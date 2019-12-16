@@ -1,0 +1,235 @@
+---
+title: "RBighornVisitationAnalysis"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This is my basic analysis of bighorn visitation to water, Summer 2019.First, I combined all of my observations into one dataframe. Due to some technical difficulties with the database at the CDFW office, I included observations from both a version of the database from 7/3 and 7/22 since I thought some had gotten deleted from the 7/22. I then removed fully duplicated rows in order to remove data that were in both the 7/3 and 7/22 database. The dataframe had 2108 observations before eliminating duplicated rows, and 2062 observations after the removal of duplicated rows. This makes sense as the approximate number of observations that I had input into the database by 7/3. Before coding further, I went through the SBrs and Marb data and visually checked that there were observations for every date that were supposedly covered. The only discrepancy that I found was that there were no observations in the Marbles on 6/25 after 14:49 pm. I went into the photo data and confirmed that this was indeed the case. Perhaps it was a really cool afternoon?
+
+I then formatted the data where major things needed to be fixed. I changed the cells of  KI_DG_FirstPhotoTime2, KI_DG_FirstPhotoTime3, KI_DG_FirstPhotoTime4, KI_DG_LastPhotoTime2, KI_DG_LastPhotoTime3, and KI_DG_LastPhotoTime4 that were '0' or blank to NAs. I also changed the cells of KI_DG_SheepDrank2, KI_DG_SheepDrank3, and KI_DG_SheepDrank4 that were blank to NAs. 
+
+
+
+
+```{r}
+AshleyDataall <- read.csv("AshleyDatabasequeryall121419.csv", header = TRUE, sep = ",")
+twodbobs <- read.csv("ObservationsBeginningoftheSummer2databases121419.csv", header = TRUE, sep = ",")
+firstpartdgobs <- read.csv("NopaCMPRMarbfirstpartofsummerDanielleObservations.csv", header = TRUE, sep = ",")
+threedf <- rbind(AshleyDataall, twodbobs, firstpartdgobs)
+library(tidyverse)
+nodups <- distinct(threedf)
+
+as.character(nodups$KI_DG_FirstPhotoTime2, nodups$KI_DG_LastPhotoTime2, nodups$KI_DG_FirstPhotoTime3, nodups$KI_DG_LastPhotoTime3, nodups$KI_DG_FirstPhotoTime4, nodups$KI_DG_LastPhotoTime4)
+nodups$KI_DG_FirstPhotoTime2[nodups$KI_DG_FirstPhotoTime2 == "0"] <- NA
+nodups$KI_DG_FirstPhotoTime2[nodups$KI_DG_FirstPhotoTime2 == ""] <- NA
+nodups$KI_DG_LastPhotoTime2[nodups$KI_DG_LastPhotoTime2 == "0"] <- NA
+nodups$KI_DG_LastPhotoTime2[nodups$KI_DG_LastPhotoTime2 == ""] <- NA
+nodups$KI_DG_FirstPhotoTime3[nodups$KI_DG_FirstPhotoTime3 == "0"] <- NA
+nodups$KI_DG_FirstPhotoTime3[nodups$KI_DG_FirstPhotoTime3 == ""] <- NA
+nodups$KI_DG_LastPhotoTime3[nodups$KI_DG_LastPhotoTime3 == "0"] <- NA
+nodups$KI_DG_LastPhotoTime3[nodups$KI_DG_LastPhotoTime3 == ""] <- NA
+nodups$KI_DG_FirstPhotoTime4[nodups$KI_DG_FirstPhotoTime4 == "0"] <- NA
+nodups$KI_DG_FirstPhotoTime4[nodups$KI_DG_FirstPhotoTime4 == ""] <- NA
+nodups$KI_DG_LastPhotoTime4[nodups$KI_DG_LastPhotoTime4 == "0"] <- NA
+nodups$KI_DG_LastPhotoTime4[nodups$KI_DG_LastPhotoTime4 == ""] <- NA
+
+
+as.character(nodups$KI_DG_SheepDrank2, nodups$KI_DG_SheepDrank3, nodups$KI_DG_SheepDrank4)
+nodups$KI_DG_SheepDrank2[nodups$KI_DG_SheepDrank2 == ""] <- NA
+nodups$KI_DG_SheepDrank3[nodups$KI_DG_SheepDrank3 == ""] <- NA
+nodups$KI_DG_SheepDrank4[nodups$KI_DG_SheepDrank4 == ""] <- NA
+
+as.character(nodups$GO_DG_SpecificSource)
+nodups$GO_DG_SpecificSource[nodups$GO_DG_SpecificSource == ""] <- NA
+as.factor(nodups$GO_DG_SpecificSource)
+
+```
+A List of everything that needs to be fixed:
+- input the GPS location as per the GO_WaterSource. Make sure to input the type of GPS data (UTM, latlong) that is relevant to the GPS Data cleaning stuff. 
+- change the data type of every column to the correct type
+- at some point, subset the KI_Known_ID for the sheep I am interested in for the GPS analysis
+- input the missing KI_Sex cells
+- input the missing KI_DG_FirstPhotoTime and KI_DG_LastPhotoTime times, and the missing Ki_DG_SheepDrank (there's a ton of these - Ashley???)
+- check that all of the comp numbers are numbers and are appropriate. And that there are no blanks and NAs.
+- If possible, fill in the weights, body lengths, and chest girths that are missing.
+
+```{r}
+
+# THIS WILL BE WHERE YOU FIX ALL OF THESE THINGS.
+
+```
+
+
+``` {r}
+# df.expanded <- df[rep(row.names(df), df$freq), 1:2]
+
+```
+
+
+
+
+```{r}
+# NOPAH PLOT
+
+library(rmarkdown)
+setwd("~/RWorkingDirectory")
+NopahData <- read.csv("NopahBighornVisitsSummer2019csv.csv", header = TRUE, sep = ",")
+View(NopahData)
+str(NopahData)
+library(tidyverse)
+library(lubridate)
+NopahData$DateAttempt <- ymd(NopahData$GO_Date)
+# Need to calculate number of visitations/day. 
+visitationsbyday <- as.data.frame(table(NopahData$KI_Known_ID, NopahData$DateAttempt))
+View(visitationsbyday)
+str(visitationsbyday)
+colnames(visitationsbyday)[colnames(visitationsbyday) == "Var1"] <- "sheep"
+colnames(visitationsbyday)[colnames(visitationsbyday) == "Var2"] <- "date"
+colnames(visitationsbyday)[colnames(visitationsbyday) == "Freq"] <- "visits"
+
+test <- data.frame(date = rep(seq(from = as.Date("2019-06-06"), to = as.Date("2019-08-07"), "days"), 5), sheep = c(rep("BHS_1736", 63), rep("BHS_1737", 63), rep("BHS_1738", 63), rep("BHS_1739", 63), rep("BHS_1740", 63)))
+View(test)
+mergedvisit <- merge(test, visitationsbyday,by = c("sheep","date"), all = TRUE)
+View(mergedvisit)
+str(mergedvisit)
+mergedvisit$datenum <- as.numeric(mergedvisit$date)
+# for 6/6-6/13
+mergedvisit$visits[is.na(mergedvisit$visits) == TRUE & (18053 <= mergedvisit$datenum & mergedvisit$datenum <= 18060)] <- 0
+# For 6/25-7/8
+mergedvisit$visits[is.na(mergedvisit$visits) == TRUE & (18072 <= mergedvisit$datenum & mergedvisit$datenum <= 18085)] <- 0
+# For 7/19-8/7 **** NOte - 4 hour period on 7/29 when wasn't covered... shouldn't include 7/29?
+mergedvisit$visits[is.na(mergedvisit$visits) == TRUE & (18096 <= mergedvisit$datenum & mergedvisit$datenum <= 18115)] <- 0
+
+# Systematically jittering the results by sheep so can see them on the plot.
+
+mergedvisit$jitter <- mergedvisit$visits
+mergedvisit$jitter[mergedvisit$sheep == "BHS_1737"] <- (mergedvisit$jitter[mergedvisit$sheep == "BHS_1737"] + 0.05)
+mergedvisit$jitter[mergedvisit$sheep == "BHS_1736"] <- (mergedvisit$jitter[mergedvisit$sheep == "BHS_1736"] + 0.1)
+mergedvisit$jitter[mergedvisit$sheep == "BHS_1739"] <- (mergedvisit$jitter[mergedvisit$sheep == "BHS_1739"] - 0.05)
+mergedvisit$jitter[mergedvisit$sheep == "BHS_1740"] <- (mergedvisit$jitter[mergedvisit$sheep == "BHS_1740"] - 0.1)
+
+plot(jitter ~ date, data = mergedvisit, type = "p", col = mergedvisit$sheep, main = "Nopah", xlab = "Date", ylab = "Visitations of Surface Water per Day")
+# NEEDS TO BE FIXED legend(x = "topleft", legend = levels(mergedvisit$sheep), col = mergedvisit$sheep, cex = 1)
+
+
+
+
+
+
+
+
+
+# for(i in 2019-06-06:2019-08-07){if ((visitationsbyday$Freq != 1 OR 2) AND (visitationsbyday$Var1 == "BHS_1736" | "BHS_1737" | "BHS_1738" | "BHS_1739" | "BHS_1740") AND (visitationsbyday$Var2 == i)) {
+#          visitationsbyday$Freq == 0}}
+?merge
+# visitationsbyday <- count(NopahData$KI_Known_ID ~ NopahData$DateAttempt)
+# plot(KI_Known_ID ~ GO_Date, data = NopahData)
+# as.data.frame(table(count(nrow( NopahData[NopahData$KI_Known_ID == ""]))))
+# for
+
+# Attempt a different way:
+NopahData2 <- read.csv("NopahRearranged2.csv", header = TRUE, sep = ",")
+View(NopahData2)
+plot(Visitations ~ Date, data = NopahData2, type = "b")
+
+```
+
+
+
+```{r}
+# CASTLE PIUTE PLOT
+
+CMPRData <- read.csv("CMPRBighornVisitsSummer2019csv.csv", header = TRUE, sep = ",")
+View(CMPRData)
+str(CMPRData)
+CMPRData$DateAttempt <- ymd(CMPRData$GO_Date)
+CMPRvisitationsbyday <- as.data.frame(table(CMPRData$KI_Known_ID, CMPRData$DateAttempt))
+View(CMPRvisitationsbyday)
+str(CMPRvisitationsbyday)
+colnames(CMPRvisitationsbyday)[colnames(CMPRvisitationsbyday) == "Var1"] <- "sheep"
+colnames(CMPRvisitationsbyday)[colnames(CMPRvisitationsbyday) == "Var2"] <- "date"
+colnames(CMPRvisitationsbyday)[colnames(CMPRvisitationsbyday) == "Freq"] <- "visits"
+### test1 <- data.frame( date = rep(seq(from = as.Date("2019-05-23"), to = as.Date("2019-08-15"), "days"), ))
+
+# NEED TO DECIDE WHAT I'M DOING ABOUT STUPID PIUTE MTNS - SHEEP GOING BETWEEN PIUTE GUZZLER & SOUTH CREEK THING!!!!!
+```
+
+
+This is an attempt to make it so I can do the real number of visits, accounting for the difference between the number of observations and the number of visits.
+
+```{r}
+
+# df.expanded <- df[rep(row.names(df), df$freq), 1:2]
+
+```
+
+
+
+
+
+```{r}
+# SOUTH BRISTOLS PLOT
+
+BrsSData <- read.csv("BrsSBighornVisitsSummer2019csv.csv", header = TRUE, sep = ",")
+str(BrsSData)
+View(BrsSData)
+library(tidyverse)
+library(lubridate)
+BrsSData$DateAttempt <- ymd(BrsSData$GO_Date)
+BrsSvisitationsbyday <- as.data.frame(table(BrsSData$KI_Known_ID, BrsSData$DateAttempt))
+View(BrsSvisitationsbyday)
+str(BrsSvisitationsbyday)
+colnames(BrsSvisitationsbyday)[colnames(BrsSvisitationsbyday) == "Var1"] <- "sheep"
+colnames(BrsSvisitationsbyday)[colnames(BrsSvisitationsbyday) == "Var2"] <- "date"
+colnames(BrsSvisitationsbyday)[colnames(BrsSvisitationsbyday) == "Freq"] <- "visits"
+test1 <- data.frame(date = rep(seq(from = as.Date("2019-06-04"), to = as.Date("2019-08-06"), "days"), 27), sheep = c(rep("BHS_1330", 64), rep("BHS_1340", 64), rep("BHS_1337", 64), rep("BHS_1334", 64), rep("BHS_1331", 64), rep("BHS_1329", 64), rep("BHS_1328", 64), rep("BHS_1333", 64), rep("BHS_1425", 64), rep("BHS_1426", 64), rep("BHS_1489", 64), rep("BHS_1491", 64), rep("BHS_1578", 64), rep("BHS_1579", 64), rep("BHS_1580", 64), rep("BHS_1596", 64), rep("BHS_1598", 64), rep("BHS_1599", 64), rep("BHS_1687", 64), rep("BHS_1486", 64), rep("BHS_1490", 64), rep("BHS_1492", 64), rep("BHS_1428", 64), rep("BHS_1685", 64), rep("BHS_1686", 64), rep("BHS_1688", 64), rep("BHS_1689", 64)))
+View(test1)
+BrsSmergedvisit <- merge(test1, BrsSvisitationsbyday, by = c("sheep", "date"), all = TRUE)
+View(BrsSmergedvisit)
+str(BrsSmergedvisit)
+BrsSmergedvisit$datenum <- as.numeric(BrsSmergedvisit$date)
+# for SBRS 6/4 - 6/16
+BrsSmergedvisit$visits[is.na(BrsSmergedvisit$visits) == TRUE & (18051 <= BrsSmergedvisit$datenum & BrsSmergedvisit$datenum <= 	18063)] <- 0 
+# for SBrs 6/18 - 7/29
+BrsSmergedvisit$visits[is.na(BrsSmergedvisit$visits) == TRUE & (18065 <= BrsSmergedvisit$datenum & BrsSmergedvisit$datenum <= 	18106)] <- 0 
+# for SBrs 8/1-8/6
+BrsSmergedvisit$visits[is.na(BrsSmergedvisit$visits) == TRUE & (18109 <= BrsSmergedvisit$datenum & BrsSmergedvisit$datenum <= 		18114)] <- 0 
+BrsSmergedvisit$jitter <- BrsSmergedvisit$visits
+BrsSmergedvisit$jitter[BrsSmergedvisit$sheep == "BHS_1330"] <- (BrsSmergedvisit$jitter[BrsSmergedvisit$sheep == "BHS_1330"] + 0.02)
+BrsSmergedvisit$jitter[BrsSmergedvisit$sheep == "BHS_1340"] <- (BrsSmergedvisit$jitter[BrsSmergedvisit$sheep == "BHS_1340"] - 0.02)
+BrsSmergedvisit$jitter[BrsSmergedvisit$sheep == "BHS_1337"] <- (BrsSmergedvisit$jitter[BrsSmergedvisit$sheep == "BHS_1337"] + 0.04)
+BrsSmergedvisit$jitter[BrsSmergedvisit$sheep == "BHS_1334"] <- (BrsSmergedvisit$jitter[BrsSmergedvisit$sheep == "BHS_1334"] - 0.04)
+BrsSmergedvisit$jitter[BrsSmergedvisit$sheep == "BHS_1331"] <- (BrsSmergedvisit$jitter[BrsSmergedvisit$sheep == "BHS_1331"] + 0.06)
+BrsSmergedvisit$jitter[BrsSmergedvisit$sheep == "BHS_1329"] <- (BrsSmergedvisit$jitter[BrsSmergedvisit$sheep == "BHS_1329"] - 0.06)
+BrsSmergedvisit$jitter[BrsSmergedvisit$sheep == "BHS_1328"] <- (BrsSmergedvisit$jitter[BrsSmergedvisit$sheep == "BHS_1328"] + 0.08)
+BrsSmergedvisit$jitter[BrsSmergedvisit$sheep == "BHS_1333"] <- (BrsSmergedvisit$jitter[BrsSmergedvisit$sheep == "BHS_1333"] - 0.08)
+BrsSmergedvisit$jitter[BrsSmergedvisit$sheep == "BHS_1425"] <- (BrsSmergedvisit$jitter[BrsSmergedvisit$sheep == "BHS_1425"] + 0.10)
+BrsSmergedvisit$jitter[BrsSmergedvisit$sheep == "BHS_1426"] <- (BrsSmergedvisit$jitter[BrsSmergedvisit$sheep == "BHS_1426"] - 0.10)
+BrsSmergedvisit$jitter[BrsSmergedvisit$sheep == "BHS_1489"] <- (BrsSmergedvisit$jitter[BrsSmergedvisit$sheep == "BHS_1489"] + 0.12)
+BrsSmergedvisit$jitter[BrsSmergedvisit$sheep == "BHS_1580"] <- (BrsSmergedvisit$jitter[BrsSmergedvisit$sheep == "BHS_1580"] - 0.12)
+BrsSmergedvisit$jitter[BrsSmergedvisit$sheep == "BHS_1491"] <- (BrsSmergedvisit$jitter[BrsSmergedvisit$sheep == "BHS_1491"] + 0.14)
+BrsSmergedvisit$jitter[BrsSmergedvisit$sheep == "BHS_1596"] <- (BrsSmergedvisit$jitter[BrsSmergedvisit$sheep == "BHS_1596"] - 0.14)
+BrsSmergedvisit$jitter[BrsSmergedvisit$sheep == "BHS_1578"] <- (BrsSmergedvisit$jitter[BrsSmergedvisit$sheep == "BHS_1578"] + 0.16)
+BrsSmergedvisit$jitter[BrsSmergedvisit$sheep == "BHS_1579"] <- (BrsSmergedvisit$jitter[BrsSmergedvisit$sheep == "BHS_1579"] - 0.16)
+BrsSmergedvisit$jitter[BrsSmergedvisit$sheep == "BHS_1598"] <- (BrsSmergedvisit$jitter[BrsSmergedvisit$sheep == "BHS_1598"] + 0.18)
+BrsSmergedvisit$jitter[BrsSmergedvisit$sheep == "BHS_1599"] <- (BrsSmergedvisit$jitter[BrsSmergedvisit$sheep == "BHS_1599"] - 0.18)
+BrsSmergedvisit$jitter[BrsSmergedvisit$sheep == "BHS_1687"] <- (BrsSmergedvisit$jitter[BrsSmergedvisit$sheep == "BHS_1687"] + 0.20)
+BrsSmergedvisit$jitter[BrsSmergedvisit$sheep == "BHS_1486"] <- (BrsSmergedvisit$jitter[BrsSmergedvisit$sheep == "BHS_1486"] - 0.20)
+BrsSmergedvisit$jitter[BrsSmergedvisit$sheep == "BHS_1490"] <- (BrsSmergedvisit$jitter[BrsSmergedvisit$sheep == "BHS_1490"] + 0.22)
+BrsSmergedvisit$jitter[BrsSmergedvisit$sheep == "BHS_1492"] <- (BrsSmergedvisit$jitter[BrsSmergedvisit$sheep == "BHS_1492"] - 0.22)
+BrsSmergedvisit$jitter[BrsSmergedvisit$sheep == "BHS_1428"] <- (BrsSmergedvisit$jitter[BrsSmergedvisit$sheep == "BHS_1428"] + 0.24)
+BrsSmergedvisit$jitter[BrsSmergedvisit$sheep == "BHS_1685"] <- (BrsSmergedvisit$jitter[BrsSmergedvisit$sheep == "BHS_1685"] - 0.24)
+BrsSmergedvisit$jitter[BrsSmergedvisit$sheep == "BHS_1686"] <- (BrsSmergedvisit$jitter[BrsSmergedvisit$sheep == "BHS_1686"] + 0.26)
+BrsSmergedvisit$jitter[BrsSmergedvisit$sheep == "BHS_1688"] <- (BrsSmergedvisit$jitter[BrsSmergedvisit$sheep == "BHS_1688"] - 0.26)
+plot(jitter ~ date, data = BrsSmergedvisit, type = "p", col = BrsSmergedvisit$sheep, main = "South Bristols", xlab = "Date", ylab = "Visitations to Surface Water per Day", cex = 0.75)
+
+
+allgpsdata <- read.csv("AllGPSData20190501to20190912.csv", header = TRUE, sep = ",")
+
+
+```
+
+
