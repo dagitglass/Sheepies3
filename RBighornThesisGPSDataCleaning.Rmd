@@ -5,7 +5,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-setwd("~/RWorkingDirectory")
+setwd("/Users/Danielle Glass/Documents/RWorkingDirectory/Sheepies2/Sheepies2")
 ```
 
 ## Subsetting by Range & Individual Sheep ID
@@ -14,8 +14,6 @@ First, I uploaded the GPS data. I checked for duplicates - there were none. Then
 
 ```{r}
 library(rmarkdown)
-setwd("~/RWorkingDirectory")
-
 # This doesn't work in R Markdown for some reason. Why?
 allgpsdata <- read.csv("AllGPSData20190501to20190912.csv", header = TRUE, sep = ",")
 View(allgpsdata)

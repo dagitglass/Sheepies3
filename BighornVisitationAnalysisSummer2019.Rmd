@@ -21,6 +21,9 @@ firstpartdgobs <- read.csv("NopaCMPRMarbfirstpartofsummerDanielleObservations.cs
 threedf <- rbind(AshleyDataall, twodbobs, firstpartdgobs)
 library(tidyverse)
 nodups <- distinct(threedf)
+table(duplicated(nodups))
+table(duplicated(nodups$KI_DatObsT_ID))
+# THERE ARE NO DUPLICATES OF THE ROWS OVERALL, BUT THERE ARE DUPLICATES OF THE NODUPS$KI_DATOBST_ID. WHY?!!!!!!!
 
 as.character(nodups$KI_DG_FirstPhotoTime2, nodups$KI_DG_LastPhotoTime2, nodups$KI_DG_FirstPhotoTime3, nodups$KI_DG_LastPhotoTime3, nodups$KI_DG_FirstPhotoTime4, nodups$KI_DG_LastPhotoTime4)
 nodups$KI_DG_FirstPhotoTime2[nodups$KI_DG_FirstPhotoTime2 == "0"] <- NA
@@ -55,8 +58,15 @@ A List of everything that needs to be fixed:
 - input the missing KI_DG_FirstPhotoTime and KI_DG_LastPhotoTime times, and the missing Ki_DG_SheepDrank (there's a ton of these - Ashley???)
 - check that all of the comp numbers are numbers and are appropriate. And that there are no blanks and NAs.
 - If possible, fill in the weights, body lengths, and chest girths that are missing.
+-KI_DatObsT_ID has 1858 levels, but there are 2062 entries
+- GO_DatObsTime and KI_DatObsT_ID are wrong for some entries. Need to remake in order to use!
 
 ```{r}
+
+
+# nodups$KI_Sex[nodups$KI_DatObsT_ID == "20190313A_Evans09:16BHS_1489"]
+
+# KI_DateObs
 
 # THIS WILL BE WHERE YOU FIX ALL OF THESE THINGS.
 
@@ -75,7 +85,6 @@ A List of everything that needs to be fixed:
 # NOPAH PLOT
 
 library(rmarkdown)
-setwd("~/RWorkingDirectory")
 NopahData <- read.csv("NopahBighornVisitsSummer2019csv.csv", header = TRUE, sep = ",")
 View(NopahData)
 str(NopahData)
