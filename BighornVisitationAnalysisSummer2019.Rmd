@@ -7,7 +7,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-This is my basic analysis of bighorn visitation to water, Summer 2019.First, I combined all of my observations into one dataframe. Due to some technical difficulties with the database at the CDFW office, I included observations from both a version of the database from 7/3 and 7/22 since I thought some had gotten deleted from the 7/22. I then removed fully duplicated rows in order to remove data that were in both the 7/3 and 7/22 database. The dataframe had 2108 observations before eliminating duplicated rows, and 2062 observations after the removal of duplicated rows. This makes sense as the approximate number of observations that I had input into the database by 7/3. Before coding further, I went through the SBrs and Marb data and visually checked that there were observations for every date that were supposedly covered. The only discrepancy that I found was that there were no observations in the Marbles on 6/25 after 14:49 pm. I went into the photo data and confirmed that this was indeed the case. Perhaps it was a really cool afternoon?
+This is my basic analysis of bighorn visitation to water, Summer 2019. First, I combined all of my observations into one dataframe. Due to some technical difficulties with the database at the CDFW office, I included observations from both a version of the database from 7/3 and 7/22 since I thought some had gotten deleted from the 7/22. I then removed fully duplicated rows in order to remove data that were in both the 7/3 and 7/22 database. The dataframe had 2108 observations before eliminating duplicated rows, and 2062 observations after the removal of duplicated rows. This makes sense as the approximate number of observations that I had input into the database by 7/3. Before coding further, I went through the SBrs and Marb data and visually checked that there were observations for every date that were supposedly covered. The only discrepancy that I found was that there were no observations in the Marbles on 6/25 after 14:49 pm. I went into the photo data and confirmed that this was indeed the case. Perhaps it was a really cool afternoon?
 
 I then formatted the data where major things needed to be fixed. I changed the cells of  KI_DG_FirstPhotoTime2, KI_DG_FirstPhotoTime3, KI_DG_FirstPhotoTime4, KI_DG_LastPhotoTime2, KI_DG_LastPhotoTime3, and KI_DG_LastPhotoTime4 that were '0' or blank to NAs. I also changed the cells of KI_DG_SheepDrank2, KI_DG_SheepDrank3, and KI_DG_SheepDrank4 that were blank to NAs. 
 
@@ -22,8 +22,9 @@ threedf <- rbind(AshleyDataall, twodbobs, firstpartdgobs)
 library(tidyverse)
 nodups <- distinct(threedf)
 table(duplicated(nodups))
-table(duplicated(nodups$KI_DatObsT_ID))
-# THERE ARE NO DUPLICATES OF THE ROWS OVERALL, BUT THERE ARE DUPLICATES OF THE NODUPS$KI_DATOBST_ID. WHY?!!!!!!!
+table(duplicated(nodups$DateObsTimeIDwaterspecific))
+# THERE ARE NO DUPLICATES OF THE ROWS OVERALL, BUT THERE ARE 204 DUPLICATES OF THE NODUPS$DateObsTimeODwaterspecific. WHY?!!!!!!! B/C some of the observations have the capture data and some don't. I SHOULD BE ABLE TO FIX THIS AFTER INPUTTING THE CORRECT WEIGHTS, BODY LENGTHS, AND CHEST GIRTHS THAT ARE MISSING.
+View(duplicated(nodups$DateObsTimeIDwaterspecific))
 
 as.character(nodups$KI_DG_FirstPhotoTime2, nodups$KI_DG_LastPhotoTime2, nodups$KI_DG_FirstPhotoTime3, nodups$KI_DG_LastPhotoTime3, nodups$KI_DG_FirstPhotoTime4, nodups$KI_DG_LastPhotoTime4)
 nodups$KI_DG_FirstPhotoTime2[nodups$KI_DG_FirstPhotoTime2 == "0"] <- NA
@@ -54,21 +55,61 @@ A List of everything that needs to be fixed:
 - input the GPS location as per the GO_WaterSource. Make sure to input the type of GPS data (UTM, latlong) that is relevant to the GPS Data cleaning stuff. 
 - change the data type of every column to the correct type
 - at some point, subset the KI_Known_ID for the sheep I am interested in for the GPS analysis
-- input the missing KI_Sex cells
+- input the missing KI_Sex cells - DONE
 - input the missing KI_DG_FirstPhotoTime and KI_DG_LastPhotoTime times, and the missing Ki_DG_SheepDrank (there's a ton of these - Ashley???)
 - check that all of the comp numbers are numbers and are appropriate. And that there are no blanks and NAs.
 - If possible, fill in the weights, body lengths, and chest girths that are missing.
 -KI_DatObsT_ID has 1858 levels, but there are 2062 entries
 - GO_DatObsTime and KI_DatObsT_ID are wrong for some entries. Need to remake in order to use!
 
+In an attempt to figure out why there was still duplicated rows, I made a column with everything needed to make each observation individually identifiable. I discovered that some rows did not have the capture data needed, and that this was what was making the duplicated rows not seen as duplicated. I then worked to input the missing information - weight, body length, and chest girth.
+
+
 ```{r}
+as.character(nodups$GO_Date, nodups$KI_Known_ID, nodups$GO_Time_HHMM, nodups$GO_WaterSource, nodups$GO_DG_SpecificSource)
+nodups$DateObsTimeIDwaterspecific <- paste(nodups$GO_Date, nodups$KI_Known_ID, nodups$GO_Time_HHMM, nodups$GO_WaterSource, nodups$GO_DG_SpecificSource, sep = "")
+as.character(nodups$KI_Sex)
+as.character(nodups$KI_Known_ID)
+table(nodups$KI_Sex)
+sextofix <- nodups[nodups$KI_Sex == " "]
+nodups$KI_Sex[nodups$KI_Known_ID == "BHS_1489" | nodups$KI_Known_ID == "BHS_1596" | nodups$KI_Known_ID == "BHS_1361" | nodups$KI_Known_ID == "BHS_1357" | nodups$KI_Known_ID == "BHS_1367" | nodups$KI_Known_ID == "BHS_1362" | nodups$KI_Known_ID == "BHS_1584" | nodups$KI_Known_ID == "BHS_1585" | nodups$KI_Known_ID == "BHS_1583" | nodups$KI_Known_ID == "BHS_1582" | nodups$KI_Known_ID == "BHS_1588" | nodups$KI_Known_ID == "BHS_1365" | nodups$KI_Known_ID == "BHS_1574" | nodups$KI_Known_ID == "BHS_1366" | nodups$KI_Known_ID == "BHS_1594" | nodups$KI_Known_ID == "BHS_1577" | nodups$KI_Known_ID == "BHS_1581" | nodups$KI_Known_ID == "BHS_1576" | nodups$KI_Known_ID == "BHS_1416" | nodups$KI_Known_ID == "BHS_1587" | nodups$KI_Known_ID == "BHS_1575" | nodups$KI_Known_ID == "BHS_1592" | nodups$KI_Known_ID == "BHS_1589" | nodups$KI_Known_ID == "BHS_1421" | nodups$KI_Known_ID == "BHS_1740" | nodups$KI_Known_ID == "BHS_1738" | nodups$KI_Known_ID == "BHS_1736" | nodups$KI_Known_ID == "BHS_1734" | nodups$KI_Known_ID == "BHS_1733" | nodups$KI_Known_ID == "BHS_1741"] <- "F"
+
+nodups$KI_Sex[nodups$KI_Known_ID == "BHS_1494" | nodups$KI_Known_ID == "BHS_1684" | nodups$KI_Known_ID == "BHS_1683" | nodups$KI_Known_ID == "BHS_1682" | nodups$KI_Known_ID == "BHS_1493" | nodups$KI_Known_ID == "BHS_1591" | nodups$KI_Known_ID == "BHS_1590" | nodups$KI_Known_ID == "BHS_1420" | nodups$KI_Known_ID == "1728" | nodups$KI_Known_ID == "BHS_1739"] <- "M"
 
 
-# nodups$KI_Sex[nodups$KI_DatObsT_ID == "20190313A_Evans09:16BHS_1489"]
+nodups$KI_Sex[nodups$DateObsTimeIDwaterspecific == "20190613BHS_14899:16NaanNA"] <- "F"
+
+
+
+
+
+
+
+
+
+
+
+
+as.factor(nodups$KI_Known_ID)
+# df[df$Name == "John_Smith" & df$State == "WI",1] <- "John_Smith1"
+# nodups[nodups$DateObsTimeIDwaterspecific == "20190613BHS_14899:16NaanNA", is.na(nodups$KI_Sex) == TRUE] <- "F" 
+
+
+
+# this changes every KI_Sex to female - wrong!
+# if(nodups$DateObsTimeIDwaterspecific == "20190613BHS_14899:16NaanNA"){nodups$KI_Sex <- "F"}
+
+View()
+
+as.character(nodups$KI_Sex)
+nodups$KI_Sex[nodups$DateObsTimeIDwaterspecific == "	20190613BHS_14899:16NaanNA"] <- "F"
 
 # KI_DateObs
 
 # THIS WILL BE WHERE YOU FIX ALL OF THESE THINGS.
+
+table(duplicated(nodups))
+table(duplicated(nodups$DateObsTimeIDwaterspecific))
 
 ```
 
