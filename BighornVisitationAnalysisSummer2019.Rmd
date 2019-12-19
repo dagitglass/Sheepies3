@@ -76,6 +76,20 @@ nodups$KI_Sex[nodups$KI_Known_ID == "BHS_1489" | nodups$KI_Known_ID == "BHS_1596
 
 nodups$KI_Sex[nodups$KI_Known_ID == "BHS_1494" | nodups$KI_Known_ID == "BHS_1684" | nodups$KI_Known_ID == "BHS_1683" | nodups$KI_Known_ID == "BHS_1682" | nodups$KI_Known_ID == "BHS_1493" | nodups$KI_Known_ID == "BHS_1591" | nodups$KI_Known_ID == "BHS_1590" | nodups$KI_Known_ID == "BHS_1420" | nodups$KI_Known_ID == "1728" | nodups$KI_Known_ID == "BHS_1739"] <- "M"
 
+as.character(nodups$CP_BdyLgth_cm)
+# table(nodups$KI_Known_ID) - going through the individual sheep to check and make sure their weight, body length, and chest girth are filled out correctly.
+
+# LIST OF SHEEP THAT HAVE MEASUREMENTS (* sheep that had different measurements?): BHS_1428*, BHS_1490*, 1493*, 1494*, 1563, 1565, 1574, 1575, 1576, 1577, 1581, 1582, 1583, 1587, 1592, 1594, 1682, 1683, 1684, 1689, 1713, 1730, 1731, 1733, 1734, 1736, 1738, 1739 
+# nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == ""]
+#### NEED TO FIX ID THAT HAS "BHs_1596" to "BHS_1596"!!!!!!!!
+
+#BHS_1428 - body length comes back at both 151.3 and 149.0. I am going to set it to 149.0 b/c that is what in the 7/22 database and because the higher number is probably the untarred number.
+nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == "BHS_1428"] <- "149.0"
+# BHS_1428 Weight comes back as 63 and 89, chest girth comes back as 100.0 and 108.3.
+
+          View(missmeasures)
+  nodups[nodups$CP_BdyLgth_cm == "NA"]
+nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == "BHS_1489"] <- ""
 
 nodups$KI_Sex[nodups$DateObsTimeIDwaterspecific == "20190613BHS_14899:16NaanNA"] <- "F"
 
@@ -115,6 +129,8 @@ table(duplicated(nodups$DateObsTimeIDwaterspecific))
 
 
 ``` {r}
+missmeasures <- nodups[nodups$KI_Known_ID | nodups$CP_Weight..kg. | nodups$CP_BdyLgth_cm | nodups$CP_ChstGth_cm]
+
 # df.expanded <- df[rep(row.names(df), df$freq), 1:2]
 
 ```
