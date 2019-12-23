@@ -79,13 +79,121 @@ nodups$KI_Sex[nodups$KI_Known_ID == "BHS_1494" | nodups$KI_Known_ID == "BHS_1684
 as.character(nodups$CP_BdyLgth_cm)
 # table(nodups$KI_Known_ID) - going through the individual sheep to check and make sure their weight, body length, and chest girth are filled out correctly.
 
+
+
 # LIST OF SHEEP THAT HAVE MEASUREMENTS (* sheep that had different measurements?): BHS_1428*, BHS_1490*, 1493*, 1494*, 1563, 1565, 1574, 1575, 1576, 1577, 1581, 1582, 1583, 1587, 1592, 1594, 1682, 1683, 1684, 1689, 1713, 1730, 1731, 1733, 1734, 1736, 1738, 1739 
 # nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == ""]
 #### NEED TO FIX ID THAT HAS "BHs_1596" to "BHS_1596"!!!!!!!!
 
+as.character(nodups$KI_Known_ID)
+nodups$KI_Known_ID[nodups$KI_Known_ID == "BHs_1596"] <- "BHS_1596"
+as.factor(nodups$KI_Known_ID)
+# now comes back at BHs_1596 = 0, BHS_1596=78 - did this truly fix the problem?
+
+# Four of the bighorn have two different numbers at their measurements. I am going to set them to the lower number b/c the higher number is probably the untarred number.
 #BHS_1428 - body length comes back at both 151.3 and 149.0. I am going to set it to 149.0 b/c that is what in the 7/22 database and because the higher number is probably the untarred number.
+
+# BODY LENGTHS:
 nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == "BHS_1428"] <- "149.0"
+nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == "BHS_1490"] <- "158.2"
+nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == "BHS_1493"] <- "162.5"
+nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == "BHS_1494"] <- "145.1"
+nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == "BHS_1563"] <- "165.0"
+nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == "BHS_1565"] <- "136.0"
+nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == "BHS_1574"] <- "146.0"
+nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == "BHS_1575"] <- "143.0"
+nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == "BHS_1576"] <- "141.0"
+nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == "BHS_1577"] <- "141.0"
+nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == "BHS_1581"] <- "139.0"
+nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == "BHS_1582"] <- "138.0"
+nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == "BHS_1583"] <- "142.5"
+nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == "BHS_1587"] <- "139.0"
+nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == "BHS_1592"] <- "137.5"
+nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == "BHS_1594"] <- "125.0"
+nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == "BHS_1682"] <- "140.0"
+nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == "BHS_1683"] <- "144.0"
+nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == "BHS_1684"] <- "149.0"
+nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == "BHS_1689"] <- "155.5"
+nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == "BHS_1713"] <- "140.0"
+nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == "BHS_1730"] <- "152.0"
+nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == "BHS_1731"] <- "161.0"
+nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == "BHS_1733"] <- "153.0"
+nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == "BHS_1734"] <- "149.5"
+nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == "BHS_1736"] <- "118.0"
+nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == "BHS_1738"] <- "130.5"
+nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == "BHS_1739"] <- "145.0"
+as.numeric(nodups$CP_BdyLgth_cm)
+
+
+#CHEST GIRTHS
+as.character(nodups$CP_ChstGth_cm)
+nodups$CP_ChstGth_cm[nodups$KI_Known_ID == "BHS_1428"] <- "100.0"
+nodups$CP_ChstGth_cm[nodups$KI_Known_ID == "BHS_1490"] <- "101.8"
+nodups$CP_ChstGth_cm[nodups$KI_Known_ID == "BHS_1493"] <- "111.0"
+nodups$CP_ChstGth_cm[nodups$KI_Known_ID == "BHS_1494"] <- "104.0"
+nodups$CP_ChstGth_cm[nodups$KI_Known_ID == "BHS_1563"] <- "107.2"
+nodups$CP_ChstGth_cm[nodups$KI_Known_ID == "BHS_1565"] <- "99.0"
+nodups$CP_ChstGth_cm[nodups$KI_Known_ID == "BHS_1574"] <- "95.5"
+nodups$CP_ChstGth_cm[nodups$KI_Known_ID == "BHS_1575"] <- "99.0"
+nodups$CP_ChstGth_cm[nodups$KI_Known_ID == "BHS_1576"] <- "97.0"
+nodups$CP_ChstGth_cm[nodups$KI_Known_ID == "BHS_1577"] <- "99.1"
+nodups$CP_ChstGth_cm[nodups$KI_Known_ID == "BHS_1581"] <- "101.0"
+nodups$CP_ChstGth_cm[nodups$KI_Known_ID == "BHS_1582"] <- "92.0"
+nodups$CP_ChstGth_cm[nodups$KI_Known_ID == "BHS_1583"] <- "93.2"
+nodups$CP_ChstGth_cm[nodups$KI_Known_ID == "BHS_1587"] <- "97.0"
+nodups$CP_ChstGth_cm[nodups$KI_Known_ID == "BHS_1592"] <- "103.0"
+nodups$CP_ChstGth_cm[nodups$KI_Known_ID == "BHS_1594"] <- "98.9"
+nodups$CP_ChstGth_cm[nodups$KI_Known_ID == "BHS_1682"] <- "98.5"
+nodups$CP_ChstGth_cm[nodups$KI_Known_ID == "BHS_1683"] <- "95.5"
+nodups$CP_ChstGth_cm[nodups$KI_Known_ID == "BHS_1684"] <- "102.0"
+nodups$CP_ChstGth_cm[nodups$KI_Known_ID == "BHS_1689"] <- "108.5"
+nodups$CP_ChstGth_cm[nodups$KI_Known_ID == "BHS_1713"] <- "97.0"
+nodups$CP_ChstGth_cm[nodups$KI_Known_ID == "BHS_1730"] <- "101.5"
+nodups$CP_ChstGth_cm[nodups$KI_Known_ID == "BHS_1731"] <- "115.0"
+nodups$CP_ChstGth_cm[nodups$KI_Known_ID == "BHS_1733"] <- "109.5"
+nodups$CP_ChstGth_cm[nodups$KI_Known_ID == "BHS_1734"] <- "96.0"
+nodups$CP_ChstGth_cm[nodups$KI_Known_ID == "BHS_1736"] <- "82.5"
+nodups$CP_ChstGth_cm[nodups$KI_Known_ID == "BHS_1738"] <- "84.5"
+nodups$CP_ChstGth_cm[nodups$KI_Known_ID == "BHS_1739"] <- "96.0"
+as.numeric(nodups$CP_ChstGth_cm)
+
+#WEIGHT
+as.character(nodups$CP_Weight..kg.)
+nodups$CP_Weight..kg.[nodups$KI_Known_ID == "BHS_1428"] <- "149.0"
+nodups$CP_Weight..kg.[nodups$KI_Known_ID == "BHS_1490"] <- "158.2"
+nodups$CP_Weight..kg.[nodups$KI_Known_ID == "BHS_1493"] <- "162.5"
+nodups$CP_Weight..kg.[nodups$KI_Known_ID == "BHS_1494"] <- "145.1"
+nodups$CP_Weight..kg.[nodups$KI_Known_ID == "BHS_1563"] <- "165.0"
+nodups$CP_Weight..kg.[nodups$KI_Known_ID == "BHS_1565"] <- "136.0"
+nodups$CP_Weight..kg.[nodups$KI_Known_ID == "BHS_1574"] <- "146.0"
+nodups$CP_Weight..kg.[nodups$KI_Known_ID == "BHS_1575"] <- "143.0"
+nodups$CP_Weight..kg.[nodups$KI_Known_ID == "BHS_1576"] <- "141.0"
+nodups$CP_Weight..kg.[nodups$KI_Known_ID == "BHS_1577"] <- "141.0"
+nodups$CP_Weight..kg.[nodups$KI_Known_ID == "BHS_1581"] <- "139.0"
+nodups$CP_Weight..kg.[nodups$KI_Known_ID == "BHS_1582"] <- "138.0"
+nodups$CP_Weight..kg.[nodups$KI_Known_ID == "BHS_1583"] <- "142.5"
+nodups$CP_Weight..kg.[nodups$KI_Known_ID == "BHS_1587"] <- "139.0"
+nodups$CP_Weight..kg.[nodups$KI_Known_ID == "BHS_1592"] <- "137.5"
+nodups$CP_Weight..kg.[nodups$KI_Known_ID == "BHS_1594"] <- "125.0"
+nodups$CP_Weight..kg.[nodups$KI_Known_ID == "BHS_1682"] <- "140.0"
+nodups$CP_Weight..kg.[nodups$KI_Known_ID == "BHS_1683"] <- "144.0"
+nodups$CP_Weight..kg.[nodups$KI_Known_ID == "BHS_1684"] <- "149.0"
+nodups$CP_Weight..kg.[nodups$KI_Known_ID == "BHS_1689"] <- "155.5"
+nodups$CP_Weight..kg.[nodups$KI_Known_ID == "BHS_1713"] <- "140.0"
+nodups$CP_Weight..kg.[nodups$KI_Known_ID == "BHS_1730"] <- "152.0"
+nodups$CP_Weight..kg.[nodups$KI_Known_ID == "BHS_1731"] <- "161.0"
+nodups$CP_Weight..kg.[nodups$KI_Known_ID == "BHS_1733"] <- "153.0"
+nodups$CP_Weight..kg.[nodups$KI_Known_ID == "BHS_1734"] <- "149.5"
+nodups$CP_Weight..kg.[nodups$KI_Known_ID == "BHS_1736"] <- "118.0"
+nodups$CP_Weight..kg.[nodups$KI_Known_ID == "BHS_1738"] <- "130.5"
+nodups$CP_Weight..kg.[nodups$KI_Known_ID == "BHS_1739"] <- "145.0"
+
 # BHS_1428 Weight comes back as 63 and 89, chest girth comes back as 100.0 and 108.3.
+
+
+
+
+
 
           View(missmeasures)
   nodups[nodups$CP_BdyLgth_cm == "NA"]
