@@ -76,10 +76,9 @@ nodups$KI_Sex[nodups$KI_Known_ID == "BHS_1489" | nodups$KI_Known_ID == "BHS_1596
 
 nodups$KI_Sex[nodups$KI_Known_ID == "BHS_1494" | nodups$KI_Known_ID == "BHS_1684" | nodups$KI_Known_ID == "BHS_1683" | nodups$KI_Known_ID == "BHS_1682" | nodups$KI_Known_ID == "BHS_1493" | nodups$KI_Known_ID == "BHS_1591" | nodups$KI_Known_ID == "BHS_1590" | nodups$KI_Known_ID == "BHS_1420" | nodups$KI_Known_ID == "1728" | nodups$KI_Known_ID == "BHS_1739"] <- "M"
 
-as.character(nodups$CP_BdyLgth_cm)
 # table(nodups$KI_Known_ID) - going through the individual sheep to check and make sure their weight, body length, and chest girth are filled out correctly.
-
-
+# nrows()
+# table(nodups$KI_Known_ID[!is.na()])
 
 # LIST OF SHEEP THAT HAVE MEASUREMENTS (* sheep that had different measurements?): BHS_1428*, BHS_1490*, 1493*, 1494*, 1563, 1565, 1574, 1575, 1576, 1577, 1581, 1582, 1583, 1587, 1592, 1594, 1682, 1683, 1684, 1689, 1713, 1730, 1731, 1733, 1734, 1736, 1738, 1739 
 # nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == ""]
@@ -93,9 +92,13 @@ as.factor(nodups$KI_Known_ID)
 # Four of the bighorn have two different numbers at their measurements. I am going to set them to the lower number b/c the higher number is probably the untarred number.
 #BHS_1428 - body length comes back at both 151.3 and 149.0. I am going to set it to 149.0 b/c that is what in the 7/22 database and because the higher number is probably the untarred number.
 
+# There are measurements that are not in the 7/22 database that are in my datasheet. I need to add the measurements for the sheep that this is true so as to make there be no duplicated rows. 
+
 # BODY LENGTHS:
+as.character(nodups$CP_BdyLgth_cm)
 nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == "BHS_1428"] <- "149.0"
 nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == "BHS_1490"] <- "158.2"
+nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == "BHS_1492"] <- 
 nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == "BHS_1493"] <- "162.5"
 nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == "BHS_1494"] <- "145.1"
 nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == "BHS_1563"] <- "165.0"
@@ -190,9 +193,16 @@ nodups$CP_Weight..kg.[nodups$KI_Known_ID == "BHS_1739"] <- "71.8"
 as.numeric(nodups$CP_Weight..kg.)
 
 
+library(tidyverse)
+renodups <- distinct(nodups)
+table(duplicated(renodups))
+table(duplicated(renodups$DateObsTimeIDwaterspecific))
+View(duplicated(renodups$DateObsTimeIDwaterspecific))
 
-
-
+nodups <- distinct(threedf)
+table(duplicated(nodups))
+table(duplicated(nodups$DateObsTimeIDwaterspecific))
+View(duplicated($DateObsTimeIDwaterspecific))
 
 
 
