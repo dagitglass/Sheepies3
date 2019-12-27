@@ -61,6 +61,8 @@ A List of everything that needs to be fixed:
 - If possible, fill in the weights, body lengths, and chest girths that are missing.
 -KI_DatObsT_ID has 1858 levels, but there are 2062 entries
 - GO_DatObsTime and KI_DatObsT_ID are wrong for some entries. Need to remake in order to use!
+- put in age for some of them
+- also missing chest girth, body length, weight for some (BHS_1492)
 
 In an attempt to figure out why there was still duplicated rows, I made a column with everything needed to make each observation individually identifiable. I discovered that some rows did not have the capture data needed, and that this was what was making the duplicated rows not seen as duplicated. I then worked to input the missing information - weight, body length, and chest girth.
 
@@ -80,7 +82,7 @@ nodups$KI_Sex[nodups$KI_Known_ID == "BHS_1494" | nodups$KI_Known_ID == "BHS_1684
 # nrows()
 # table(nodups$KI_Known_ID[!is.na()])
 
-# LIST OF SHEEP THAT HAVE MEASUREMENTS (* sheep that had different measurements?): BHS_1428*, BHS_1490*, 1493*, 1494*, 1563, 1565, 1574, 1575, 1576, 1577, 1581, 1582, 1583, 1587, 1592, 1594, 1682, 1683, 1684, 1689, 1713, 1730, 1731, 1733, 1734, 1736, 1738, 1739 
+# LIST OF SHEEP THAT HAVE MEASUREMENTS (* sheep that had different measurements?, ^ sheep that I am checking measurements with CDFW): BHS_1420^, BHS_1428*, BHS_1490*, BHS_1492^, 1493*, 1494*, 1563, 1565, 1574, 1575, 1576, 1577, 1581, 1582, 1583, 1587, 1592, 1594, 1682, 1683, 1684, 1689, 1713, 1730, 1731, 1733, 1734, 1736, 1738, 1739 
 # nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == ""]
 #### NEED TO FIX ID THAT HAS "BHs_1596" to "BHS_1596"!!!!!!!!
 
@@ -96,9 +98,10 @@ as.factor(nodups$KI_Known_ID)
 
 # BODY LENGTHS:
 as.character(nodups$CP_BdyLgth_cm)
+nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == "BHS_1420"] <- "155.0"
 nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == "BHS_1428"] <- "149.0"
 nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == "BHS_1490"] <- "158.2"
-nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == "BHS_1492"] <- 
+nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == "BHS_1492"] <- "152.0"
 nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == "BHS_1493"] <- "162.5"
 nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == "BHS_1494"] <- "145.1"
 nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == "BHS_1563"] <- "165.0"
@@ -130,8 +133,10 @@ as.numeric(nodups$CP_BdyLgth_cm)
 
 #CHEST GIRTHS
 as.character(nodups$CP_ChstGth_cm)
+nodups$CP_ChstGth_cm[nodups$KI_Known_ID == "BHS_1420"] <- "111.5"
 nodups$CP_ChstGth_cm[nodups$KI_Known_ID == "BHS_1428"] <- "100.0"
 nodups$CP_ChstGth_cm[nodups$KI_Known_ID == "BHS_1490"] <- "101.8"
+nodups$CP_ChstGth_cm[nodups$KI_Known_ID == "BHS_1492"] <- "105.0"
 nodups$CP_ChstGth_cm[nodups$KI_Known_ID == "BHS_1493"] <- "111.0"
 nodups$CP_ChstGth_cm[nodups$KI_Known_ID == "BHS_1494"] <- "104.0"
 nodups$CP_ChstGth_cm[nodups$KI_Known_ID == "BHS_1563"] <- "107.2"
@@ -162,8 +167,10 @@ as.numeric(nodups$CP_ChstGth_cm)
 
 #WEIGHT - this is unadjusted, raw weight (no tar)b/c the vast majority of the entries do not have a tar weight or a net weight.
 as.character(nodups$CP_Weight..kg.)
+nodups$CP_Weight..kg.[nodups$KI_Known_ID == "BHS_1420"] <- "96.5"
 nodups$CP_Weight..kg.[nodups$KI_Known_ID == "BHS_1428"] <- "63.0"
 nodups$CP_Weight..kg.[nodups$KI_Known_ID == "BHS_1490"] <- "82.0"
+nodups$CP_Weight..kg.[nodups$KI_Known_ID == "BHS_1492"] <- "88.4"
 nodups$CP_Weight..kg.[nodups$KI_Known_ID == "BHS_1493"] <- "87.4"
 nodups$CP_Weight..kg.[nodups$KI_Known_ID == "BHS_1494"] <- "64.6"
 nodups$CP_Weight..kg.[nodups$KI_Known_ID == "BHS_1563"] <- "89.8"
@@ -192,28 +199,60 @@ nodups$CP_Weight..kg.[nodups$KI_Known_ID == "BHS_1738"] <- "44.2"
 nodups$CP_Weight..kg.[nodups$KI_Known_ID == "BHS_1739"] <- "71.8"
 as.numeric(nodups$CP_Weight..kg.)
 
+# AGE AT TIME OF CAPTURE:
+as.character(nodups$CP_AgeYears)
+nodups$CP_AgeYears[nodups$KI_Known_ID == "BHS_1420"] <- "6"
+nodups$CP_AgeYears[nodups$KI_Known_ID == "BHS_1428"] <- "3"
+nodups$CP_AgeYears[nodups$KI_Known_ID == "BHS_1490"] <- "7"
+nodups$CP_AgeYears[nodups$KI_Known_ID == "BHS_1492"] <- "8"
+nodups$CP_AgeYears[nodups$KI_Known_ID == "BHS_1493"] <- "7"
+nodups$CP_AgeYears[nodups$KI_Known_ID == "BHS_1494"] <- "4"
+nodups$CP_AgeYears[nodups$KI_Known_ID == "BHS_1563"] <- "4"
+nodups$CP_AgeYears[nodups$KI_Known_ID == "BHS_1565"] <- "4"
+nodups$CP_AgeYears[nodups$KI_Known_ID == "BHS_1574"] <- "10"
+nodups$CP_AgeYears[nodups$KI_Known_ID == "BHS_1575"] <- "5"
+nodups$CP_AgeYears[nodups$KI_Known_ID == "BHS_1576"] <- "8"
+nodups$CP_AgeYears[nodups$KI_Known_ID == "BHS_1577"] <- "5"
+nodups$CP_AgeYears[nodups$KI_Known_ID == "BHS_1581"] <- "5"
+nodups$CP_AgeYears[nodups$KI_Known_ID == "BHS_1582"] <- "5"
+nodups$CP_AgeYears[nodups$KI_Known_ID == "BHS_1583"] <- "6"
+nodups$CP_AgeYears[nodups$KI_Known_ID == "BHS_1587"] <- "6"
+nodups$CP_AgeYears[nodups$KI_Known_ID == "BHS_1592"] <- "5"
+nodups$CP_AgeYears[nodups$KI_Known_ID == "BHS_1594"] <- "7"
+nodups$CP_AgeYears[nodups$KI_Known_ID == "BHS_1682"] <- "3"
+nodups$CP_AgeYears[nodups$KI_Known_ID == "BHS_1683"] <- "3"
+nodups$CP_AgeYears[nodups$KI_Known_ID == "BHS_1684"] <- "12"
+nodups$CP_AgeYears[nodups$KI_Known_ID == "BHS_1689"] <- "9"
+nodups$CP_AgeYears[nodups$KI_Known_ID == "BHS_1713"] <- "6"
+nodups$CP_AgeYears[nodups$KI_Known_ID == "BHS_1730"] <- "4"
+nodups$CP_AgeYears[nodups$KI_Known_ID == "BHS_1731"] <- "8"
+nodups$CP_AgeYears[nodups$KI_Known_ID == "BHS_1733"] <- "8"
+nodups$CP_AgeYears[nodups$KI_Known_ID == "BHS_1734"] <- "6"
+nodups$CP_AgeYears[nodups$KI_Known_ID == "BHS_1736"] <- "2"
+nodups$CP_AgeYears[nodups$KI_Known_ID == "BHS_1738"] <- "1"
+nodups$CP_AgeYears[nodups$KI_Known_ID == "BHS_1739"] <- "4"
+as.integer(nodups$CP_AgeYears)
+
 
 library(tidyverse)
 renodups <- distinct(nodups)
 table(duplicated(renodups))
 table(duplicated(renodups$DateObsTimeIDwaterspecific))
-View(duplicated(renodups$DateObsTimeIDwaterspecific))
-
-nodups <- distinct(threedf)
-table(duplicated(nodups))
-table(duplicated(nodups$DateObsTimeIDwaterspecific))
-View(duplicated($DateObsTimeIDwaterspecific))
-
-
-
-          View(missmeasures)
-  nodups[nodups$CP_BdyLgth_cm == "NA"]
-nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == "BHS_1489"] <- ""
-
-nodups$KI_Sex[nodups$DateObsTimeIDwaterspecific == "20190613BHS_14899:16NaanNA"] <- "F"
+# Before Age Years, 177 duplicates.
+# Down to 80 duplicates after Age Years fixed.
+# Now down to 54 duplicates.
+# No more duplicates! Yay!
+# View(duplicated(renodups$DateObsTimeIDwaterspecific))
 
 
 
+
+
+ #         View(missmeasures)
+#  nodups[nodups$CP_BdyLgth_cm == "NA"]
+# nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == "BHS_1489"] <- ""
+
+# nodups$KI_Sex[nodups$DateObsTimeIDwaterspecific == "20190613BHS_14899:16NaanNA"] <- "F"
 
 
 
@@ -223,7 +262,10 @@ nodups$KI_Sex[nodups$DateObsTimeIDwaterspecific == "20190613BHS_14899:16NaanNA"]
 
 
 
-as.factor(nodups$KI_Known_ID)
+
+
+
+# as.factor(nodups$KI_Known_ID)
 # df[df$Name == "John_Smith" & df$State == "WI",1] <- "John_Smith1"
 # nodups[nodups$DateObsTimeIDwaterspecific == "20190613BHS_14899:16NaanNA", is.na(nodups$KI_Sex) == TRUE] <- "F" 
 
@@ -232,17 +274,17 @@ as.factor(nodups$KI_Known_ID)
 # this changes every KI_Sex to female - wrong!
 # if(nodups$DateObsTimeIDwaterspecific == "20190613BHS_14899:16NaanNA"){nodups$KI_Sex <- "F"}
 
-View()
+# View()
 
-as.character(nodups$KI_Sex)
-nodups$KI_Sex[nodups$DateObsTimeIDwaterspecific == "	20190613BHS_14899:16NaanNA"] <- "F"
+# as.character(nodups$KI_Sex)
+# nodups$KI_Sex[nodups$DateObsTimeIDwaterspecific == "	20190613BHS_14899:16NaanNA"] <- "F"
 
 # KI_DateObs
 
 # THIS WILL BE WHERE YOU FIX ALL OF THESE THINGS.
 
-table(duplicated(nodups))
-table(duplicated(nodups$DateObsTimeIDwaterspecific))
+# table(duplicated(nodups))
+# table(duplicated(nodups$DateObsTimeIDwaterspecific))
 
 ```
 
