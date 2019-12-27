@@ -80,7 +80,7 @@ Nopah:
 2019-07-16 19:03:00 - 2019-07-29 15:06:00
 2019-07-29 19:55:00 - 2019-08-07 14:49:00
 
-Also due to the lack of coverage in the Castle Piutes, I limited the analysis to bighorn that located in the mine area (1730, 1733). I also cut the time period of 1731, who located throughout the range, to time periods when he was found within the mine area. 1731 was not included in the vistation analysis because of this.
+Also due to the lack of coverage in the Castle Piutes, I limited the analysis to bighorn that located in the mine area (1730, 1733, 1734). I therefore did not include 1731 and 1732 because they were only located and seen in the Paiute area. I also will include 1728 in the visitation analyses, who does not have a working GPS collar.
 
 Also have to figure out South Nopah vs. rest of Nopahs
 

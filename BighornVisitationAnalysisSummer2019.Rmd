@@ -56,15 +56,22 @@ A List of everything that needs to be fixed:
 - change the data type of every column to the correct type
 - at some point, subset the KI_Known_ID for the sheep I am interested in for the GPS analysis
 - input the missing KI_Sex cells - DONE
-- input the missing KI_DG_FirstPhotoTime and KI_DG_LastPhotoTime times, and the missing Ki_DG_SheepDrank (there's a ton of these - Ashley???)
+- input the missing KI_DG_FirstPhotoTime and KI_DG_LastPhotoTime times, and the missing Ki_DG_SheepDrank (there's a ton of these - Ashley???)- Don't need to - these are the other sheep
 - check that all of the comp numbers are numbers and are appropriate. And that there are no blanks and NAs.
-- If possible, fill in the weights, body lengths, and chest girths that are missing.
--KI_DatObsT_ID has 1858 levels, but there are 2062 entries
-- GO_DatObsTime and KI_DatObsT_ID are wrong for some entries. Need to remake in order to use!
-- put in age for some of them
-- also missing chest girth, body length, weight for some (BHS_1492)
+- If possible, fill in the weights, body lengths, and chest girths that are missing.- DONE
+-KI_DatObsT_ID has 1858 levels, but there are 2062 entries - DONE
+- GO_DatObsTime and KI_DatObsT_ID are wrong for some entries. Need to remake in order to use!- DONE
+- put in age for some of them- DONE
+- also missing chest girth, body length, weight for some (BHS_1492)- DONE
 
-In an attempt to figure out why there was still duplicated rows, I made a column with everything needed to make each observation individually identifiable. I discovered that some rows did not have the capture data needed, and that this was what was making the duplicated rows not seen as duplicated. I then worked to input the missing information - weight, body length, and chest girth.
+- subset to the correct mtn ranges
+- figure out the replication for the ones that have multiple visits in 1 observation
+- sheep drank has 53 blanks and 1 problematic Y
+- Cat 2 has a NA that probs should be 0?
+
+
+
+In an attempt to figure out why there was still duplicated rows, I made a column with everything needed to make each observation individually identifiable. I discovered that some rows did not have the capture data needed, and that this was what was making the duplicated rows not seen as duplicated. I then worked to input the missing information - weight, body length, and chest girth. I subset by the distinct rows and this equaled the previous number of individually identifiable observations. 
 
 
 ```{r}
@@ -79,7 +86,6 @@ nodups$KI_Sex[nodups$KI_Known_ID == "BHS_1489" | nodups$KI_Known_ID == "BHS_1596
 nodups$KI_Sex[nodups$KI_Known_ID == "BHS_1494" | nodups$KI_Known_ID == "BHS_1684" | nodups$KI_Known_ID == "BHS_1683" | nodups$KI_Known_ID == "BHS_1682" | nodups$KI_Known_ID == "BHS_1493" | nodups$KI_Known_ID == "BHS_1591" | nodups$KI_Known_ID == "BHS_1590" | nodups$KI_Known_ID == "BHS_1420" | nodups$KI_Known_ID == "1728" | nodups$KI_Known_ID == "BHS_1739"] <- "M"
 
 # table(nodups$KI_Known_ID) - going through the individual sheep to check and make sure their weight, body length, and chest girth are filled out correctly.
-# nrows()
 # table(nodups$KI_Known_ID[!is.na()])
 
 # LIST OF SHEEP THAT HAVE MEASUREMENTS (* sheep that had different measurements?, ^ sheep that I am checking measurements with CDFW): BHS_1420^, BHS_1428*, BHS_1490*, BHS_1492^, 1493*, 1494*, 1563, 1565, 1574, 1575, 1576, 1577, 1581, 1582, 1583, 1587, 1592, 1594, 1682, 1683, 1684, 1689, 1713, 1730, 1731, 1733, 1734, 1736, 1738, 1739 
@@ -244,52 +250,54 @@ table(duplicated(renodups$DateObsTimeIDwaterspecific))
 # No more duplicates! Yay!
 # View(duplicated(renodups$DateObsTimeIDwaterspecific))
 
-
-
-
-
- #         View(missmeasures)
-#  nodups[nodups$CP_BdyLgth_cm == "NA"]
-# nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == "BHS_1489"] <- ""
-
-# nodups$KI_Sex[nodups$DateObsTimeIDwaterspecific == "20190613BHS_14899:16NaanNA"] <- "F"
-
-
-
-
-
-
-
-
-
-
-
-
-# as.factor(nodups$KI_Known_ID)
-# df[df$Name == "John_Smith" & df$State == "WI",1] <- "John_Smith1"
-# nodups[nodups$DateObsTimeIDwaterspecific == "20190613BHS_14899:16NaanNA", is.na(nodups$KI_Sex) == TRUE] <- "F" 
-
-
-
-# this changes every KI_Sex to female - wrong!
-# if(nodups$DateObsTimeIDwaterspecific == "20190613BHS_14899:16NaanNA"){nodups$KI_Sex <- "F"}
-
-# View()
-
-# as.character(nodups$KI_Sex)
-# nodups$KI_Sex[nodups$DateObsTimeIDwaterspecific == "	20190613BHS_14899:16NaanNA"] <- "F"
-
-# KI_DateObs
-
-# THIS WILL BE WHERE YOU FIX ALL OF THESE THINGS.
-
-# table(duplicated(nodups))
-# table(duplicated(nodups$DateObsTimeIDwaterspecific))
-
 ```
+Then, just to be sure, I cut the visitation data to the time periods when all cameras were running. This data should have already been cut, but I know that Ashley was not super meticulous in only going through the photos in the time period when all of the cameras in the range were running, so I feel like this is a good check.
+
+At this time, I also checked that the GO_WaterSource and GO_RangeCode made sense for each range. I changed two entries that were actually Nopah but mistakenly CMPR.
+
 
 
 ``` {r}
+
+# all renodups$GO_Time_HHMM are numbers, though it is possible that some of them have a bad extra space
+as.character(renodups$GO_Date, renodups$GO_Time_HHMM)
+renodups$DateTime <- paste(renodups$GO_Date, renodups$GO_Time_HHMM, sep = " ")
+library(lubridate)
+renodups$DateTime <- strptime(renodups$DateTime, "%Y%m%d %H:%M")
+renodups$DateTimect <- as.POSIXct(renodups$DateTime, tz = "America/Los_Angeles", format = "%Y%m%d %H:%M")
+
+Marbobs <- renodups[renodups$GO_RangeCode == "Marb", ]
+Marbcutobs <- Marbobs[(Marbobs$DateTimect >= as.POSIXct("2019-05-17 10:49:00") & Marbobs$DateTimect <= as.POSIXct("2019-05-25 00:00:00")) | (Marbobs$DateTimect >= as.POSIXct("2019-06-04 20:00:00") & Marbobs$DateTimect <= as.POSIXct("2019-06-12 13:32:00")) | (Marbobs$DateTimect >= as.POSIXct("2019-06-18 17:19:00") & Marbobs$DateTimect <= as.POSIXct("2019-06-23 00:00:00"))| (Marbobs$DateTimect >= as.POSIXct("2019-06-25 14:49:00") & Marbobs$DateTimect <= as.POSIXct("2019-06-30 10:46:00"))| (Marbobs$DateTimect >= as.POSIXct("2019-07-10 08:45:00") & Marbobs$DateTimect <= as.POSIXct("2019-07-13 23:00:18")) | (Marbobs$DateTimect >= as.POSIXct("2019-07-17 11:46:00") & Marbobs$DateTimect <= as.POSIXct("2019-07-25 10:30:00")) | (Marbobs$DateTimect >= as.POSIXct("2019-07-31 20:52:00") & Marbobs$DateTimect <= as.POSIXct("2019-08-04 13:13:03")) | (Marbobs$DateTimect >= as.POSIXct("2019-08-06 12:03:00") & Marbobs$DateTimect <= as.POSIXct("2019-08-10 12:03:23")), ]
+
+BrsSobs <- renodups[renodups$GO_RangeCode == "BrsS", ]
+BrsScutobs <- BrsSobs[(BrsSobs$DateTimect >= as.POSIXct("2019-06-04 15:04:00") & BrsSobs$DateTimect <= as.POSIXct("2019-06-16 08:27:00")) | (BrsSobs$DateTimect >= as.POSIXct("2019-06-18 17:36:00") & BrsSobs$DateTimect <= as.POSIXct("2019-06-25 16:25:00")) | (BrsSobs$DateTimect >= as.POSIXct("2019-06-25 17:05:00") & BrsSobs$DateTimect <= as.POSIXct("2019-07-29 10:36:00")) | (BrsSobs$DateTimect >= as.POSIXct("2019-08-01 14:32:00") & BrsSobs$DateTimect <= as.POSIXct("2019-08-12 11:13:00")),]
+
+# I found a couple of entries that need to be fixed.
+as.character(renodups$GO_RangeCode)
+renodups$GO_RangeCode[renodups$DateObsTimeIDwaterspecific == "20190718BHS_174112:46NopaNA"] <- "Nopa"
+renodups$GO_RangeCode[renodups$DateObsTimeIDwaterspecific == "20190722BHS_17405:26NopaNA"] <- "Nopa"
+as.factor(renodups$GO_RangeCode)
+
+cmprobs <- renodups[renodups$GO_RangeCode == "CMPR", ]
+# Limiting the visitations to those in the mine area due to the lack of coverage of the southern stream thing. This is the same thing as removing 1731 and 1732 from the dataset.
+
+
+
+cmprfourhour <- rangeidfourhour[rangeidfourhour$MountainRange == "CMPR", ]
+cmprcutfourhour <- cmprfourhour[(cmprfourhour$DateTimeLocalTestct >= as.POSIXct("2019-05-23 15:48:00") & cmprfourhour$DateTimeLocalTestct <= as.POSIXct("2019-05-31 11:18:00")) | (cmprfourhour$DateTimeLocalTestct >= as.POSIXct("2019-06-20 17:47:00") & cmprfourhour$DateTimeLocalTestct <= as.POSIXct("2019-06-27 02:09:00")) | (cmprfourhour$DateTimeLocalTestct >= as.POSIXct("2019-07-11 18:25:00") & cmprfourhour$DateTimeLocalTestct <= as.POSIXct("2019-07-14 18:28:00")) | (cmprfourhour$DateTimeLocalTestct >= as.POSIXct("2019-07-30 14:30:00") & cmprfourhour$DateTimeLocalTestct <= as.POSIXct("2019-08-03 16:46:00")) | (cmprfourhour$DateTimeLocalTestct >= as.POSIXct("2019-08-05 19:10:00") & cmprfourhour$DateTimeLocalTestct <= as.POSIXct("2019-08-15 07:27:00")),]
+
+
+
+
+rangeidgpsdata$TimeLocal <- as.character(rangeidgpsdata$TimeLocal)
+rangeidgpsdata$DateTimeLocalTest <- rangeidgpsdata$DateTimeLocal
+library(lubridate)
+
+rangeidgpsdata$DateTimeLocalTest <- strptime(rangeidgpsdata$DateTimeLocalTest, "%m/%d/%Y %H:%M")
+rangeidgpsdata$DateTimeLocalTestct <- as.POSIXct(rangeidgpsdata$DateTimeLocalTest, tz = "America/Los_Angeles", format = "%m/%d/%Y %H:%M")
+
+
+
 missmeasures <- nodups[nodups$KI_Known_ID | nodups$CP_Weight..kg. | nodups$CP_BdyLgth_cm | nodups$CP_ChstGth_cm]
 
 # df.expanded <- df[rep(row.names(df), df$freq), 1:2]
