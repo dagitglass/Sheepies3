@@ -63,6 +63,7 @@ A List of everything that needs to be fixed:
 - GO_DatObsTime and KI_DatObsT_ID are wrong for some entries. Need to remake in order to use!- DONE
 - put in age for some of them- DONE
 - also missing chest girth, body length, weight for some (BHS_1492)- DONE
+- Fix ages
 
 - subset to the correct mtn ranges
 - figure out the replication for the ones that have multiple visits in 1 observation
@@ -80,7 +81,6 @@ nodups$DateObsTimeIDwaterspecific <- paste(nodups$GO_Date, nodups$KI_Known_ID, n
 as.character(nodups$KI_Sex)
 as.character(nodups$KI_Known_ID)
 table(nodups$KI_Sex)
-sextofix <- nodups[nodups$KI_Sex == " "]
 nodups$KI_Sex[nodups$KI_Known_ID == "BHS_1489" | nodups$KI_Known_ID == "BHS_1596" | nodups$KI_Known_ID == "BHS_1361" | nodups$KI_Known_ID == "BHS_1357" | nodups$KI_Known_ID == "BHS_1367" | nodups$KI_Known_ID == "BHS_1362" | nodups$KI_Known_ID == "BHS_1584" | nodups$KI_Known_ID == "BHS_1585" | nodups$KI_Known_ID == "BHS_1583" | nodups$KI_Known_ID == "BHS_1582" | nodups$KI_Known_ID == "BHS_1588" | nodups$KI_Known_ID == "BHS_1365" | nodups$KI_Known_ID == "BHS_1574" | nodups$KI_Known_ID == "BHS_1366" | nodups$KI_Known_ID == "BHS_1594" | nodups$KI_Known_ID == "BHS_1577" | nodups$KI_Known_ID == "BHS_1581" | nodups$KI_Known_ID == "BHS_1576" | nodups$KI_Known_ID == "BHS_1416" | nodups$KI_Known_ID == "BHS_1587" | nodups$KI_Known_ID == "BHS_1575" | nodups$KI_Known_ID == "BHS_1592" | nodups$KI_Known_ID == "BHS_1589" | nodups$KI_Known_ID == "BHS_1421" | nodups$KI_Known_ID == "BHS_1740" | nodups$KI_Known_ID == "BHS_1738" | nodups$KI_Known_ID == "BHS_1736" | nodups$KI_Known_ID == "BHS_1734" | nodups$KI_Known_ID == "BHS_1733" | nodups$KI_Known_ID == "BHS_1741"] <- "F"
 
 nodups$KI_Sex[nodups$KI_Known_ID == "BHS_1494" | nodups$KI_Known_ID == "BHS_1684" | nodups$KI_Known_ID == "BHS_1683" | nodups$KI_Known_ID == "BHS_1682" | nodups$KI_Known_ID == "BHS_1493" | nodups$KI_Known_ID == "BHS_1591" | nodups$KI_Known_ID == "BHS_1590" | nodups$KI_Known_ID == "BHS_1420" | nodups$KI_Known_ID == "1728" | nodups$KI_Known_ID == "BHS_1739"] <- "M"
@@ -257,6 +257,8 @@ At this time, I also checked that the GO_WaterSource and GO_RangeCode made sense
 
 
 
+
+
 ``` {r}
 
 # all renodups$GO_Time_HHMM are numbers, though it is possible that some of them have a bad extra space
@@ -280,31 +282,22 @@ as.factor(renodups$GO_RangeCode)
 
 cmprobs <- renodups[renodups$GO_RangeCode == "CMPR", ]
 # Limiting the visitations to those in the mine area due to the lack of coverage of the southern stream thing. This is the same thing as removing 1731 and 1732 from the dataset.
+cmprobs1 <- cmprobs[cmprobs$GO_WaterSource != "Piue", ]
+cmprcutobs <-  cmprobs1[(cmprobs1$DateTimect >= as.POSIXct("2019-05-23 15:48:00") & cmprobs1$DateTimect <= as.POSIXct("2019-05-31 11:18:00")) | (cmprobs1$DateTimect >= as.POSIXct("2019-06-20 17:47:00") & cmprobs1$DateTimect <= as.POSIXct("2019-06-27 02:09:00")) | (cmprobs1$DateTimect >= as.POSIXct("2019-07-11 18:25:00") & cmprobs1$DateTimect <= as.POSIXct("2019-07-14 18:28:00")) | (cmprobs1$DateTimect >= as.POSIXct("2019-07-30 14:30:00") & cmprobs1$DateTimect <= as.POSIXct("2019-08-03 16:46:00")) | (cmprobs1$DateTimect >= as.POSIXct("2019-08-05 19:10:00") & cmprobs1$DateTimect <= as.POSIXct("2019-08-15 07:27:00")),]
 
+nopaobs <- renodups[renodups$GO_RangeCode == "Nopa", ]
+nopacutobs <- nopaobs[(nopaobs$DateTimect >= as.POSIXct("2019-06-06 09:18:00") & nopaobs$DateTimect <= as.POSIXct("2019-06-13 11:04:00")) | (nopaobs$DateTimect >= as.POSIXct("2019-06-25 09:00:00") & nopaobs$DateTimect <= as.POSIXct("2019-07-08 12:35:00")) | (nopaobs$DateTimect >= as.POSIXct("2019-07-16 19:03:00") & nopaobs$DateTimect <= as.POSIXct("2019-07-29 15:06:00")) | (nopaobs$DateTimect >= as.POSIXct("2019-07-29 19:55:00") & nopaobs$DateTimect <= as.POSIXct("2019-08-07 14:49:00")),]
 
-
-cmprfourhour <- rangeidfourhour[rangeidfourhour$MountainRange == "CMPR", ]
-cmprcutfourhour <- cmprfourhour[(cmprfourhour$DateTimeLocalTestct >= as.POSIXct("2019-05-23 15:48:00") & cmprfourhour$DateTimeLocalTestct <= as.POSIXct("2019-05-31 11:18:00")) | (cmprfourhour$DateTimeLocalTestct >= as.POSIXct("2019-06-20 17:47:00") & cmprfourhour$DateTimeLocalTestct <= as.POSIXct("2019-06-27 02:09:00")) | (cmprfourhour$DateTimeLocalTestct >= as.POSIXct("2019-07-11 18:25:00") & cmprfourhour$DateTimeLocalTestct <= as.POSIXct("2019-07-14 18:28:00")) | (cmprfourhour$DateTimeLocalTestct >= as.POSIXct("2019-07-30 14:30:00") & cmprfourhour$DateTimeLocalTestct <= as.POSIXct("2019-08-03 16:46:00")) | (cmprfourhour$DateTimeLocalTestct >= as.POSIXct("2019-08-05 19:10:00") & cmprfourhour$DateTimeLocalTestct <= as.POSIXct("2019-08-15 07:27:00")),]
-
-
-
-
-rangeidgpsdata$TimeLocal <- as.character(rangeidgpsdata$TimeLocal)
-rangeidgpsdata$DateTimeLocalTest <- rangeidgpsdata$DateTimeLocal
-library(lubridate)
-
-rangeidgpsdata$DateTimeLocalTest <- strptime(rangeidgpsdata$DateTimeLocalTest, "%m/%d/%Y %H:%M")
-rangeidgpsdata$DateTimeLocalTestct <- as.POSIXct(rangeidgpsdata$DateTimeLocalTest, tz = "America/Los_Angeles", format = "%m/%d/%Y %H:%M")
-
-
-
-missmeasures <- nodups[nodups$KI_Known_ID | nodups$CP_Weight..kg. | nodups$CP_BdyLgth_cm | nodups$CP_ChstGth_cm]
-
-# df.expanded <- df[rep(row.names(df), df$freq), 1:2]
-
+allcut <- rbind(Marbcutobs, BrsScutobs, cmprcutobs, nopacutobs)
+write.xlsx(allcut, file = "C:\\Users\\Danielle Glass\\Documents\\RWorkingDirectory\\Sheepies2\\Sheepies2.xlsx", sheetName = "allcutVisitationData122719")
 ```
 
 
+
+```{r}
+
+# df.expanded <- df[rep(row.names(df), df$freq), 1:2]
+```
 
 
 ```{r}
