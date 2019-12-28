@@ -289,7 +289,7 @@ nopaobs <- renodups[renodups$GO_RangeCode == "Nopa", ]
 nopacutobs <- nopaobs[(nopaobs$DateTimect >= as.POSIXct("2019-06-06 09:18:00") & nopaobs$DateTimect <= as.POSIXct("2019-06-13 11:04:00")) | (nopaobs$DateTimect >= as.POSIXct("2019-06-25 09:00:00") & nopaobs$DateTimect <= as.POSIXct("2019-07-08 12:35:00")) | (nopaobs$DateTimect >= as.POSIXct("2019-07-16 19:03:00") & nopaobs$DateTimect <= as.POSIXct("2019-07-29 15:06:00")) | (nopaobs$DateTimect >= as.POSIXct("2019-07-29 19:55:00") & nopaobs$DateTimect <= as.POSIXct("2019-08-07 14:49:00")),]
 
 allcut <- rbind(Marbcutobs, BrsScutobs, cmprcutobs, nopacutobs)
-write.xlsx(allcut, file = "C:\\Users\\Danielle Glass\\Documents\\RWorkingDirectory\\Sheepies2\\Sheepies2.xlsx", sheetName = "allcutVisitationData122719")
+write.xlsx(allcut, file = "allcutVisitationData122719.xlsx")
 ```
 
 
