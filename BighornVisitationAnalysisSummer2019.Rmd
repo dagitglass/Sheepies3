@@ -303,16 +303,23 @@ allcut <- rbind(Marbcutobs, BrsScutobs, cmprcutobs, nopacutobs)
 
 marballsheepvisitsday <- as.data.frame(table(Marbcutobs$KI_Known_ID, Marbcutobs$GO_Date))
 View(marballsheepvisitsday)
-as.character(marballsheepvisitsday$Freq)
-marballsheepvisitsday$Freq[marballsheepvisitsday$Freq == "2"] <- "1"
-marballsheepvisitsday$Freq[marballsheepvisitsday$Freq == "3"] <- "1"
-marballsheepvisitsday$Freq[marballsheepvisitsday$Freq == "4"] <- "1"
-marballsheepvisitsday$Freq[marballsheepvisitsday$Freq == "5"] <- "1"
-as.integer(marballsheepvisitsday$Freq)
-
-
+marballsheepvisitsday$Freq[marballsheepvisitsday$Freq == 2] <- 1
+marballsheepvisitsday$Freq[marballsheepvisitsday$Freq == 3] <- 1
+marballsheepvisitsday$Freq[marballsheepvisitsday$Freq == 4] <- 1
+marballsheepvisitsday$Freq[marballsheepvisitsday$Freq == 5] <- 1
 marbindsheepvisitperday <- as.data.frame(tapply(marballsheepvisitsday$Freq, list(marballsheepvisitsday$Var2), sum))
 View(marbindsheepvisitperday)
+marbindsheepvisitperday <- cbind(rownames(marbindsheepvisitperday), data.frame(marbindsheepvisitperday, row.names = NULL))
+
+
+
+
+
+
+
+
+
+
 
 # aggregate(marballsheepvisitsday$Freq, by = marballsheepvisitsday$Var2, FUN = "sum")
 # table(sum(marballsheepvisitsday$Freq))
