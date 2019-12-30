@@ -318,19 +318,13 @@ marbindsheepvisitperday <- marbindsheepvisitperday[(marbindsheepvisitperday$`row
 
 marbdatena <- read.csv("TotalSheepVisitationPerDayMarbNAs122919.csv", header = TRUE, sep = ",")
 marbdatena$tapply.marballsheepvisitsday.Freq..list.marballsheepvisitsday.Var2...[marbdatena$tapply.marballsheepvisitsday.Freq..list.marballsheepvisitsday.Var2... == "#N/A"] <- NA
-names(marbdatena)[names(marbdatena) == "X.rownames.marbindsheepvisitperday.."] <- "`rownames(marbindsheepvisitperday)`"
-#RIGHT HERE
-marbdatena$datenum <- marbdatena$`rownames(marbindsheepvisitperday)`
-as.character(marbdatena$datenum)
+names(marbdatena)[names(marbdatena) == "rownames.marbindsheepvisitperday."] <- "rownames(marbindsheepvisitperday)"
+marbdatena$datenum <- as.Date(marbdatena$datenum, format = "%Y-%m-%d")
+marbdatena$datenum <- as.numeric(marbdatena$datenum)
+marbindsheepvisitperday1 <- rbind(marbindsheepvisitperday, marbdatena)
+marbindsheepvisitperday1$tapply.marballsheepvisitsday.Freq..list.marballsheepvisitsday.Var2... <- as.integer(marbindsheepvisitperday1$tapply.marballsheepvisitsday.Freq..list.marballsheepvisitsday.Var2...)
 
-# marbindsheepvisitperday$datenum <- as.character(marbindsheepvisitperday$`rownames(marbindsheepvisitperday)`)
-# marbindsheepvisitperday$datenum <- as.Date(marbindsheepvisitperday$`rownames(marbindsheepvisitperday)`, format = "%Y-%m-%d")
-# marbindsheepvisitperday$datenum <- as.numeric(marbindsheepvisitperday$datenum)
-
-marbindsheepvisitperday1 <- merge()
-
-
-barplot(tapply.marballsheepvisitsday.Freq..list.marballsheepvisitsday.Var2... ~ datenum, data = marbindsheepvisitperday, main = "Marbles Number of Individual Sheep Coming to Water by Day", xlab = "Date", ylab = "Number of Individual Sheep")
+barplot(tapply.marballsheepvisitsday.Freq..list.marballsheepvisitsday.Var2... ~ datenum, data = marbindsheepvisitperday1, main = "Marbles Number of Individual Sheep Coming to Water by Day", xlab = "Date", ylab = "Number of Individual Sheep")
 
 
 
