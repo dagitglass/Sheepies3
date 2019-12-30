@@ -316,8 +316,18 @@ marbindsheepvisitperday$datenum <- as.numeric(marbindsheepvisitperday$datenum)
 #Cutting the rows where the day wasn't complete. Inputting NA rows for uncovered days.
 marbindsheepvisitperday <- marbindsheepvisitperday[(marbindsheepvisitperday$`rownames(marbindsheepvisitperday)` != "2019-06-12") & (marbindsheepvisitperday$`rownames(marbindsheepvisitperday)` != "2019-06-18") & (marbindsheepvisitperday$`rownames(marbindsheepvisitperday)` != "2019-06-30") & (marbindsheepvisitperday$`rownames(marbindsheepvisitperday)` != "2019-07-10") & (marbindsheepvisitperday$`rownames(marbindsheepvisitperday)` != "2019-07-17") & (marbindsheepvisitperday$`rownames(marbindsheepvisitperday)` != "2019-07-25") & (marbindsheepvisitperday$`rownames(marbindsheepvisitperday)` != "2019-08-04") & (marbindsheepvisitperday$`rownames(marbindsheepvisitperday)` != "2019-08-06") & (marbindsheepvisitperday$`rownames(marbindsheepvisitperday)` != "2019-08-10"), ]
 
+marbdatena <- read.csv("TotalSheepVisitationPerDayMarbNAs122919.csv", header = TRUE, sep = ",")
+marbdatena$tapply.marballsheepvisitsday.Freq..list.marballsheepvisitsday.Var2...[marbdatena$tapply.marballsheepvisitsday.Freq..list.marballsheepvisitsday.Var2... == "#N/A"] <- NA
+names(marbdatena)[names(marbdatena) == "X.rownames.marbindsheepvisitperday.."] <- "`rownames(marbindsheepvisitperday)`"
+#RIGHT HERE
+marbdatena$datenum <- marbdatena$`rownames(marbindsheepvisitperday)`
+as.character(marbdatena$datenum)
 
+# marbindsheepvisitperday$datenum <- as.character(marbindsheepvisitperday$`rownames(marbindsheepvisitperday)`)
+# marbindsheepvisitperday$datenum <- as.Date(marbindsheepvisitperday$`rownames(marbindsheepvisitperday)`, format = "%Y-%m-%d")
+# marbindsheepvisitperday$datenum <- as.numeric(marbindsheepvisitperday$datenum)
 
+marbindsheepvisitperday1 <- merge()
 
 
 barplot(tapply.marballsheepvisitsday.Freq..list.marballsheepvisitsday.Var2... ~ datenum, data = marbindsheepvisitperday, main = "Marbles Number of Individual Sheep Coming to Water by Day", xlab = "Date", ylab = "Number of Individual Sheep")
