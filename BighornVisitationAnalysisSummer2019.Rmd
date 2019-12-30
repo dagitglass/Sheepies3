@@ -261,7 +261,6 @@ At this time, I also checked that the GO_WaterSource and GO_RangeCode made sense
 
 ``` {r}
 
-# all renodups$GO_Time_HHMM are numbers, though it is possible that some of them have a bad extra space
 as.character(renodups$GO_Date, renodups$GO_Time_HHMM)
 renodups$DateTime <- paste(renodups$GO_Date, renodups$GO_Time_HHMM, sep = " ")
 library(lubridate)
@@ -273,7 +272,7 @@ renodups$GO_Date <- strptime(renodups$GO_Date, "%Y%m%d")
 renodups$GO_Date <- as.POSIXct(renodups$GO_Date, tz = "America/Los_Angeles", format = "%Y%m%d")
 
 Marbobs <- renodups[renodups$GO_RangeCode == "Marb", ]
-Marbcutobs <- Marbobs[(Marbobs$DateTimect >= as.POSIXct("2019-05-17 10:49:00") & Marbobs$DateTimect <= as.POSIXct("2019-05-25 00:00:00")) | (Marbobs$DateTimect >= as.POSIXct("2019-06-04 20:00:00") & Marbobs$DateTimect <= as.POSIXct("2019-06-12 13:32:00")) | (Marbobs$DateTimect >= as.POSIXct("2019-06-18 17:19:00") & Marbobs$DateTimect <= as.POSIXct("2019-06-23 00:00:00"))| (Marbobs$DateTimect >= as.POSIXct("2019-06-25 14:49:00") & Marbobs$DateTimect <= as.POSIXct("2019-06-30 10:46:00"))| (Marbobs$DateTimect >= as.POSIXct("2019-07-10 08:45:00") & Marbobs$DateTimect <= as.POSIXct("2019-07-13 23:00:18")) | (Marbobs$DateTimect >= as.POSIXct("2019-07-17 11:46:00") & Marbobs$DateTimect <= as.POSIXct("2019-07-25 10:30:00")) | (Marbobs$DateTimect >= as.POSIXct("2019-07-31 20:52:00") & Marbobs$DateTimect <= as.POSIXct("2019-08-04 13:13:03")) | (Marbobs$DateTimect >= as.POSIXct("2019-08-06 12:03:00") & Marbobs$DateTimect <= as.POSIXct("2019-08-10 12:03:23")), ]
+Marbcutobs <- Marbobs[(Marbobs$DateTimect >= as.POSIXct("2019-05-17 10:49:00") & Marbobs$DateTimect <= as.POSIXct("2019-05-24 23:59:59")) | (Marbobs$DateTimect >= as.POSIXct("2019-06-04 20:00:00") & Marbobs$DateTimect <= as.POSIXct("2019-06-12 13:32:00")) | (Marbobs$DateTimect >= as.POSIXct("2019-06-18 17:19:00") & Marbobs$DateTimect <= as.POSIXct("2019-06-22 23:59:59"))| (Marbobs$DateTimect >= as.POSIXct("2019-06-25 14:49:00") & Marbobs$DateTimect <= as.POSIXct("2019-06-30 10:46:00"))| (Marbobs$DateTimect >= as.POSIXct("2019-07-10 08:45:00") & Marbobs$DateTimect <= as.POSIXct("2019-07-13 23:00:18")) | (Marbobs$DateTimect >= as.POSIXct("2019-07-17 11:46:00") & Marbobs$DateTimect <= as.POSIXct("2019-07-25 10:30:00")) | (Marbobs$DateTimect >= as.POSIXct("2019-07-31 20:52:00") & Marbobs$DateTimect <= as.POSIXct("2019-08-04 13:13:03")) | (Marbobs$DateTimect >= as.POSIXct("2019-08-06 12:03:00") & Marbobs$DateTimect <= as.POSIXct("2019-08-10 12:03:23")), ]
 
 BrsSobs <- renodups[renodups$GO_RangeCode == "BrsS", ]
 BrsScutobs <- BrsSobs[(BrsSobs$DateTimect >= as.POSIXct("2019-06-04 15:04:00") & BrsSobs$DateTimect <= as.POSIXct("2019-06-16 08:27:00")) | (BrsSobs$DateTimect >= as.POSIXct("2019-06-18 17:36:00") & BrsSobs$DateTimect <= as.POSIXct("2019-06-25 16:25:00")) | (BrsSobs$DateTimect >= as.POSIXct("2019-06-25 17:05:00") & BrsSobs$DateTimect <= as.POSIXct("2019-07-29 10:36:00")) | (BrsSobs$DateTimect >= as.POSIXct("2019-08-01 14:32:00") & BrsSobs$DateTimect <= as.POSIXct("2019-08-12 11:13:00")),]
@@ -313,6 +312,13 @@ marbindsheepvisitperday <- cbind(rownames(marbindsheepvisitperday), data.frame(m
 marbindsheepvisitperday$datenum <- as.character(marbindsheepvisitperday$`rownames(marbindsheepvisitperday)`)
 marbindsheepvisitperday$datenum <- as.Date(marbindsheepvisitperday$`rownames(marbindsheepvisitperday)`, format = "%Y-%m-%d")
 marbindsheepvisitperday$datenum <- as.numeric(marbindsheepvisitperday$datenum)
+
+#Cutting the rows where the day wasn't complete. Inputting NA rows for uncovered days.
+marbindsheepvisitperday <- marbindsheepvisitperday[(marbindsheepvisitperday$`rownames(marbindsheepvisitperday)` != "2019-06-12") & (marbindsheepvisitperday$`rownames(marbindsheepvisitperday)` != "2019-06-18") & (marbindsheepvisitperday$`rownames(marbindsheepvisitperday)` != "2019-06-30") & (marbindsheepvisitperday$`rownames(marbindsheepvisitperday)` != "2019-07-10") & (marbindsheepvisitperday$`rownames(marbindsheepvisitperday)` != "2019-07-17") & (marbindsheepvisitperday$`rownames(marbindsheepvisitperday)` != "2019-07-25") & (marbindsheepvisitperday$`rownames(marbindsheepvisitperday)` != "2019-08-04") & (marbindsheepvisitperday$`rownames(marbindsheepvisitperday)` != "2019-08-06") & (marbindsheepvisitperday$`rownames(marbindsheepvisitperday)` != "2019-08-10"), ]
+
+
+
+
 
 barplot(tapply.marballsheepvisitsday.Freq..list.marballsheepvisitsday.Var2... ~ datenum, data = marbindsheepvisitperday, main = "Marbles Number of Individual Sheep Coming to Water by Day", xlab = "Date", ylab = "Number of Individual Sheep")
 
