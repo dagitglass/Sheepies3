@@ -294,11 +294,11 @@ nopacutobs <- nopaobs[(nopaobs$DateTimect >= as.POSIXct("2019-06-06 09:18:00") &
 allcut <- rbind(Marbcutobs, BrsScutobs, cmprcutobs, nopacutobs)
 # write.xlsx(allcut, file = "allcutVisitationData122719.xlsx")
 ```
-
+I then created figures of the number of individual sheep coming into water by day. When examining the data, I noticed that the days at the beginning and end of each period when all of the cameras were running had a lower number of sheep coming in than the rest of the days. This is easily attributable to the cameras being up and running for only part of these days. As such, I cut out these days from my dataset (which probably decreased by dataset by about ~20%). For the Marbles, I did leave in one day when the cameras were only not running between 11 pm and 12 am. I figured that this is acceptable given the extreme bias of sheep for diurnality, which was confirmed when going through the camera photos. I will need to limit other analyses to these time periods given the incomplete data on the start/end days.
 
 
 ```{r}
-# 5/17 - 8/10
+# Number of Individual Sheep Coming into Water by Day
 
 marballsheepvisitsday <- as.data.frame(table(Marbcutobs$KI_Known_ID, Marbcutobs$GO_Date))
 View(marballsheepvisitsday)
@@ -336,24 +336,36 @@ ggplot(data = marbindsheepvisitperday1, aes(x = `rownames(marbindsheepvisitperda
 
 
 
-
-plot(jitter ~ date, data = mergedvisit, type = "p", col = mergedvisit$sheep, main = "Nopah", xlab = "Date", ylab = "Visitations of Surface Water per Day")
-
-
-
-
-
-
-# aggregate(marballsheepvisitsday$Freq, by = marballsheepvisitsday$Var2, FUN = "sum")
-# table(sum(marballsheepvisitsday$Freq))
-
-# head(table(unique(Marbcutobs$KI_Known_ID), Marbcutobs$GO_Date))
-(count(unique(Marbcutobs$KI_Known_ID))~ Marbcutobs$GO_Date)
-
-
-
 # df.expanded <- df[rep(row.names(df), df$freq), 1:2]
 ```
+
+```{r}
+# Mean Number of Visits Per Day for all sheep (and Standard Deviations)
+ 
+# I deleted the start and end days that weren't fully covered.
+Marbcutobsrd <- Marbcutobs[(Marbcutobs$GO_Date != "2019-06-12") & (Marbcutobs$GO_Date != "2019-06-18") & (Marbcutobs$GO_Date != "2019-06-30") & (Marbcutobs$GO_Date != "2019-07-10") & (Marbcutobs$GO_Date != "2019-07-17") & (Marbcutobs$GO_Date != "2019-07-25") & (Marbcutobs$GO_Date != "2019-08-04") & (Marbcutobs$GO_Date != "2019-08-06") & (Marbcutobs$GO_Date != "2019-08-10"), ]
+
+# In order to calculate the number of visits that each sheep had to water on a given day, I duplicated the rows with multiple visits in a single observation. If an observation had three visits in it, I duplicated the row 3x. 
+
+# The Marbles had no observations with multiple visits once cut to the appropriate dates.
+
+marballrd <- as.data.frame(table(Marbcutobsrd$KI_Known_ID, Marbcutobsrd$GO_Date))
+marbindrd <- as.data.frame(tapply(marballrd$Freq, list(marballrd$Var2), mean))
+marbindrd$sd <- as.data.frame(tapply(marballrd$Freq, list(marballrd$Var2), sd))
+
+
+
+
+# <- do.call("rbind", replicate(Marbcutobsrd[(Marbcutobsrd$KI_DG_FirstPhotoTime2)]))
+
+# do.call("rbind", replicate(dataframe, number of time to duplicate, simplify = FALSE))
+# df[rep(seq_lej(nrow(df)), each = 2), ]
+
+
+
+```
+
+
 
 
 ```{r}
