@@ -352,9 +352,18 @@ Marbcutobsrd <- Marbcutobs[(Marbcutobs$GO_Date != "2019-06-12") & (Marbcutobs$GO
 marballrd <- as.data.frame(table(Marbcutobsrd$KI_Known_ID, Marbcutobsrd$GO_Date))
 marbindrd <- as.data.frame(tapply(marballrd$Freq, list(marballrd$Var2), mean))
 marbindrd$sd <- as.data.frame(tapply(marballrd$Freq, list(marballrd$Var2), sd))
+marbindrd <- cbind(rownames(marbindrd), data.frame(marbindrd, row.names = NULL))
+marbindsheepvisitperday <- cbind(rownames(marbindsheepvisitperday), data.frame(marbindsheepvisitperday, row.names = NULL))
+
+marbna2 <- read.csv("MarbNAv21120.csv", header = TRUE, sep = ",")
+marbna2$tapply.marballrd.Freq..list.marballrd.Var2.mean[marbna2$tapply.marballrd.Freq..list.marballrd.Var2.mean == "#N/A"] <- NA
+marbna2$sd.tapply.marballrd.Freq..list.marballrd.Var2...sd.[marbna2$sd.tapply.marballrd.Freq..list.marballrd.Var2...sd. == "#N/A"] <- NA
+# marbindrd <- rbind(marbindrd, marbna2)
 
 
-
+marbindsheepvisitperday1 <- rbind(marbindsheepvisitperday, marbdatena)
+marbindsheepvisitperday1$tapply.marballsheepvisitsday.Freq..list.marballsheepvisitsday.Var2... <- as.integer(marbindsheepvisitperday1$tapply.marballsheepvisitsday.Freq..list.marballsheepvisitsday.Var2...)
+marbindsheepvisitperday1$`rownames(marbindsheepvisitperday)` <- as.Date(marbindsheepvisitperday1$`rownames(marbindsheepvisitperday)`, "%Y-%m-%d")
 
 # <- do.call("rbind", replicate(Marbcutobsrd[(Marbcutobsrd$KI_DG_FirstPhotoTime2)]))
 
