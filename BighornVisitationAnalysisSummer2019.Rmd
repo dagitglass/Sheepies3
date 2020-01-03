@@ -358,8 +358,11 @@ Marbcutobsrd <- Marbcutobs[(Marbcutobs$GO_Date != "2019-06-12") & (Marbcutobs$GO
 # The Marbles had no observations with multiple visits once cut to the appropriate dates.
 
 marballrd <- as.data.frame(table(Marbcutobsrd$KI_Known_ID, Marbcutobsrd$GO_Date))
-marbindrd <- as.data.frame(tapply(marballrd$Freq, list(marballrd$Var2), mean))
-marbindrd$sd <- tapply(marballrd$Freq, list(marballrd$Var2), sd)
+
+marballrd1 <- marballrd[(marballrd$Var1 == "BHS_1367") |  (marballrd$Var1 == "BHS_1365") | (marballrd$Var1 == "BHS_1361") | (marballrd$Var1 == "BHS_1362") | (marballrd$Var1 == "BHS_1357") | (marballrd$Var1 == "BHS_1416") | (marballrd$Var1 == "BHS_1421") | (marballrd$Var1 == "BHS_1581") | (marballrd$Var1 == "BHS_1577") | (marballrd$Var1 == "BHS_1574") | (marballrd$Var1 == "BHS_1576") | (marballrd$Var1 == "BHS_1583") | (marballrd$Var1 == "BHS_1584") | (marballrd$Var1 == "BHS_1585") | (marballrd$Var1 == "BHS_1587") | (marballrd$Var1 == "BHS_1582") | (marballrd$Var1 == "BHS_1575") | (marballrd$Var1 == "BHS_1589") | (marballrd$Var1 == "BHS_1592") | (marballrd$Var1 == "BHS_1594") | (marballrd$Var1 == "BHS_1420") | (marballrd$Var1 == "BHS_1493") | (marballrd$Var1 == "BHS_1413") | (marballrd$Var1 == "BHS_1494") | (marballrd$Var1 == "BHS_1590") | (marballrd$Var1 == "BHS_1591") | (marballrd$Var1 == "BHS_1682") | (marballrd$Var1 == "BHS_1683") | (marballrd$Var1 == "BHS_1684") | (marballrd$Var1 == "BHS_1366") | (marballrd$Var1 == "BHS_1497") | (marballrd$Var1 == "BHS_1496") | (marballrd$Var1 == "BHS_1597") | (marballrd$Var1 == "BHS_1588") | (marballrd$Var1 == "BHS_1595"), ]
+
+marbindrd <- as.data.frame(tapply(marballrd1$Freq, list(marballrd1$Var2), mean))
+marbindrd$sd <- tapply(marballrd1$Freq, list(marballrd1$Var2), sd)
 marbindrd <- cbind(rownames(marbindrd), data.frame(marbindrd, row.names = NULL))
 
 marbna2 <- read.csv("MarbNAv21120.csv", header = TRUE, sep = ",")
@@ -368,18 +371,20 @@ marbna2$sd.tapply.marballrd.Freq..list.marballrd.Var2...sd.[marbna2$sd.tapply.ma
 names(marbna2)[names(marbna2) == "rownames.marbindrd."] <- "rownames(marbindrd)"
 names(marbna2)[names(marbna2) == "tapply.marballrd.Freq..list.marballrd.Var2.mean"] <- "tapply.marballrd.Freq..list.marballrd.Var2...mean."
 names(marbna2)[names(marbna2) == "sd.tapply.marballrd.Freq..list.marballrd.Var2...sd."] <- "sd"
+
+names(marbindrd)[names(marbindrd) == "tapply.marballrd1.Freq..list.marballrd1.Var2...mean."] <- "visits"
+names(marbna2)[names(marbna2) == "tapply.marballrd.Freq..list.marballrd.Var2...mean."] <- "visits"
+
 marbindrd11 <- rbind(marbindrd, marbna2)
-marbindrd11$tapply.marballrd.Freq..list.marballrd.Var2...mean. <- as.numeric(marbindrd11$tapply.marballrd.Freq..list.marballrd.Var2...mean.)
+marbindrd11$visits <- as.numeric(marbindrd11$visits)
 marbindrd11$sd <- as.numeric(marbindrd11$sd)
 marbindrd11$`rownames(marbindrd)` <- as.Date(marbindrd11$`rownames(marbindrd)` , "%Y-%m-%d")
 library(ggplot2)
-p <- ggplot(data = marbindrd11, aes(x = `rownames(marbindrd)`, y = tapply.marballrd.Freq..list.marballrd.Var2...mean.)) + geom_point() + geom_errorbar(aes(ymin = tapply.marballrd.Freq..list.marballrd.Var2...mean. - sd, ymax = tapply.marballrd.Freq..list.marballrd.Var2...mean. + sd), width = .2)
+p <- ggplot(data = marbindrd11, aes(x = `rownames(marbindrd)`, y = visits)) + geom_point() + geom_errorbar(aes(ymin = visits - sd, ymax = visits + sd), width = .2)
 print(p)
-p + labs(title = "Marbles Mean Number of Visits Per Day Given All Collared Sheep")
+p + labs(title = "Marbles Mean Number of Visits Per Day Given All Collared Sheep", x = "Date", y = "Mean Number of Visits by Day")
 
-library(ggplot2)
-marbvisitplot <- ggplot(data = marbindsheepvisitperday1, aes(x = `rownames(marbindsheepvisitperday)`, y = tapply.marballsheepvisitsday.Freq..list.marballsheepvisitsday.Var2...)) +
-  geom_bar(stat="identity") + scale_x_date(limits = as.Date(c("2019-05-17", "2019-08-10"))) + ggtitle("Marbles Number of Individual Sheep Coming to Water by Day") + xlab("Date") + ylab("Number of Individual Sheep")
+
 
 
 ### THIS IS WRONG BECAUSE CONSIDERS EVERY SHEEP NOT JUST MARBLES SHEEP!
