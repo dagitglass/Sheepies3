@@ -300,6 +300,8 @@ I then created figures of the number of individual sheep coming into water by da
 ```{r}
 # Number of Individual Sheep Coming into Water by Day
 
+# Marbles
+
 marballsheepvisitsday <- as.data.frame(table(Marbcutobs$KI_Known_ID, Marbcutobs$GO_Date))
 # View(marballsheepvisitsday)
 
@@ -341,6 +343,18 @@ marbindsheepvisitperday1$`rownames(marbindsheepvisitperday)` <- as.Date(marbinds
 library(ggplot2)
 ggplot(data = marbindsheepvisitperday1, aes(x = `rownames(marbindsheepvisitperday)`, y = visits, fill = "supp")) +
   geom_bar(stat="identity", color = "black") + scale_x_date(limits = as.Date(c("2019-05-17", "2019-08-10"))) + ggtitle("Marbles Number of Individual Sheep Coming to Water by Day") + xlab("Date") + ylab("Number of Individual Sheep") + theme(legend.position = "none")
+
+
+
+# SOUTH BRISTOLS
+
+sbrssheepvisitsday <- as.data.frame(table(BrsScutobs$KI_Known_ID, BrsScutobs$GO_Date))
+sbrssheepvisitsday1 <- sbrssheepvisitsday[(sbrssheepvisitsday$Var1 == "")]
+
+marballsheepvisitsday <- as.data.frame(table(Marbcutobs$KI_Known_ID, Marbcutobs$GO_Date))
+# View(marballsheepvisitsday)
+
+marballsheepvisitsday1 <- marballsheepvisitsday[(marballsheepvisitsday$Var1 == "BHS_1367") |  (marballsheepvisitsday$Var1 == "BHS_1365") | (marballsheepvisitsday$Var1 == "BHS_1361") |(marballsheepvisitsday$Var1 == "BHS_1362") | (marballsheepvisitsday$Var1 == "BHS_1357") | (marballsheepvisitsday$Var1 == "BHS_1416") | (marballsheepvisitsday$Var1 == "BHS_1421") | (marballsheepvisitsday$Var1 == "BHS_1581") | (marballsheepvisitsday$Var1 == "BHS_1577") | (marballsheepvisitsday$Var1 == "BHS_1574") | (marballsheepvisitsday$Var1 == "BHS_1576") | (marballsheepvisitsday$Var1 == "BHS_1583") | (marballsheepvisitsday$Var1 == "BHS_1584") | (marballsheepvisitsday$Var1 == "BHS_1585") | (marballsheepvisitsday$Var1 == "BHS_1587") | (marballsheepvisitsday$Var1 == "BHS_1582") | (marballsheepvisitsday$Var1 == "BHS_1575") | (marballsheepvisitsday$Var1 == "BHS_1589") | (marballsheepvisitsday$Var1 == "BHS_1592") | (marballsheepvisitsday$Var1 == "BHS_1594") | (marballsheepvisitsday$Var1 == "BHS_1420") | (marballsheepvisitsday$Var1 == "BHS_1493") | (marballsheepvisitsday$Var1 == "BHS_1413") | (marballsheepvisitsday$Var1 == "BHS_1494") | (marballsheepvisitsday$Var1 == "BHS_1590") | (marballsheepvisitsday$Var1 == "BHS_1591") | (marballsheepvisitsday$Var1 == "BHS_1682") | (marballsheepvisitsday$Var1 == "BHS_1683") | (marballsheepvisitsday$Var1 == "BHS_1684") | (marballsheepvisitsday$Var1 == "BHS_1366") | (marballsheepvisitsday$Var1 == "BHS_1497") | (marballsheepvisitsday$Var1 == "BHS_1496") | (marballsheepvisitsday$Var1 == "BHS_1597") | (marballsheepvisitsday$Var1 == "BHS_1588") | (marballsheepvisitsday$Var1 == "BHS_1595"), ]
 
 
 
@@ -399,6 +413,13 @@ p + labs(title = "Marbles Mean Number of Visits Per Day Given All Collared Sheep
 
 ```
 
+```{r}
+# Time between sheep coming into water
+
+# mutate(air_time = end_time - start_time)
+# mutate(air_time2 = as.numeric(end_time - start_time, units="mins"))
+
+```
 
 
 
