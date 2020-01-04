@@ -349,12 +349,25 @@ ggplot(data = marbindsheepvisitperday1, aes(x = `rownames(marbindsheepvisitperda
 # SOUTH BRISTOLS
 
 sbrssheepvisitsday <- as.data.frame(table(BrsScutobs$KI_Known_ID, BrsScutobs$GO_Date))
-sbrssheepvisitsday1 <- sbrssheepvisitsday[(sbrssheepvisitsday$Var1 == "")]
-
-marballsheepvisitsday <- as.data.frame(table(Marbcutobs$KI_Known_ID, Marbcutobs$GO_Date))
-# View(marballsheepvisitsday)
-
-marballsheepvisitsday1 <- marballsheepvisitsday[(marballsheepvisitsday$Var1 == "BHS_1367") |  (marballsheepvisitsday$Var1 == "BHS_1365") | (marballsheepvisitsday$Var1 == "BHS_1361") |(marballsheepvisitsday$Var1 == "BHS_1362") | (marballsheepvisitsday$Var1 == "BHS_1357") | (marballsheepvisitsday$Var1 == "BHS_1416") | (marballsheepvisitsday$Var1 == "BHS_1421") | (marballsheepvisitsday$Var1 == "BHS_1581") | (marballsheepvisitsday$Var1 == "BHS_1577") | (marballsheepvisitsday$Var1 == "BHS_1574") | (marballsheepvisitsday$Var1 == "BHS_1576") | (marballsheepvisitsday$Var1 == "BHS_1583") | (marballsheepvisitsday$Var1 == "BHS_1584") | (marballsheepvisitsday$Var1 == "BHS_1585") | (marballsheepvisitsday$Var1 == "BHS_1587") | (marballsheepvisitsday$Var1 == "BHS_1582") | (marballsheepvisitsday$Var1 == "BHS_1575") | (marballsheepvisitsday$Var1 == "BHS_1589") | (marballsheepvisitsday$Var1 == "BHS_1592") | (marballsheepvisitsday$Var1 == "BHS_1594") | (marballsheepvisitsday$Var1 == "BHS_1420") | (marballsheepvisitsday$Var1 == "BHS_1493") | (marballsheepvisitsday$Var1 == "BHS_1413") | (marballsheepvisitsday$Var1 == "BHS_1494") | (marballsheepvisitsday$Var1 == "BHS_1590") | (marballsheepvisitsday$Var1 == "BHS_1591") | (marballsheepvisitsday$Var1 == "BHS_1682") | (marballsheepvisitsday$Var1 == "BHS_1683") | (marballsheepvisitsday$Var1 == "BHS_1684") | (marballsheepvisitsday$Var1 == "BHS_1366") | (marballsheepvisitsday$Var1 == "BHS_1497") | (marballsheepvisitsday$Var1 == "BHS_1496") | (marballsheepvisitsday$Var1 == "BHS_1597") | (marballsheepvisitsday$Var1 == "BHS_1588") | (marballsheepvisitsday$Var1 == "BHS_1595"), ]
+sbrssheepvisitsday1 <- sbrssheepvisitsday[(sbrssheepvisitsday$Var1 == "BHS_1330") | (sbrssheepvisitsday$Var1 == "BHS_1340") | (sbrssheepvisitsday$Var1 == "BHS_1337") | (sbrssheepvisitsday$Var1 == "BHS_1334") | (sbrssheepvisitsday$Var1 == "BHS_1331") | (sbrssheepvisitsday$Var1 == "BHS_1329") | (sbrssheepvisitsday$Var1 == "BHS_1328") | (sbrssheepvisitsday$Var1 == "BHS_1333") | (sbrssheepvisitsday$Var1 == "BHS_1425") | (sbrssheepvisitsday$Var1 == "BHS_1426") | (sbrssheepvisitsday$Var1 == "BHS_1489") | (sbrssheepvisitsday$Var1 == "BHS_1491") | (sbrssheepvisitsday$Var1 == "BHS_1578") | (sbrssheepvisitsday$Var1 == "BHS_1579") | (sbrssheepvisitsday$Var1 == "BHS_1580") | (sbrssheepvisitsday$Var1 == "BHS_1596") | (sbrssheepvisitsday$Var1 == "BHS_1598") | (sbrssheepvisitsday$Var1 == "BHS_1599") | (sbrssheepvisitsday$Var1 == "BHS_1687") | (sbrssheepvisitsday$Var1 == "BHS_1486") | (sbrssheepvisitsday$Var1 == "BHS_1490") | (sbrssheepvisitsday$Var1 == "BHS_1492") | (sbrssheepvisitsday$Var1 == "BHS_1428") | (sbrssheepvisitsday$Var1 == "BHS_1685") | (sbrssheepvisitsday$Var1 == "BHS_1686") | (sbrssheepvisitsday$Var1 == "BHS_1688") | (sbrssheepvisitsday$Var1 == "BHS_1689"),]
+# table(sbrssheepvisitsday1$Freq) - through 5
+sbrssheepvisitsday1$Freq[sbrssheepvisitsday1$Freq == 2] <- 1
+sbrssheepvisitsday1$Freq[sbrssheepvisitsday1$Freq == 3] <- 1
+sbrssheepvisitsday1$Freq[sbrssheepvisitsday1$Freq == 4] <- 1
+sbrssheepvisitsday1$Freq[sbrssheepvisitsday1$Freq == 5] <- 1
+sbrsindsheepvisitperday <- as.data.frame(tapply(sbrssheepvisitsday1$Freq, list(sbrssheepvisitsday1$Var2), sum))
+View(sbrsindsheepvisitperday)
+sbrsindsheepvisitperday <- cbind(rownames(sbrsindsheepvisitperday), data.frame(sbrsindsheepvisitperday, row.names = NULL))
+names(sbrsindsheepvisitperday)[names(sbrsindsheepvisitperday) == "rownames(sbrsindsheepvisitperday)"] <- "Date"
+names(sbrsindsheepvisitperday)[names(sbrsindsheepvisitperday) == "tapply.sbrssheepvisitsday1.Freq..list.sbrssheepvisitsday1.Var2..."] <- "NumIndSheep"
+sbrsindsheepvisitperday$Date <- as.Date(sbrsindsheepvisitperday$Date, format = "%Y-%m-%d")
+sbrsindsheepvisitperday1 <- sbrsindsheepvisitperday[(sbrsindsheepvisitperday$Date != "2019-06-04") & (sbrsindsheepvisitperday$Date != "2019-06-16") & (sbrsindsheepvisitperday$Date != "2019-06-18") & (sbrsindsheepvisitperday$Date != "2019-07-29") & (sbrsindsheepvisitperday$Date != "2019-08-01") & (sbrsindsheepvisitperday$Date != "2019-08-12"), ]
+sbrsdatena <- read.csv("SBrsNAIndSheepVisits1320.csv", header = TRUE, sep = ",")
+sbrsdatena$Date <- as.Date(sbrsdatena$Date, format = "%Y-%m-%d")
+sbrsdatena$NumIndSheep <- as.numeric(sbrsdatena$NumIndSheep)
+sbrsindsheepvisitperday2 <- rbind(sbrsindsheepvisitperday1, sbrsdatena)
+library(ggplot2)
+ggplot(data = sbrsindsheepvisitperday2, aes(x = Date, y = NumIndSheep, fill = "supp")) + geom_bar(stat = "identity", color = "black") + scale_x_date(limits = as.Date(c("2019-06-04", "2019-08-12"))) + ggtitle("South Bristols Number of Individual Sheep Coming to Water by Day") + xlab("Date") + ylab("Number of Individual Sheep") + theme(legend.position = "none")
 
 
 
