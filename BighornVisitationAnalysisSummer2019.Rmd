@@ -407,9 +407,9 @@ marbindrd11$visits <- as.numeric(marbindrd11$visits)
 marbindrd11$sd <- as.numeric(marbindrd11$sd)
 marbindrd11$`rownames(marbindrd)` <- as.Date(marbindrd11$`rownames(marbindrd)` , "%Y-%m-%d")
 library(ggplot2)
-p <- ggplot(data = marbindrd11, aes(x = `rownames(marbindrd)`, y = visits)) + geom_point() + geom_errorbar(aes(ymin = visits - sd, ymax = visits + sd), width = .2)
+p <- ggplot(data = marbindrd11, aes(x = `rownames(marbindrd)`, y = visits)) + geom_point() + geom_errorbar(aes(ymin = visits - sd, ymax = visits + sd), width = .2) + labs(title = "Marbles Mean Number of Visits Per Day Given All Collared Sheep", x = "Date", y = "Mean Number of Visits by Day")
 print(p)
-p + labs(title = "Marbles Mean Number of Visits Per Day Given All Collared Sheep", x = "Date", y = "Mean Number of Visits by Day")
+
 
 
 
