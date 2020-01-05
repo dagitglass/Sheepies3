@@ -371,12 +371,13 @@ ggplot(data = sbrsindsheepvisitperday2, aes(x = Date, y = NumIndSheep, fill = "s
 
 
 
-# df.expanded <- df[rep(row.names(df), df$freq), 1:2]
 ```
 
 ```{r}
 # Mean Number of Visits Per Day for all sheep (and Standard Deviations)
  
+# MARBLES
+
 # I deleted the start and end days that weren't fully covered.
 Marbcutobsrd <- Marbcutobs[(Marbcutobs$GO_Date != "2019-06-12") & (Marbcutobs$GO_Date != "2019-06-18") & (Marbcutobs$GO_Date != "2019-06-30") & (Marbcutobs$GO_Date != "2019-07-10") & (Marbcutobs$GO_Date != "2019-07-17") & (Marbcutobs$GO_Date != "2019-07-25") & (Marbcutobs$GO_Date != "2019-08-04") & (Marbcutobs$GO_Date != "2019-08-06") & (Marbcutobs$GO_Date != "2019-08-10"), ]
 
@@ -411,12 +412,26 @@ p <- ggplot(data = marbindrd11, aes(x = `rownames(marbindrd)`, y = visits)) + ge
 print(p)
 
 
+# SOUTH BRISTOLS
+
+BrsScutobsrd <- BrsScutobs[(BrsScutobs$GO_Date != "2019-06-04") & (BrsScutobs$GO_Date != "2019-06-16") & (BrsScutobs$GO_Date != "2019-06-18") & (BrsScutobs$GO_Date != "2019-07-29") & (BrsScutobs$GO_Date != "2019-08-01") & (BrsScutobs$GO_Date != "2019-08-12"), ]
+
+# In order to calculate the number of visits that each sheep had to water on a given day, I duplicated the rows with multiple visits in a single observation. If an observation had three visits in it, I duplicated the row 3x. 
+
+BrsSonevisitperobs <- BrsScutobsrd[(is.na(BrsScutobsrd$KI_DG_FirstPhotoTime) == FALSE) & (is.na(BrsScutobsrd$KI_DG_FirstPhotoTime2) == TRUE) & (is.na(BrsScutobsrd$KI_DG_FirstPhotoTime3) == TRUE) & (is.na(BrsScutobsrd$KI_DG_FirstPhotoTime4) == TRUE), ]
+
+# The Marbles had no observations with multiple visits once cut to the appropriate dates.
+# 2nd equals something and 3rd and 4th = na, duplicate row by 2
+# 3rd equals something and 3rd and 4th = na, duplicate row by 3
+# 4th equals something, duplicate row by 4
+
+
 
 
 
 ### THIS IS WRONG BECAUSE CONSIDERS EVERY SHEEP NOT JUST MARBLES SHEEP!
 
-
+# df.expanded <- df[rep(row.names(df), df$freq), 1:2]
 # <- do.call("rbind", replicate(Marbcutobsrd[(Marbcutobsrd$KI_DG_FirstPhotoTime2)]))
 
 # do.call("rbind", replicate(dataframe, number of time to duplicate, simplify = FALSE))
