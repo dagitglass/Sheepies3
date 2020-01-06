@@ -369,6 +369,30 @@ sbrsindsheepvisitperday2 <- rbind(sbrsindsheepvisitperday1, sbrsdatena)
 library(ggplot2)
 ggplot(data = sbrsindsheepvisitperday2, aes(x = Date, y = NumIndSheep, fill = "supp")) + geom_bar(stat = "identity", color = "black") + scale_x_date(limits = as.Date(c("2019-06-04", "2019-08-12"))) + ggtitle("South Bristols Number of Individual Sheep Coming to Water by Day") + xlab("Date") + ylab("Number of Individual Sheep") + theme(legend.position = "none")
 
+#Nopah
+nopaallsheepvisitsday <- as.data.frame(table(nopacutobs$KI_Known_ID, nopacutobs$GO_Date))
+# View(nopaallsheepvisitsday)
+nopaallsheepvisitsday1 <- nopaallsheepvisitsday[(nopaallsheepvisitsday$Var1 == "BHS_1737") | (nopaallsheepvisitsday$Var1 == "BHS_1740") | (nopaallsheepvisitsday$Var1 == "BHS_1741") | (nopaallsheepvisitsday$Var1 == "BHS_1738") | (nopaallsheepvisitsday$Var1 == "BHS_1736") | (nopaallsheepvisitsday$Var1 == "BHS_1739"), ]
+# Nopah only has up to 2 visits in a day, so only need to change 2 to 1.
+nopaallsheepvisitsday1$Freq[nopaallsheepvisitsday1$Freq == 2] <- 1
+nopaindsheepvisitperday <- as.data.frame(tapply(nopaallsheepvisitsday1$Freq, list(nopaallsheepvisitsday1$Var2), sum))
+View(nopaindsheepvisitperday)
+nopaindsheepvisitperday <- cbind(rownames(nopaindsheepvisitperday), data.frame(nopaindsheepvisitperday, row.names = NULL))
+names(nopaindsheepvisitperday)[names(nopaindsheepvisitperday) == "rownames(nopaindsheepvisitperday)"] <- "Date"
+names(nopaindsheepvisitperday)[names(nopaindsheepvisitperday) == "tapply.nopaallsheepvisitsday1.Freq..list.nopaallsheepvisitsday1.Var2..."] <- "NumIndSheep"
+nopaindsheepvisitperday$Date <- as.Date(nopaindsheepvisitperday$Date, format = "%Y-%m-%d")
+# Need to input days that have zero observations, as well as the NA days.
+nopaindsheepvisitperday1 <- nopaindsheepvisitperday[(nopaindsheepvisitperday$Date != "2019-06-25") & (nopaindsheepvisitperday$Date != "2019-08-07"), ]
+nopadatena <- read.csv("NopaNAIndSheepVisits1620.csv", header= TRUE, sep = ",")
+nopadatena$Date <- as.Date(nopadatena$Date, format = "%Y-%m-%d")
+nopadatena$NumIndSheep <- as.numeric(nopadatena$NumIndSheep)
+nopaindsheepvisitperday2 <- rbind(nopaindsheepvisitperday1, nopadatena)
+library(ggplot2)
+ggplot(data = nopaindsheepvisitperday2, aes(x = Date, y = NumIndSheep, fill = "supp")) + geom_bar(stat = "identity", color = "black") + scale_x_date(limits = as.Date(c("2019-06-06", "2019-08-07"))) + ggtitle("Nopah Number of Individual Sheep Coming to Water by Day") + xlab("Date") + ylab("Number of Individual Sheep") + theme(legend.position = "none")
+
+
+
+
 
 
 ```
@@ -457,8 +481,6 @@ print(sbrsrd11plot)
 # 2nd equals something and 3rd and 4th = na, duplicate row by 2
 # 3rd equals something and 3rd and 4th = na, duplicate row by 3
 # 4th equals something, duplicate row by 4
-
-
 
 
 
