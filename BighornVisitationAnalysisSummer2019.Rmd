@@ -418,7 +418,40 @@ BrsScutobsrd <- BrsScutobs[(BrsScutobs$GO_Date != "2019-06-04") & (BrsScutobs$GO
 
 # In order to calculate the number of visits that each sheep had to water on a given day, I duplicated the rows with multiple visits in a single observation. If an observation had three visits in it, I duplicated the row 3x. 
 
+# Divided the observations up into how many visits/observation.
 BrsSonevisitperobs <- BrsScutobsrd[(is.na(BrsScutobsrd$KI_DG_FirstPhotoTime) == FALSE) & (is.na(BrsScutobsrd$KI_DG_FirstPhotoTime2) == TRUE) & (is.na(BrsScutobsrd$KI_DG_FirstPhotoTime3) == TRUE) & (is.na(BrsScutobsrd$KI_DG_FirstPhotoTime4) == TRUE), ]
+BrsStwovisitperobs <- BrsScutobsrd[(is.na(BrsScutobsrd$KI_DG_FirstPhotoTime2) == FALSE) & (is.na(BrsScutobsrd$KI_DG_FirstPhotoTime3) == TRUE) & (is.na(BrsScutobsrd$KI_DG_FirstPhotoTime4) == TRUE), ]
+BrsSthreevisitperobs <- BrsScutobsrd[(is.na(BrsScutobsrd$KI_DG_FirstPhotoTime3) == FALSE) & (is.na(BrsScutobsrd$KI_DG_FirstPhotoTime4) == TRUE),]
+BrsSfourvisitperobs <- BrsScutobsrd[(is.na(BrsScutobsrd$KI_DG_FirstPhotoTime4) == FALSE) ,]
+#Duplicated the rows
+BrsStwovisitdup <-  do.call("rbind", replicate(2, BrsStwovisitperobs, simplify = FALSE))
+BrsSthreevisitdup <- do.call("rbind", replicate(3, BrsSthreevisitperobs, simplify = FALSE))
+BrsSfourvisitdup <- do.call("rbind", replicate(4, BrsSfourvisitperobs, simplify = FALSE))
+# Combining these duplicated dataframes
+BrsScutobsrdwithdups <- rbind(BrsSonevisitperobs, BrsStwovisitdup, BrsSthreevisitdup, BrsSfourvisitdup)
+sbrsallrd <- as.data.frame(table(BrsScutobsrdwithdups$KI_Known_ID, BrsScutobsrdwithdups$GO_Date))
+# I double-checked that the table function did not remove the duplicates before calculation. It didn't, so this worked.
+# tocompare <- as.data.frame(table(BrsScutobsrd$KI_Known_ID, BrsScutobsrd$GO_Date))
+sbrsallrd1 <- sbrsallrd[(sbrsallrd$Var1 == "BHS_1330") | (sbrsallrd$Var1 == "BHS_1340") | (sbrsallrd$Var1 == "BHS_1337") | (sbrsallrd$Var1 == "BHS_1334") | (sbrsallrd$Var1 == "BHS_1331") | (sbrsallrd$Var1 == "BHS_1329") | (sbrsallrd$Var1 == "BHS_1328") | (sbrsallrd$Var1 == "BHS_1333") | (sbrsallrd$Var1 == "BHS_1425") | (sbrsallrd$Var1 == "BHS_1426") | (sbrsallrd$Var1 == "BHS_1489") | (sbrsallrd$Var1 == "BHS_1491") | (sbrsallrd$Var1 == "BHS_1578") | (sbrsallrd$Var1 == "BHS_1579") | (sbrsallrd$Var1 == "BHS_1580") | (sbrsallrd$Var1 == "BHS_1596") | (sbrsallrd$Var1 == "BHS_1598") | (sbrsallrd$Var1 == "BHS_1599") | (sbrsallrd$Var1 == "BHS_1687") | (sbrsallrd$Var1 == "BHS_1486") | (sbrsallrd$Var1 == "BHS_1490") | (sbrsallrd$Var1 == "BHS_1492") | (sbrsallrd$Var1 == "BHS_1428") | (sbrsallrd$Var1 == "BHS_1685") | (sbrsallrd$Var1 == "BHS_1686") | (sbrsallrd$Var1 == "BHS_1688") | (sbrsallrd$Var1 == "BHS_1689"), ]
+sbrsindrd <- as.data.frame(tapply(sbrsallrd1$Freq, list(sbrsallrd1$Var2), mean))
+sbrsindrd$sd <- tapply(sbrsallrd1$Freq, list(sbrsallrd1$Var2), sd)
+sbrsindrd <- cbind(rownames(sbrsindrd), data.frame(sbrsindrd, row.names = NULL))
+names(sbrsindrd)[names(sbrsindrd) == "rownames(sbrsindrd)"] <- "Date"
+names(sbrsindrd)[names(sbrsindrd) == "tapply.sbrsallrd1.Freq..list.sbrsallrd1.Var2...mean."] <- "Meannumvisits"
+sbrsna2 <- read.csv("SBrsNAv21520.csv", header = TRUE, sep = ",")
+sbrsrd11 <- rbind(sbrsindrd, sbrsna2)
+sbrsrd11$Meannumvisits <- as.numeric(sbrsrd11$Meannumvisits)
+sbrsrd11$sd <- as.numeric(sbrsrd11$sd)
+sbrsrd11$Date <- as.Date(sbrsrd11$Date, "%Y-%m-%d")
+library(ggplot2)
+sbrsrd11plot <- ggplot(data = sbrsrd11, aes(x = Date, y = Meannumvisits)) + geom_point() + geom_errorbar(aes(ymin = Meannumvisits - sd, ymax = Meannumvisits + sd), width = .2) + labs(title = "South Bristols Mean Number of Visits Per Day Given All Collared Sheep", x = "Date", y = "Mean Number of Visits by Day")
+print(sbrsrd11plot)
+
+
+
+# d <- data.frame(a = c(1,2,3),b = c(1,2,3))
+# n <- 3
+# do.call("rbind", replicate(n, d, simplify = FALSE))
 
 # The Marbles had no observations with multiple visits once cut to the appropriate dates.
 # 2nd equals something and 3rd and 4th = na, duplicate row by 2
