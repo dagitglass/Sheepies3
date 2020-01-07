@@ -471,7 +471,25 @@ library(ggplot2)
 sbrsrd11plot <- ggplot(data = sbrsrd11, aes(x = Date, y = Meannumvisits)) + geom_point() + geom_errorbar(aes(ymin = Meannumvisits - sd, ymax = Meannumvisits + sd), width = .2) + labs(title = "South Bristols Mean Number of Visits Per Day Given All Collared Sheep", x = "Date", y = "Mean Number of Visits by Day")
 print(sbrsrd11plot)
 
+#NOPAH
 
+nopacutobsrd <- nopacutobs[(nopacutobs$GO_Date != "2019-06-06") & (nopacutobs$GO_Date != "2019-06-13") & (nopacutobs$GO_Date != "2019-06-25") & (nopacutobs$GO_Date != "2019-07-08") & (nopacutobs$GO_Date != "2019-07-16") & (nopacutobs$GO_Date != "2019-07-29") & (nopacutobs$GO_Date != "2019-08-07"), ]
+nopaallrd <- as.data.frame(table(nopacutobsrd$KI_Known_ID, nopacutobsrd$GO_Date))
+nopaallrd1 <- nopaallrd[(nopaallrd$Var1 == "BHS_1737") | (nopaallrd$Var1 == "BHS_1740") | (nopaallrd$Var1 == "BHS_1741") | (nopaallrd$Var1 == "BHS_1738") | (nopaallrd$Var1 == "BHS_1736") | (nopaallrd$Var1 == "BHS_1739"), ]
+nopaindrd <- as.data.frame(tapply(nopaallrd1$Freq, list(nopaallrd1$Var2), mean))
+nopaindrd$sd <- tapply(nopaallrd1$Freq, list(nopaallrd1$Var2), sd)
+nopaindrd <- cbind(rownames(nopaindrd), data.frame(nopaindrd, row.names = NULL))
+names(nopaindrd)[names(nopaindrd) == "rownames(nopaindrd)"] <- "Date"
+names(nopaindrd)[names(nopaindrd) == "tapply.nopaallrd1.Freq..list.nopaallrd1.Var2...mean."] <- "Meannumvisits"
+# I then needed to add in both the NA time periods and the mean = zero time periods.
+nopana2 <- read.csv("NopaNAZerov21620.csv", header = TRUE, sep = ",")
+nopard11 <- rbind(nopaindrd, nopana2)
+nopard11$Meannumvisits <- as.numeric(nopard11$Meannumvisits)
+nopard11$sd <- as.numeric(nopard11$sd)
+nopard11$Date <- as.Date(nopard11$Date, "%Y-%m-%d")
+library(ggplot2)
+nopard11plot <- ggplot(data = nopard11, aes(x = Date, y = Meannumvisits)) + geom_point() + geom_errorbar(aes(ymin = Meannumvisits - sd, ymax = Meannumvisits + sd), width = 0.2) + labs(title = "Nopah Mean Number of Visits Per Day Given All Collared Sheep", x = "Date", y = "Mean Number of Visits by Day")
+print(nopard11plot)
 
 # d <- data.frame(a = c(1,2,3),b = c(1,2,3))
 # n <- 3
