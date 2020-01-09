@@ -1,6 +1,9 @@
 ---
 title: "RBighornVisitationAnalysis"
-output: html_document
+output:
+  word_document: default
+  pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -24,7 +27,7 @@ nodups <- distinct(threedf)
 table(duplicated(nodups))
 table(duplicated(nodups$DateObsTimeIDwaterspecific))
 # THERE ARE NO DUPLICATES OF THE ROWS OVERALL, BUT THERE ARE 204 DUPLICATES OF THE NODUPS$DateObsTimeODwaterspecific. WHY?!!!!!!! B/C some of the observations have the capture data and some don't. I SHOULD BE ABLE TO FIX THIS AFTER INPUTTING THE CORRECT WEIGHTS, BODY LENGTHS, AND CHEST GIRTHS THAT ARE MISSING.
-View(duplicated(nodups$DateObsTimeIDwaterspecific))
+# View(duplicated(nodups$DateObsTimeIDwaterspecific))
 
 as.character(nodups$KI_DG_FirstPhotoTime2, nodups$KI_DG_LastPhotoTime2, nodups$KI_DG_FirstPhotoTime3, nodups$KI_DG_LastPhotoTime3, nodups$KI_DG_FirstPhotoTime4, nodups$KI_DG_LastPhotoTime4)
 nodups$KI_DG_FirstPhotoTime2[nodups$KI_DG_FirstPhotoTime2 == "0"] <- NA
@@ -80,7 +83,7 @@ as.character(nodups$GO_Date, nodups$KI_Known_ID, nodups$GO_Time_HHMM, nodups$GO_
 nodups$DateObsTimeIDwaterspecific <- paste(nodups$GO_Date, nodups$KI_Known_ID, nodups$GO_Time_HHMM, nodups$GO_WaterSource, nodups$GO_DG_SpecificSource, sep = "")
 as.character(nodups$KI_Sex)
 as.character(nodups$KI_Known_ID)
-table(nodups$KI_Sex)
+# table(nodups$KI_Sex)
 nodups$KI_Sex[nodups$KI_Known_ID == "BHS_1489" | nodups$KI_Known_ID == "BHS_1596" | nodups$KI_Known_ID == "BHS_1361" | nodups$KI_Known_ID == "BHS_1357" | nodups$KI_Known_ID == "BHS_1367" | nodups$KI_Known_ID == "BHS_1362" | nodups$KI_Known_ID == "BHS_1584" | nodups$KI_Known_ID == "BHS_1585" | nodups$KI_Known_ID == "BHS_1583" | nodups$KI_Known_ID == "BHS_1582" | nodups$KI_Known_ID == "BHS_1588" | nodups$KI_Known_ID == "BHS_1365" | nodups$KI_Known_ID == "BHS_1574" | nodups$KI_Known_ID == "BHS_1366" | nodups$KI_Known_ID == "BHS_1594" | nodups$KI_Known_ID == "BHS_1577" | nodups$KI_Known_ID == "BHS_1581" | nodups$KI_Known_ID == "BHS_1576" | nodups$KI_Known_ID == "BHS_1416" | nodups$KI_Known_ID == "BHS_1587" | nodups$KI_Known_ID == "BHS_1575" | nodups$KI_Known_ID == "BHS_1592" | nodups$KI_Known_ID == "BHS_1589" | nodups$KI_Known_ID == "BHS_1421" | nodups$KI_Known_ID == "BHS_1740" | nodups$KI_Known_ID == "BHS_1738" | nodups$KI_Known_ID == "BHS_1736" | nodups$KI_Known_ID == "BHS_1734" | nodups$KI_Known_ID == "BHS_1733" | nodups$KI_Known_ID == "BHS_1741"] <- "F"
 
 nodups$KI_Sex[nodups$KI_Known_ID == "BHS_1494" | nodups$KI_Known_ID == "BHS_1684" | nodups$KI_Known_ID == "BHS_1683" | nodups$KI_Known_ID == "BHS_1682" | nodups$KI_Known_ID == "BHS_1493" | nodups$KI_Known_ID == "BHS_1591" | nodups$KI_Known_ID == "BHS_1590" | nodups$KI_Known_ID == "BHS_1420" | nodups$KI_Known_ID == "1728" | nodups$KI_Known_ID == "BHS_1739"] <- "M"
@@ -486,8 +489,8 @@ marbindrd11$visits <- as.numeric(marbindrd11$visits)
 marbindrd11$sd <- as.numeric(marbindrd11$sd)
 marbindrd11$`rownames(marbindrd)` <- as.Date(marbindrd11$`rownames(marbindrd)` , "%Y-%m-%d")
 library(ggplot2)
-p <- ggplot(data = marbindrd11, aes(x = `rownames(marbindrd)`, y = visits)) + geom_point() + geom_errorbar(aes(ymin = visits - sd, ymax = visits + sd), width = .2) + labs(title = "Marbles Mean Number of Visits Per Day Given All Collared Sheep", x = "Date", y = "Mean Number of Visits by Day")
-print(p)
+p <- ggplot(data = marbindrd11, aes(x = `rownames(marbindrd)`, y = visits)) + geom_point() + geom_errorbar(aes(ymin = visits - sd, ymax = visits + sd), width = .2) + labs(title = "Marbles (n = 35)", x = "Date", y = "Mean Number of Visits by Day") + ylim(0, 2.5) + scale_x_date(limits = as.Date(c("2019-05-17", "2019-08-15"))) + theme_grey(base_size = 10)
+# print(p)
 
 
 # SOUTH BRISTOLS
@@ -522,8 +525,8 @@ sbrsrd11$Meannumvisits <- as.numeric(sbrsrd11$Meannumvisits)
 sbrsrd11$sd <- as.numeric(sbrsrd11$sd)
 sbrsrd11$Date <- as.Date(sbrsrd11$Date, "%Y-%m-%d")
 library(ggplot2)
-sbrsrd11plot <- ggplot(data = sbrsrd11, aes(x = Date, y = Meannumvisits)) + geom_point() + geom_errorbar(aes(ymin = Meannumvisits - sd, ymax = Meannumvisits + sd), width = .2) + labs(title = "South Bristols Mean Number of Visits Per Day Given All Collared Sheep", x = "Date", y = "Mean Number of Visits by Day")
-print(sbrsrd11plot)
+sbrsrd11plot <- ggplot(data = sbrsrd11, aes(x = Date, y = Meannumvisits)) + geom_point() + geom_errorbar(aes(ymin = Meannumvisits - sd, ymax = Meannumvisits + sd), width = .2) + labs(title = "South Bristols (n = 27)", x = "Date", y = "Mean Number of Visits by Day") + ylim(0, 2.5) + scale_x_date(limits = as.Date(c("2019-05-17", "2019-08-15"))) + theme_grey(base_size = 10)
+# print(sbrsrd11plot) 
 
 #NOPAH
 
@@ -542,30 +545,30 @@ nopard11$Meannumvisits <- as.numeric(nopard11$Meannumvisits)
 nopard11$sd <- as.numeric(nopard11$sd)
 nopard11$Date <- as.Date(nopard11$Date, "%Y-%m-%d")
 library(ggplot2)
-nopard11plot <- ggplot(data = nopard11, aes(x = Date, y = Meannumvisits)) + geom_point() + geom_errorbar(aes(ymin = Meannumvisits - sd, ymax = Meannumvisits + sd), width = 0.2) + labs(title = "Nopah Mean Number of Visits Per Day Given All Collared Sheep", x = "Date", y = "Mean Number of Visits by Day")
-print(nopard11plot)
+nopard11plot <- ggplot(data = nopard11, aes(x = Date, y = Meannumvisits)) + geom_point() + geom_errorbar(aes(ymin = Meannumvisits - sd, ymax = Meannumvisits + sd), width = 0.2) + labs(title = "Nopah (n = 6)", x = "Date", y = "Mean Number of Visits by Day") + ylim(0, 2.5) + scale_x_date(limits = as.Date(c("2019-05-17", "2019-08-15"))) + theme_grey(base_size = 10)
+# print(nopard11plot)
 
-# d <- data.frame(a = c(1,2,3),b = c(1,2,3))
-# n <- 3
-# do.call("rbind", replicate(n, d, simplify = FALSE))
+# CASTLE PIUTE
 
-# The Marbles had no observations with multiple visits once cut to the appropriate dates.
-# 2nd equals something and 3rd and 4th = na, duplicate row by 2
-# 3rd equals something and 3rd and 4th = na, duplicate row by 3
-# 4th equals something, duplicate row by 4
+# Cmpr data already good for start and end dates based on decisions made while making the previous figures.
+cmprallrd <- as.data.frame(table(cmprcutobs$KI_Known_ID, cmprcutobs$GO_Date))
+cmprallrd1 <- cmprallrd[(cmprallrd$Var1 == "BHS_1730") | (cmprallrd$Var1 == "BHS_1733") | (cmprallrd$Var1 == "BHS_1734") | (cmprallrd$Var1 == "BHS_1728"), ]
+cmprindrd <- as.data.frame(tapply(cmprallrd1$Freq, list(cmprallrd1$Var2), mean))
+cmprindrd$sd <- tapply(cmprallrd1$Freq, list(cmprallrd1$Var2), sd)
+cmprindrd <- cbind(rownames(cmprindrd), data.frame(cmprindrd, row.names = NULL))
+names(cmprindrd)[names(cmprindrd) == "rownames(cmprindrd)"] <- "Date"
+names(cmprindrd)[names(cmprindrd) == "tapply.cmprallrd1.Freq..list.cmprallrd1.Var2...mean."] <- "Meannumvisits"
+cmprna2 <- read.csv("CmprNAZerov21820.csv", header = TRUE, sep = ",")
+cmprrd11 <- rbind(cmprindrd, cmprna2)
+cmprrd11$Meannumvisits <- as.numeric(cmprrd11$Meannumvisits)
+cmprrd11$sd <- as.numeric(cmprrd11$sd)
+cmprrd11$Date <- as.Date(cmprrd11$Date, "%Y-%m-%d")
+library(ggplot2)
+cmprrd11plot <- ggplot(data = cmprrd11, aes(x = Date, y = Meannumvisits)) + geom_point() + geom_errorbar(aes(ymin = Meannumvisits - sd, ymax = Meannumvisits + sd), width = 0.2) + labs(title = "Castle Piute (n = 4)", x = "Date", y = "Mean Number of Visits by Day") + ylim(0, 2.5) + scale_x_date(limits = as.Date(c("2019-05-17", "2019-08-15"))) + theme_grey(base_size = 10)
+# print(cmprrd11plot)
 
-
-
-### THIS IS WRONG BECAUSE CONSIDERS EVERY SHEEP NOT JUST MARBLES SHEEP!
-
-# df.expanded <- df[rep(row.names(df), df$freq), 1:2]
-# <- do.call("rbind", replicate(Marbcutobsrd[(Marbcutobsrd$KI_DG_FirstPhotoTime2)]))
-
-# do.call("rbind", replicate(dataframe, number of time to duplicate, simplify = FALSE))
-# df[rep(seq_lej(nrow(df)), each = 2), ]
-
-
-
+library(gridExtra)
+grid.arrange(p, sbrsrd11plot, nopard11plot, cmprrd11plot, nrow = 2, top = "Mean Number of Visits Per Day Given All Collared Sheep")
 ```
 
 ```{r}
