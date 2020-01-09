@@ -80,7 +80,9 @@ Nopah:
 2019-07-16 19:03:00 - 2019-07-29 15:06:00
 2019-07-29 19:55:00 - 2019-08-07 14:49:00
 
-Also due to the lack of coverage in the Castle Piutes, I limited the analysis to bighorn that located in the mine area (1730, 1733, 1734). I therefore did not include 1731 and 1732 because they were only located and seen in the Paiute area. I also will include 1728 in the visitation analyses, who does not have a working GPS collar.
+Also due to the lack of coverage in the Castle Piutes along the southern stream, I limited the analysis to bighorn that located in the mine area (1730, 1733, 1734, 1728 - which doesn't have a working GPS collar), and sheep that were in the Paiute Guzzler area for the vast majority of the time (1726, 1732, 1731). 1732 will need to be cut for the time around July 30th - August 4th because it went close to the southern stream. 1731 will need to be cut for the time around July 12-13th for the same reason. 1727 will not be included at all because she was only around the southern stream.
+
+
 
 Also have to figure out South Nopah vs. rest of Nopahs
 

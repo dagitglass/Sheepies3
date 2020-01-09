@@ -341,6 +341,7 @@ marbindsheepvisitperday1$`rownames(marbindsheepvisitperday)` <- as.Date(marbinds
 library(ggplot2)
 plotmarbnumsheep <- ggplot(data = marbindsheepvisitperday1, aes(x = `rownames(marbindsheepvisitperday)`, y = visits, fill = "supp")) +
   geom_bar(stat="identity", color = "black") + scale_x_date(limits = as.Date(c("2019-05-17", "2019-08-15"))) + ggtitle("Marbles") + xlab("Date") + ylab("Number of Individual Sheep") + theme(legend.position = "none") + ylim(0, 35) + geom_hline(yintercept = 35)
+print(plotmarbnumsheep)
 
 ## MARBLES NEED TO KNOW WHEN SHEEP DIED AND ADD IN LINE!!!
 
@@ -393,9 +394,9 @@ plotnopasheepnum <- ggplot(data = nopaindsheepvisitperday2, aes(x = Date, y = Nu
 # CASTLE-PIUTE
 
 cmprallsheepvisitsday <- as.data.frame(table(cmprcutobs$KI_Known_ID, cmprcutobs$GO_Date))
-# Also due to the lack of coverage in the Castle Piutes along the southern stream, I limited the analysis to bighorn that located in the mine area (1730, 1733, 1734, 1728 - which doesn't have a working GPS collar), and sheep that were in the Paiute Guzzler area for the vast majority of the time (1726, 1732, 1731). 1732 will need to be cut for the time around July 30th - August 4th because it went close to the southern stream. 1731 will need to be cut for the time around July 12-13th for the same reason. 1727 will not be included at all because she was only around the southern stream.
+# Also due to the lack of coverage in the Castle Piutes along the southern stream, I limited the analysis to bighorn that located in the mine area (1730, 1733, 1734, 1728 - which doesn't have a working GPS collar).
 ### IS THIS THE RIGHT THING TO DO???
-cmprallsheepvisitsday1 <- cmprallsheepvisitsday[(cmprallsheepvisitsday$Var1 == "BHS_1730") | (cmprallsheepvisitsday$Var1 == "BHS_1733") | (cmprallsheepvisitsday$Var1 == "BHS_1734") | (cmprallsheepvisitsday$Var1 == "BHS_1728") | (cmprallsheepvisitsday$Var1 == "BHS_1726") | (cmprallsheepvisitsday$Var1 == "BHS_1732") | (cmprallsheepvisitsday$Var1 == "BHS_1731"), ]
+cmprallsheepvisitsday1 <- cmprallsheepvisitsday[(cmprallsheepvisitsday$Var1 == "BHS_1730") | (cmprallsheepvisitsday$Var1 == "BHS_1733") | (cmprallsheepvisitsday$Var1 == "BHS_1734") | (cmprallsheepvisitsday$Var1 == "BHS_1728"), ]
 # CMPR only has up to 2 visits in a day, so only need to change 2 to 1.
 cmprallsheepvisitsday1$Freq[cmprallsheepvisitsday1$Freq == 2] <- 1
 cmprindsheepvisitperday <- as.data.frame(tapply(cmprallsheepvisitsday1$Freq, list(cmprallsheepvisitsday1$Var2), sum))
@@ -409,25 +410,43 @@ cmprdatena$Date <- as.Date(cmprdatena$Date, format = "%Y-%m-%d")
 cmprdatena$NumIndSheep <- as.numeric(cmprdatena$NumIndSheep)
 cmprindsheepvisitperday2 <- rbind(cmprindsheepvisitperday, cmprdatena)
 library(ggplot2)
-plotcmprnumsheep <- ggplot(data = cmprindsheepvisitperday2, aes(x = Date, y = NumIndSheep, fill = "supp")) + geom_bar(stat = "identity", color = "black") + scale_x_date(limits = as.Date(c("2019-05-17", "2019-08-15"))) + ggtitle("Castle Piute") + xlab("Date") + ylab("Number of Individual Sheep") + theme(legend.position = "none") + ylim(0, 35) + geom_hline(yintercept = 7)
+plotcmprnumsheep <- ggplot(data = cmprindsheepvisitperday2, aes(x = Date, y = NumIndSheep, fill = "supp")) + geom_bar(stat = "identity", color = "black") + scale_x_date(limits = as.Date(c("2019-05-17", "2019-08-15"))) + ggtitle("Castle Piute") + xlab("Date") + ylab("Number of Individual Sheep") + theme(legend.position = "none") + ylim(0, 35) + geom_hline(yintercept = 4)
 
 # Getting all plots in same file
-library(gridExtra)
-grid.arrange(plotmarbnumsheep, plotsbrsnumsheep, plotnopasheepnum, plotcmprnumsheep, nrow = 2, top = "Number of Individual Sheep Coming to Water by Day")
+# library(gridExtra)
+# grid.arrange(plotmarbnumsheep, plotsbrsnumsheep, plotnopasheepnum, plotcmprnumsheep, nrow = 2, top = "Number of Individual Sheep Coming to Water by Day")
 
 ```
 Percent of Individual Sheep Coming into Water by Day
 ```{r}
 
+# MARBLES - need to wait until Lily gets back to me with dead sheep.
+
 # SOUTH BRISTOLS
 sbrsindsheepvisitperday2$TotalNumSheep <- 27
 sbrsindsheepvisitperday2$Percentvisited <- (sbrsindsheepvisitperday2$NumIndSheep / sbrsindsheepvisitperday2$TotalNumSheep)
 library(ggplot2)
-plotsbrspercentsheep <- ggplot(data = sbrsindsheepvisitperday2, aes(x = Date, y = Percentvisited, fill = "supp")) + geom_bar(stat = "identity", color = "black") + scale_x_date(limits = as.Date(c("2019-05-17", "2019-08-15"))) + ggtitle("South Bristols") + xlab("Date") + ylab("Percent of Sheep") + theme(legend.position = "none") + ylim(0, 1)
-print(plotsbrspercentsheep)
+plotsbrspercentsheep <- ggplot(data = sbrsindsheepvisitperday2, aes(x = Date, y = Percentvisited, fill = "supp")) + geom_bar(stat = "identity", color = "black") + scale_x_date(limits = as.Date(c("2019-05-17", "2019-08-15"))) + ggtitle("South Bristols (n = 27)") + xlab("Date") + ylab("Percent of Sheep") + theme(legend.position = "none") + ylim(0, 1)
+plotsbrspercentsheep1 <- plotsbrspercentsheep %+% scale_y_continuous((name = "Percent of Collared Sheep"), sec.axis = sec_axis(~. * 27, name = "Number of Collared Sheep"))
+print(plotsbrspercentsheep1)
 
-library(ggplot2)
-plotcmprnumsheep <- ggplot(data = cmprindsheepvisitperday2, aes(x = Date, y = NumIndSheep, fill = "supp")) + geom_bar(stat = "identity", color = "black") + scale_x_date(limits = as.Date(c("2019-05-17", "2019-08-15"))) + ggtitle("Castle Piute") + xlab("Date") + ylab("Number of Individual Sheep") + theme(legend.position = "none") + ylim(0, 35) + geom_hline(yintercept = 7)
+# NOPAH
+
+nopaindsheepvisitperday2$Percentvisited <- (nopaindsheepvisitperday2$NumIndSheep / 6)
+plotnopapercentsheep <- ggplot(data = nopaindsheepvisitperday2, aes(x = Date, y = Percentvisited, fill = "supp")) + geom_bar(stat = "identity", color = "black") + scale_x_date(limits = as.Date(c("2019-05-17", "2019-08-15"))) + ggtitle("Nopah (n = 6)") + xlab("Date") + ylab("Percent of Sheep") + theme(legend.position = "none") + ylim(0, 1) 
+plotnopapercentsheep1 <- plotnopapercentsheep %+% scale_y_continuous((name = "Percent of Collared Sheep"), sec.axis = sec_axis(~. * 6, name = "Number of Collared Sheep"))
+print(plotnopapercentsheep1)
+
+# CASTLE PIUTE
+cmprindsheepvisitperday2$Percentvisited <- (cmprindsheepvisitperday2$NumIndSheep / 4)
+plotcmprpercentsheep <- ggplot(data = cmprindsheepvisitperday2, aes(x = Date, y = Percentvisited, fill = "supp")) + geom_bar(stat = "identity", color = "black") + scale_x_date(limits = as.Date(c("2019-05-17", "2019-08-15"))) + ggtitle("Castle Piute (n = 4)") + xlab("Date") + ylab("Percent of Sheep") + theme(legend.position = "none") + ylim(0, 1)
+plotcmprpercentsheep1 <- plotcmprpercentsheep %+% scale_y_continuous((name = "Percent of Collared Sheep"), sec.axis = sec_axis(~. * 4, name = "Number of Collared Sheep"))
+print(plotcmprpercentsheep1)
+
+library(gridExtra)
+grid.arrange(plotsbrspercentsheep1, plotnopapercentsheep1, plotcmprpercentsheep1, nrow = 2, top = "Percent & Number of Individual Sheep Coming to Water by Day")
+# grid.arrange(plotmarbnumsheep, plotsbrsnumsheep, plotnopasheepnum, plotcmprnumsheep, nrow = 2, top = "Number of Individual Sheep Coming to Water by Day")
+
 ```
 
 
