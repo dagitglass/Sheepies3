@@ -66,7 +66,7 @@ A List of everything that needs to be fixed:
 - Fix ages
 
 - subset to the correct mtn ranges
-- figure out the replication for the ones that have multiple visits in 1 observation
+- figure out the replication for the ones that have multiple visits in 1 observation -DONE
 - sheep drank has 53 blanks and 1 problematic Y
 - Cat 2 has a NA that probs should be 0?
 
@@ -284,9 +284,7 @@ renodups$GO_RangeCode[renodups$DateObsTimeIDwaterspecific == "20190722BHS_17405:
 as.factor(renodups$GO_RangeCode)
 
 cmprobs <- renodups[renodups$GO_RangeCode == "CMPR", ]
-# Limiting the visitations to those in the mine area due to the lack of coverage of the southern stream thing. This is the same thing as removing 1731 and 1732 from the dataset.
-cmprobs1 <- cmprobs[cmprobs$GO_WaterSource != "Piue", ]
-cmprcutobs <-  cmprobs1[(cmprobs1$DateTimect >= as.POSIXct("2019-05-23 15:48:00") & cmprobs1$DateTimect <= as.POSIXct("2019-05-31 11:18:00")) | (cmprobs1$DateTimect >= as.POSIXct("2019-06-20 17:47:00") & cmprobs1$DateTimect <= as.POSIXct("2019-06-27 02:09:00")) | (cmprobs1$DateTimect >= as.POSIXct("2019-07-11 18:25:00") & cmprobs1$DateTimect <= as.POSIXct("2019-07-14 18:28:00")) | (cmprobs1$DateTimect >= as.POSIXct("2019-07-30 14:30:00") & cmprobs1$DateTimect <= as.POSIXct("2019-08-03 16:46:00")) | (cmprobs1$DateTimect >= as.POSIXct("2019-08-05 19:10:00") & cmprobs1$DateTimect <= as.POSIXct("2019-08-15 07:27:00")),]
+cmprcutobs <-  cmprobs[(cmprobs$DateTimect >= as.POSIXct("2019-05-23 15:48:00") & cmprobs$DateTimect <= as.POSIXct("2019-05-31 11:18:00")) | (cmprobs$DateTimect >= as.POSIXct("2019-06-20 17:47:00") & cmprobs$DateTimect <= as.POSIXct("2019-06-27 02:09:00")) | (cmprobs$DateTimect >= as.POSIXct("2019-07-11 18:25:00") & cmprobs$DateTimect <= as.POSIXct("2019-07-14 18:28:00")) | (cmprobs$DateTimect >= as.POSIXct("2019-07-30 14:30:00") & cmprobs$DateTimect <= as.POSIXct("2019-08-03 16:46:00")) | (cmprobs$DateTimect >= as.POSIXct("2019-08-05 19:10:00") & cmprobs$DateTimect <= as.POSIXct("2019-08-15 07:27:00")),]
 
 nopaobs <- renodups[renodups$GO_RangeCode == "Nopa", ]
 nopacutobs <- nopaobs[(nopaobs$DateTimect >= as.POSIXct("2019-06-06 09:18:00") & nopaobs$DateTimect <= as.POSIXct("2019-06-13 11:04:00")) | (nopaobs$DateTimect >= as.POSIXct("2019-06-25 09:00:00") & nopaobs$DateTimect <= as.POSIXct("2019-07-08 12:35:00")) | (nopaobs$DateTimect >= as.POSIXct("2019-07-16 19:03:00") & nopaobs$DateTimect <= as.POSIXct("2019-07-29 15:06:00")) | (nopaobs$DateTimect >= as.POSIXct("2019-07-29 19:55:00") & nopaobs$DateTimect <= as.POSIXct("2019-08-07 14:49:00")),]
@@ -341,8 +339,10 @@ marbindsheepvisitperday1$`rownames(marbindsheepvisitperday)` <- as.Date(marbinds
 
 # GGPLOT WORKS!
 library(ggplot2)
-ggplot(data = marbindsheepvisitperday1, aes(x = `rownames(marbindsheepvisitperday)`, y = visits, fill = "supp")) +
-  geom_bar(stat="identity", color = "black") + scale_x_date(limits = as.Date(c("2019-05-17", "2019-08-10"))) + ggtitle("Marbles Number of Individual Sheep Coming to Water by Day") + xlab("Date") + ylab("Number of Individual Sheep") + theme(legend.position = "none")
+plotmarbnumsheep <- ggplot(data = marbindsheepvisitperday1, aes(x = `rownames(marbindsheepvisitperday)`, y = visits, fill = "supp")) +
+  geom_bar(stat="identity", color = "black") + scale_x_date(limits = as.Date(c("2019-05-17", "2019-08-15"))) + ggtitle("Marbles") + xlab("Date") + ylab("Number of Individual Sheep") + theme(legend.position = "none") + ylim(0, 35) + geom_hline(yintercept = 35)
+
+## MARBLES NEED TO KNOW WHEN SHEEP DIED AND ADD IN LINE!!!
 
 
 
@@ -367,7 +367,7 @@ sbrsdatena$Date <- as.Date(sbrsdatena$Date, format = "%Y-%m-%d")
 sbrsdatena$NumIndSheep <- as.numeric(sbrsdatena$NumIndSheep)
 sbrsindsheepvisitperday2 <- rbind(sbrsindsheepvisitperday1, sbrsdatena)
 library(ggplot2)
-ggplot(data = sbrsindsheepvisitperday2, aes(x = Date, y = NumIndSheep, fill = "supp")) + geom_bar(stat = "identity", color = "black") + scale_x_date(limits = as.Date(c("2019-06-04", "2019-08-12"))) + ggtitle("South Bristols Number of Individual Sheep Coming to Water by Day") + xlab("Date") + ylab("Number of Individual Sheep") + theme(legend.position = "none")
+plotsbrsnumsheep <- ggplot(data = sbrsindsheepvisitperday2, aes(x = Date, y = NumIndSheep, fill = "supp")) + geom_bar(stat = "identity", color = "black") + scale_x_date(limits = as.Date(c("2019-05-17", "2019-08-15"))) + ggtitle("South Bristols") + xlab("Date") + ylab("Number of Individual Sheep") + theme(legend.position = "none") + ylim(0, 35) + geom_hline(yintercept = 27)
 
 #Nopah
 nopaallsheepvisitsday <- as.data.frame(table(nopacutobs$KI_Known_ID, nopacutobs$GO_Date))
@@ -388,14 +388,49 @@ nopadatena$Date <- as.Date(nopadatena$Date, format = "%Y-%m-%d")
 nopadatena$NumIndSheep <- as.numeric(nopadatena$NumIndSheep)
 nopaindsheepvisitperday2 <- rbind(nopaindsheepvisitperday1, nopadatena)
 library(ggplot2)
-ggplot(data = nopaindsheepvisitperday2, aes(x = Date, y = NumIndSheep, fill = "supp")) + geom_bar(stat = "identity", color = "black") + scale_x_date(limits = as.Date(c("2019-06-06", "2019-08-07"))) + ggtitle("Nopah Number of Individual Sheep Coming to Water by Day") + xlab("Date") + ylab("Number of Individual Sheep") + theme(legend.position = "none")
+plotnopasheepnum <- ggplot(data = nopaindsheepvisitperday2, aes(x = Date, y = NumIndSheep, fill = "supp")) + geom_bar(stat = "identity", color = "black") + scale_x_date(limits = as.Date(c("2019-05-17", "2019-08-15"))) + ggtitle("Nopah") + xlab("Date") + ylab("Number of Individual Sheep") + theme(legend.position = "none") + ylim(0, 35) + geom_hline(yintercept = 6)
 
+# CASTLE-PIUTE
 
+cmprallsheepvisitsday <- as.data.frame(table(cmprcutobs$KI_Known_ID, cmprcutobs$GO_Date))
+# Also due to the lack of coverage in the Castle Piutes along the southern stream, I limited the analysis to bighorn that located in the mine area (1730, 1733, 1734, 1728 - which doesn't have a working GPS collar), and sheep that were in the Paiute Guzzler area for the vast majority of the time (1726, 1732, 1731). 1732 will need to be cut for the time around July 30th - August 4th because it went close to the southern stream. 1731 will need to be cut for the time around July 12-13th for the same reason. 1727 will not be included at all because she was only around the southern stream.
+### IS THIS THE RIGHT THING TO DO???
+cmprallsheepvisitsday1 <- cmprallsheepvisitsday[(cmprallsheepvisitsday$Var1 == "BHS_1730") | (cmprallsheepvisitsday$Var1 == "BHS_1733") | (cmprallsheepvisitsday$Var1 == "BHS_1734") | (cmprallsheepvisitsday$Var1 == "BHS_1728") | (cmprallsheepvisitsday$Var1 == "BHS_1726") | (cmprallsheepvisitsday$Var1 == "BHS_1732") | (cmprallsheepvisitsday$Var1 == "BHS_1731"), ]
+# CMPR only has up to 2 visits in a day, so only need to change 2 to 1.
+cmprallsheepvisitsday1$Freq[cmprallsheepvisitsday1$Freq == 2] <- 1
+cmprindsheepvisitperday <- as.data.frame(tapply(cmprallsheepvisitsday1$Freq, list(cmprallsheepvisitsday1$Var2), sum))
+cmprindsheepvisitperday <- cbind(rownames(cmprindsheepvisitperday), data.frame(cmprindsheepvisitperday, row.names = NULL))
+names(cmprindsheepvisitperday)[names(cmprindsheepvisitperday) == "rownames(cmprindsheepvisitperday)"] <- "Date"
+names(cmprindsheepvisitperday)[names(cmprindsheepvisitperday) == "tapply.cmprallsheepvisitsday1.Freq..list.cmprallsheepvisitsday1.Var2..."] <- "NumIndSheep"
+cmprindsheepvisitperday$Date <- as.Date(cmprindsheepvisitperday$Date, format = "%Y-%m-%d")
+# There were no dates that at the end of camera periods that needed to be deleted for the Castle Piutes.
+cmprdatena <- read.csv("CmprNAIndSheepVisits1820.csv", header = TRUE, sep = ",")
+cmprdatena$Date <- as.Date(cmprdatena$Date, format = "%Y-%m-%d")
+cmprdatena$NumIndSheep <- as.numeric(cmprdatena$NumIndSheep)
+cmprindsheepvisitperday2 <- rbind(cmprindsheepvisitperday, cmprdatena)
+library(ggplot2)
+plotcmprnumsheep <- ggplot(data = cmprindsheepvisitperday2, aes(x = Date, y = NumIndSheep, fill = "supp")) + geom_bar(stat = "identity", color = "black") + scale_x_date(limits = as.Date(c("2019-05-17", "2019-08-15"))) + ggtitle("Castle Piute") + xlab("Date") + ylab("Number of Individual Sheep") + theme(legend.position = "none") + ylim(0, 35) + geom_hline(yintercept = 7)
 
-
-
+# Getting all plots in same file
+library(gridExtra)
+grid.arrange(plotmarbnumsheep, plotsbrsnumsheep, plotnopasheepnum, plotcmprnumsheep, nrow = 2, top = "Number of Individual Sheep Coming to Water by Day")
 
 ```
+Percent of Individual Sheep Coming into Water by Day
+```{r}
+
+# SOUTH BRISTOLS
+sbrsindsheepvisitperday2$TotalNumSheep <- 27
+sbrsindsheepvisitperday2$Percentvisited <- (sbrsindsheepvisitperday2$NumIndSheep / sbrsindsheepvisitperday2$TotalNumSheep)
+library(ggplot2)
+plotsbrspercentsheep <- ggplot(data = sbrsindsheepvisitperday2, aes(x = Date, y = Percentvisited, fill = "supp")) + geom_bar(stat = "identity", color = "black") + scale_x_date(limits = as.Date(c("2019-05-17", "2019-08-15"))) + ggtitle("South Bristols") + xlab("Date") + ylab("Percent of Sheep") + theme(legend.position = "none") + ylim(0, 1)
+print(plotsbrspercentsheep)
+
+library(ggplot2)
+plotcmprnumsheep <- ggplot(data = cmprindsheepvisitperday2, aes(x = Date, y = NumIndSheep, fill = "supp")) + geom_bar(stat = "identity", color = "black") + scale_x_date(limits = as.Date(c("2019-05-17", "2019-08-15"))) + ggtitle("Castle Piute") + xlab("Date") + ylab("Number of Individual Sheep") + theme(legend.position = "none") + ylim(0, 35) + geom_hline(yintercept = 7)
+```
+
+
 
 ```{r}
 # Mean Number of Visits Per Day for all sheep (and Standard Deviations)
