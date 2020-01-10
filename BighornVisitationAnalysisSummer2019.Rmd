@@ -575,11 +575,73 @@ grid.arrange(p, sbrsrd11plot, nopard11plot, cmprrd11plot, nrow = 2, top = "Mean 
 I then ran statistics associated with the previous figures.
 - whether there is a significant difference in the number of collared sheep visiting water among months within each mountain range
 - whether there is a significant difference in the mean number of visitations of collared sheep visiting water among months within each mountain range
+- whether there is a significant difference in the number of visitations of collared sheep visiting water among months within each mountain range?? (don't do any sort of by-day calculation)???
 - whether there is a significant difference in the percent of collared sheep visiting water between mountain ranges 
 
 
 ```{r}
+## whether there is a significant difference in the number of collared sheep visiting water among months within each mountain range
+# South Bristols
+library(lubridate)
+sbrsindsheepvisitperday2$Month <- month(sbrsindsheepvisitperday2$Date)
+#Having trouble getting this to show up 'inline' in Markdown, but qq plot looks good.
+qqnorm(sbrsindsheepvisitperday2$NumIndSheep) 
+qqline(sbrsindsheepvisitperday2$NumIndSheep)
+hist(sbrsindsheepvisitperday2$NumIndSheep)
+boxplot(NumIndSheep ~ Month, data = sbrsindsheepvisitperday2)
+bartlett.test(NumIndSheep ~ Month, data = sbrsindsheepvisitperday2)
+# p value = 0.7447
 
+is.factor(Sparrow$Observer)
+str(Sparrow$Observer)
+Sparrow$Observer <- as.factor(Sparrow$Observer)
+str(Sparrow$Observer)
+CulObs <- aov(Culmen ~ Observer, data = Sparrow)
+summary.lm(CulObs)
+TukeyHSD(CulObs)
+
+# 3. Is there a difference in tarsus size between species?
+# Check assumptions, perform the appropriate test, and create an appropriate plot to visualize.
+qqnorm(Sparrow$Tarsus)
+qqline(Sparrow$Tarsus)
+shapiro.test(Sparrow$Tarsus)
+shapiro.test(Sparrow$Tarsus[Sparrow$Species == "SESP"])
+shapiro.test(Sparrow$Tarsus[Sparrow$Species == "SSTS"])
+hist(Sparrow$Tarsus)
+var.test(x = Sparrow$Tarsus[Sparrow$Species == "SESP"], y = Sparrow$Tarsus[Sparrow$Species == "SSTS"])
+# The above tests show that tarsus size is not quite normally distributed, but it is close enough
+# to a normal distribution to allow us to use a two-way t-test.The tarsus data approximately fits a 
+# line in the normal quantile plot, and the histogram looks approximately normally distributed, if a 
+# little right-skewed.
+t.test(Tarsus ~ Species, data = Sparrow)
+# p-value < 2.2e-16 There is a significant difference between the two species.
+boxplot(Sparrow$Tarsus ~ Sparrow$Species)
+# 4. Was there an influence of observer on culmen measurements? If so, which observers had significantly different measurements from each other?
+# Check assumptions and perform the appropriate test. Be sure that your observer variable is properly encoded as a factor.
+qqnorm(Sparrow$Culmen)
+qqline(Sparrow$Culmen)
+shapiro.test(Sparrow$Culmen)
+boxplot(Culmen ~ Observer, data = Sparrow)
+bartlett.test(Culmen ~ Observer, data = Sparrow)
+# The data is normally distributed enough to perform an ANOVA. Looking at the boxplot, there are not obvious standouts in culmen size by observer.
+is.factor(Sparrow$Observer)
+str(Sparrow$Observer)
+Sparrow$Observer <- as.factor(Sparrow$Observer)
+str(Sparrow$Observer)
+CulObs <- aov(Culmen ~ Observer, data = Sparrow)
+summary.lm(CulObs)
+TukeyHSD(CulObs)
+# Observer did influence culmen measurements. Observers that had significantly different measurements
+# from each other are: 3-2, 8-2, 4-3, 7-3, 6-4, 8-4, 8-6, and 8-7.
+# 5. Is there an interaction between Sex and Species on Culmen size?
+# Perform the appropriate test and interpret the model output. Run a post-hoc test if needed.
+culsexspe <- aov(Culmen ~ Sex * Species, data = Sparrow)
+summary(culsexspe)
+TukeyHSD(culsexspe)
+# P-value for Sex:Species = 0.000238. There is a significant interaction between sex and species on culmen size. This is interesting because
+# species has a significant effect on culmen size, while sex does not. Looking at the results of the Tukey's test, all sex-species combinations had a 
+# significant effect on culmen size except Male SSTS-Female SSTS. This means that the relationship between
+# sex and culmen size changes depending on which species you are looking at.
 
 ```
 
