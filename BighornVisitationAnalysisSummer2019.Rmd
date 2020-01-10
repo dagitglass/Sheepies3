@@ -591,6 +591,15 @@ hist(sbrsindsheepvisitperday2$NumIndSheep)
 boxplot(NumIndSheep ~ Month, data = sbrsindsheepvisitperday2)
 bartlett.test(NumIndSheep ~ Month, data = sbrsindsheepvisitperday2)
 # p value = 0.7447
+sbrsindsheepvisitperday2$Month <- as.factor(sbrsindsheepvisitperday2$Month)
+NISMonth <- aov(NumIndSheep ~ Month, data = sbrsindsheepvisitperday2)
+summary.lm(NISMonth)
+# p-value = 0.01271
+TukeyHSD(NISMonth)
+#          diff         lwr      upr     p adj
+# 7-6 0.7531056 -1.25106927 2.757280 0.6400796
+# 8-6 3.4173913  0.71973569 6.115047 0.0095915
+# 8-7 2.6642857  0.04063367 5.287938 0.0457927
 
 is.factor(Sparrow$Observer)
 str(Sparrow$Observer)
