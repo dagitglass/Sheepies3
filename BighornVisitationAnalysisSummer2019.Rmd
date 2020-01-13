@@ -258,9 +258,9 @@ Then, just to be sure, I cut the visitation data to the time periods when all ca
 
 At this time, I also checked that the GO_WaterSource and GO_RangeCode made sense for each range. I changed two entries that were actually Nopah but mistakenly CMPR.
 
+I also checked to see if every sheep came into water at least once in every range. Marb BHS_1589, Marb BHS_1413, BHS_1497, and BHS_1597 never came into water. South Bristols BHS_1340, BHS_1331, and BHS_1598 never came into water. Nopah BHS_1737 never came into water. All of the CMPR sheep that I limited this analysis to (for reasons listed below) came into water.
 
-
-
+Some notes on the whereabouts of these sheep as per their GPS collars. Marb BHS_1589 literally just chilled on Castle Peak. BHS_1413 also no longer working (Vectronics website is down). BHS_1497 and BHS_1597's collars are no longer working. South Bristols BHS_1340 and BHS_1331 no longer had working GPS collars (is this true for BHS_1598 too? Vectronics website is currently down). Nopah BHS_1737 was between the Nopah and El Si Guzzler - looks like stayed as high elevation? 
 
 ``` {r}
 
@@ -494,6 +494,7 @@ library(ggplot2)
 p <- ggplot(data = marbindrd11, aes(x = `rownames(marbindrd)`, y = visits)) + geom_point() + geom_errorbar(aes(ymin = visits - sd, ymax = visits + sd), width = .2) + labs(title = "Marbles (n = 35)", x = "Date", y = "Mean Number of Visits by Day") + ylim(0, 2.5) + scale_x_date(limits = as.Date(c("2019-05-17", "2019-08-15"))) + theme_grey(base_size = 10)
 # print(p)
 
+# An Attempt to make it boxplots ggplot(data = marbindrd11, aes(x = `rownames(marbindrd)`, y = visits)) + geom_boxplot((aes(group = cut_width(`rownames(marbindrd)`, 1))
 
 # SOUTH BRISTOLS
 
@@ -600,14 +601,19 @@ TukeyHSD(NISMonth)
 # 7-6 0.7531056 -1.25106927 2.757280 0.6400796
 # 8-6 3.4173913  0.71973569 6.115047 0.0095915
 # 8-7 2.6642857  0.04063367 5.287938 0.0457927
+# South Bristols significant 
 
-is.factor(Sparrow$Observer)
-str(Sparrow$Observer)
-Sparrow$Observer <- as.factor(Sparrow$Observer)
-str(Sparrow$Observer)
-CulObs <- aov(Culmen ~ Observer, data = Sparrow)
-summary.lm(CulObs)
-TukeyHSD(CulObs)
+PercentMonthsbrs <- aov(formula = Percentvisited ~ Month, data = sbrsindsheepvisitperday2)
+summary.lm(PercentMonthsbrs)
+TukeyHSD(PercentMonthsbrs)
+#          diff          lwr       upr     p adj
+# 7-6 0.02789280 -0.046335899 0.1021215 0.6400796
+# 8-6 0.12657005  0.026656877 0.2264832 0.0095915
+# 8-7 0.09867725  0.001504951 0.1958495 0.0457927
+
+# ANOVA on actual numbers and percentages yields the same exact result.
+
+nopaindsheepvisitperday2
 
 # 3. Is there a difference in tarsus size between species?
 # Check assumptions, perform the appropriate test, and create an appropriate plot to visualize.
