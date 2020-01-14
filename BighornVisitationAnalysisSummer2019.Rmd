@@ -258,9 +258,20 @@ Then, just to be sure, I cut the visitation data to the time periods when all ca
 
 At this time, I also checked that the GO_WaterSource and GO_RangeCode made sense for each range. I changed two entries that were actually Nopah but mistakenly CMPR.
 
-I also checked to see if every sheep came into water at least once in every range. Marb BHS_1589, Marb BHS_1413, BHS_1497, and BHS_1597 never came into water. South Bristols BHS_1340, BHS_1331, and BHS_1598 never came into water. Nopah BHS_1737 never came into water. All of the CMPR sheep that I limited this analysis to (for reasons listed below) came into water.
+I also checked to see if every sheep came into water at least once in every range. Marb BHS_1589, Marb BHS_1413, BHS_1496, BHS_1497, and BHS_1597 never came into water. South Bristols BHS_1340, BHS_1331, and BHS_1598 never came into water. Nopah BHS_1737 never came into water. All of the CMPR sheep that I limited this analysis to (for reasons listed below) came into water.
 
 Some notes on the whereabouts of these sheep as per their GPS collars. Marb BHS_1589 literally just chilled on Castle Peak. BHS_1413 also no longer working (Vectronics website is down). BHS_1497 and BHS_1597's collars are no longer working. South Bristols BHS_1340 and BHS_1331 no longer had working GPS collars (is this true for BHS_1598 too? Vectronics website is currently down). Nopah BHS_1737 was between the Nopah and El Si Guzzler - looks like stayed as high elevation? 
+
+1589 - Febuary 28th
+1413 - not in last seen table
+1496 - last seen 2018 
+1497 - last seen in November 2019
+1597 - 
+1340 - last seen in November 2019
+1331 - 
+1598 - 
+
+NEED TO FIGURE OUT THE STATUS OF 1496!!!
 
 ``` {r}
 
@@ -309,8 +320,8 @@ Afterwards, I realized that the plots that I made here are not nearly as useful 
 
 marballsheepvisitsday <- as.data.frame(table(Marbcutobs$KI_Known_ID, Marbcutobs$GO_Date))
 # View(marballsheepvisitsday)
-
-marballsheepvisitsday1 <- marballsheepvisitsday[(marballsheepvisitsday$Var1 == "BHS_1367") |  (marballsheepvisitsday$Var1 == "BHS_1365") | (marballsheepvisitsday$Var1 == "BHS_1361") |(marballsheepvisitsday$Var1 == "BHS_1362") | (marballsheepvisitsday$Var1 == "BHS_1357") | (marballsheepvisitsday$Var1 == "BHS_1416") | (marballsheepvisitsday$Var1 == "BHS_1421") | (marballsheepvisitsday$Var1 == "BHS_1581") | (marballsheepvisitsday$Var1 == "BHS_1577") | (marballsheepvisitsday$Var1 == "BHS_1574") | (marballsheepvisitsday$Var1 == "BHS_1576") | (marballsheepvisitsday$Var1 == "BHS_1583") | (marballsheepvisitsday$Var1 == "BHS_1584") | (marballsheepvisitsday$Var1 == "BHS_1585") | (marballsheepvisitsday$Var1 == "BHS_1587") | (marballsheepvisitsday$Var1 == "BHS_1582") | (marballsheepvisitsday$Var1 == "BHS_1575") | (marballsheepvisitsday$Var1 == "BHS_1589") | (marballsheepvisitsday$Var1 == "BHS_1592") | (marballsheepvisitsday$Var1 == "BHS_1594") | (marballsheepvisitsday$Var1 == "BHS_1420") | (marballsheepvisitsday$Var1 == "BHS_1493") | (marballsheepvisitsday$Var1 == "BHS_1413") | (marballsheepvisitsday$Var1 == "BHS_1494") | (marballsheepvisitsday$Var1 == "BHS_1590") | (marballsheepvisitsday$Var1 == "BHS_1591") | (marballsheepvisitsday$Var1 == "BHS_1682") | (marballsheepvisitsday$Var1 == "BHS_1683") | (marballsheepvisitsday$Var1 == "BHS_1684") | (marballsheepvisitsday$Var1 == "BHS_1366") | (marballsheepvisitsday$Var1 == "BHS_1497") | (marballsheepvisitsday$Var1 == "BHS_1496") | (marballsheepvisitsday$Var1 == "BHS_1597") | (marballsheepvisitsday$Var1 == "BHS_1588") | (marballsheepvisitsday$Var1 == "BHS_1595"), ]
+# Took out 1413 b/c dead, 1589 and 1597 because assumed dead 
+marballsheepvisitsday1 <- marballsheepvisitsday[(marballsheepvisitsday$Var1 == "BHS_1367") |  (marballsheepvisitsday$Var1 == "BHS_1365") | (marballsheepvisitsday$Var1 == "BHS_1361") |(marballsheepvisitsday$Var1 == "BHS_1362") | (marballsheepvisitsday$Var1 == "BHS_1357") | (marballsheepvisitsday$Var1 == "BHS_1416") | (marballsheepvisitsday$Var1 == "BHS_1421") | (marballsheepvisitsday$Var1 == "BHS_1581") | (marballsheepvisitsday$Var1 == "BHS_1577") | (marballsheepvisitsday$Var1 == "BHS_1574") | (marballsheepvisitsday$Var1 == "BHS_1576") | (marballsheepvisitsday$Var1 == "BHS_1583") | (marballsheepvisitsday$Var1 == "BHS_1584") | (marballsheepvisitsday$Var1 == "BHS_1585") | (marballsheepvisitsday$Var1 == "BHS_1587") | (marballsheepvisitsday$Var1 == "BHS_1582") | (marballsheepvisitsday$Var1 == "BHS_1575") | (marballsheepvisitsday$Var1 == "BHS_1592") | (marballsheepvisitsday$Var1 == "BHS_1594") | (marballsheepvisitsday$Var1 == "BHS_1420") | (marballsheepvisitsday$Var1 == "BHS_1493") | (marballsheepvisitsday$Var1 == "BHS_1494") | (marballsheepvisitsday$Var1 == "BHS_1590") | (marballsheepvisitsday$Var1 == "BHS_1591") | (marballsheepvisitsday$Var1 == "BHS_1682") | (marballsheepvisitsday$Var1 == "BHS_1683") | (marballsheepvisitsday$Var1 == "BHS_1684") | (marballsheepvisitsday$Var1 == "BHS_1366") | (marballsheepvisitsday$Var1 == "BHS_1497") | (marballsheepvisitsday$Var1 == "BHS_1588") | (marballsheepvisitsday$Var1 == "BHS_1595"), ]
 
 marballsheepvisitsday1$Freq[marballsheepvisitsday1$Freq == 2] <- 1
 marballsheepvisitsday1$Freq[marballsheepvisitsday1$Freq == 3] <- 1
@@ -347,7 +358,7 @@ marbindsheepvisitperday1$`rownames(marbindsheepvisitperday)` <- as.Date(marbinds
 # GGPLOT WORKS!
 library(ggplot2)
 plotmarbnumsheep <- ggplot(data = marbindsheepvisitperday1, aes(x = `rownames(marbindsheepvisitperday)`, y = visits, fill = "supp")) +
-  geom_bar(stat="identity", color = "black") + scale_x_date(limits = as.Date(c("2019-05-17", "2019-08-15"))) + ggtitle("Marbles") + xlab("Date") + ylab("Number of Individual Sheep") + theme(legend.position = "none") + ylim(0, 35) + geom_hline(yintercept = 35)
+  geom_bar(stat="identity", color = "black") + scale_x_date(limits = as.Date(c("2019-05-17", "2019-08-15"))) + ggtitle("Marbles") + xlab("Date") + ylab("Number of Individual Sheep") + theme(legend.position = "none") + ylim(0, 35) + geom_hline(yintercept = 31)
 print(plotmarbnumsheep)
 
 ## MARBLES NEED TO KNOW WHEN SHEEP DIED AND ADD IN LINE!!!
@@ -427,7 +438,17 @@ plotcmprnumsheep <- ggplot(data = cmprindsheepvisitperday2, aes(x = Date, y = Nu
 I then made figures of the percent of individual sheep coming into water by day. Given the extreme difference in the number of sheep between different mountain ranges, I also included the absolute number of sheep coming in as a secondary y axis. For the Marbles, the absolute number of collared sheep decreases towards the end of the summer due to multiple mortalities.
 ```{r}
 
-# MARBLES - need to wait until Lily gets back to me with dead sheep.
+# MARBLES
+# 32 includes 1496 and 1497.
+# 31 does not include 1496.
+
+# NEED TO FIX NUMBER GOING DOWN FROM 31- DEAD MARBLES SHEEP!!!!
+marbindsheepvisitperday1$TotalNumSheep <- 31
+marbindsheepvisitperday1$Percentvisited <- (marbindsheepvisitperday1$visits / marbindsheepvisitperday1$TotalNumSheep)
+library(ggplot2)
+plotmarbpercentsheep <- ggplot(data = marbindsheepvisitperday1, aes(x = `rownames(marbindsheepvisitperday)`, y = Percentvisited, fill = "supp")) + geom_bar(stat = "identity", color = "black") + scale_x_date(limits = as.Date(c("2019-05-17", "2019-08-15"))) + ggtitle("Marbles (n = 31)") + xlab("Date") + ylab("Percent of Sheep") + theme(legend.position = "none") + ylim(0, 1)
+plotmarbpercentsheep1 <- plotmarbpercentsheep %+% scale_y_continuous((name = "Percent of Collared Sheep"), sec.axis = sec_axis(~. * 31, name = "Number of Collared Sheep"))
+print(plotmarbpercentsheep1)
 
 # SOUTH BRISTOLS
 sbrsindsheepvisitperday2$TotalNumSheep <- 27
@@ -451,7 +472,7 @@ plotcmprpercentsheep1 <- plotcmprpercentsheep %+% scale_y_continuous((name = "Pe
 print(plotcmprpercentsheep1)
 
 library(gridExtra)
-grid.arrange(plotsbrspercentsheep1, plotnopapercentsheep1, plotcmprpercentsheep1, nrow = 2, top = "Percent & Number of Individual Sheep Coming to Water by Day")
+grid.arrange(plotmarbpercentsheep1, plotsbrspercentsheep1, plotnopapercentsheep1, plotcmprpercentsheep1, nrow = 2, top = "Percent & Number of Individual Sheep Coming to Water by Day")
 # grid.arrange(plotmarbnumsheep, plotsbrsnumsheep, plotnopasheepnum, plotcmprnumsheep, nrow = 2, top = "Number of Individual Sheep Coming to Water by Day")
 
 ```
@@ -470,7 +491,10 @@ Marbcutobsrd <- Marbcutobs[(Marbcutobs$GO_Date != "2019-06-12") & (Marbcutobs$GO
 
 marballrd <- as.data.frame(table(Marbcutobsrd$KI_Known_ID, Marbcutobsrd$GO_Date))
 
-marballrd1 <- marballrd[(marballrd$Var1 == "BHS_1367") |  (marballrd$Var1 == "BHS_1365") | (marballrd$Var1 == "BHS_1361") | (marballrd$Var1 == "BHS_1362") | (marballrd$Var1 == "BHS_1357") | (marballrd$Var1 == "BHS_1416") | (marballrd$Var1 == "BHS_1421") | (marballrd$Var1 == "BHS_1581") | (marballrd$Var1 == "BHS_1577") | (marballrd$Var1 == "BHS_1574") | (marballrd$Var1 == "BHS_1576") | (marballrd$Var1 == "BHS_1583") | (marballrd$Var1 == "BHS_1584") | (marballrd$Var1 == "BHS_1585") | (marballrd$Var1 == "BHS_1587") | (marballrd$Var1 == "BHS_1582") | (marballrd$Var1 == "BHS_1575") | (marballrd$Var1 == "BHS_1589") | (marballrd$Var1 == "BHS_1592") | (marballrd$Var1 == "BHS_1594") | (marballrd$Var1 == "BHS_1420") | (marballrd$Var1 == "BHS_1493") | (marballrd$Var1 == "BHS_1413") | (marballrd$Var1 == "BHS_1494") | (marballrd$Var1 == "BHS_1590") | (marballrd$Var1 == "BHS_1591") | (marballrd$Var1 == "BHS_1682") | (marballrd$Var1 == "BHS_1683") | (marballrd$Var1 == "BHS_1684") | (marballrd$Var1 == "BHS_1366") | (marballrd$Var1 == "BHS_1497") | (marballrd$Var1 == "BHS_1496") | (marballrd$Var1 == "BHS_1597") | (marballrd$Var1 == "BHS_1588") | (marballrd$Var1 == "BHS_1595"), ]
+marballrd1 <- marballrd[(marballrd$Var1 == "BHS_1367") |  (marballrd$Var1 == "BHS_1365") | (marballrd$Var1 == "BHS_1361") | (marballrd$Var1 == "BHS_1362") | (marballrd$Var1 == "BHS_1357") | (marballrd$Var1 == "BHS_1416") | (marballrd$Var1 == "BHS_1421") | (marballrd$Var1 == "BHS_1581") | (marballrd$Var1 == "BHS_1577") | (marballrd$Var1 == "BHS_1574") | (marballrd$Var1 == "BHS_1576") | (marballrd$Var1 == "BHS_1583") | (marballrd$Var1 == "BHS_1584") | (marballrd$Var1 == "BHS_1585") | (marballrd$Var1 == "BHS_1587") | (marballrd$Var1 == "BHS_1582") | (marballrd$Var1 == "BHS_1575") | (marballrd$Var1 == "BHS_1592") | (marballrd$Var1 == "BHS_1594") | (marballrd$Var1 == "BHS_1420") | (marballrd$Var1 == "BHS_1493") | (marballrd$Var1 == "BHS_1494") | (marballrd$Var1 == "BHS_1590") | (marballrd$Var1 == "BHS_1591") | (marballrd$Var1 == "BHS_1682") | (marballrd$Var1 == "BHS_1683") | (marballrd$Var1 == "BHS_1684") | (marballrd$Var1 == "BHS_1366") | (marballrd$Var1 == "BHS_1497") | (marballrd$Var1 == "BHS_1588") | (marballrd$Var1 == "BHS_1595"), ]
+# Adding in sheep that never visited water all summer
+Marbinsert1497 <- read.csv("Marbinsert1497.csv", header = TRUE, sep = ",")
+marballrd1 <- rbind(marballrd1, Marbinsert1497)
 
 marbindrd <- as.data.frame(tapply(marballrd1$Freq, list(marballrd1$Var2), mean))
 marbindrd$sd <- tapply(marballrd1$Freq, list(marballrd1$Var2), sd)
@@ -613,7 +637,12 @@ TukeyHSD(PercentMonthsbrs)
 
 # ANOVA on actual numbers and percentages yields the same exact result.
 
-nopaindsheepvisitperday2
+# Nopah - very few sheep so results may not mean much?
+nopaindsheepvisitperday2$Month <- month(nopaindsheepvisitperday2$Date)
+qqnorm(nopaindsheepvisitperday2$NumIndSheep)
+qqline(nopaindsheepvisitperday2$NumIndSheep)
+hist(nopaindsheepvisitperday2$NumIndSheep)
+boxplot()
 
 # 3. Is there a difference in tarsus size between species?
 # Check assumptions, perform the appropriate test, and create an appropriate plot to visualize.
