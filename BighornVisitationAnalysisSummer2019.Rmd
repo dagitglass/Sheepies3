@@ -367,7 +367,17 @@ print(plotmarbnumsheep)
 
 # SOUTH BRISTOLS
 
-#### NEED TO CHECK AND POTENTIALLY FIX BHS_1499 from Talc Mine 6/23/19 10:04 am. ALso BHS_1591 Teresa Seep 7/19 21:59 and 7/20 2:43 - probably need to change to Marb.
+#### NEED TO CHECK AND POTENTIALLY FIX ALso BHS_1591 Teresa Seep 7/19 21:59 and 7/20 2:43 - probably need to change to Marb.
+
+BrsScutobs$KI_Known_ID <- as.character(BrsScutobs$KI_Known_ID)
+BrsScutobs$KI_Known_ID[BrsScutobs$DateObsTimeIDwaterspecific == "20190623BHS_149910:04TalcNA"] <- "BHS_1599"
+BrsScutobs$KI_Known_ID <- as.factor(BrsScutobs$KI_Known_ID)
+
+BrsScutobs$GO_RangeCode <- as.character(BrsScutobs$GO_RangeCode)
+BrsScutobs$GO_RangeCode[BrsScutobs$DateObsTimeIDwaterspecific == "20190719BHS_159121:59TherSeep"] <- "Marb"
+BrsScutobs$GO_RangeCode[BrsScutobs$DateObsTimeIDwaterspecific == "20190720BHS_15912:43TherSeep"] <- "Marb"
+BrsScutobs$GO_RangeCode <- as.factor(BrsScutobs$GO_RangeCode)
+# Still shows up when type in View(BrsScutobs[BrsScutobs$KI_Known_ID == "BHS_1591", ]) though now says Marb -- DID I FIX IT?
 
 sbrssheepvisitsday <- as.data.frame(table(BrsScutobs$KI_Known_ID, BrsScutobs$GO_Date))
 sbrssheepvisitsday1 <- sbrssheepvisitsday[(sbrssheepvisitsday$Var1 == "BHS_1330") | (sbrssheepvisitsday$Var1 == "BHS_1337") | (sbrssheepvisitsday$Var1 == "BHS_1334") | (sbrssheepvisitsday$Var1 == "BHS_1329") | (sbrssheepvisitsday$Var1 == "BHS_1328") | (sbrssheepvisitsday$Var1 == "BHS_1333") | (sbrssheepvisitsday$Var1 == "BHS_1425") | (sbrssheepvisitsday$Var1 == "BHS_1426") | (sbrssheepvisitsday$Var1 == "BHS_1489") | (sbrssheepvisitsday$Var1 == "BHS_1491") | (sbrssheepvisitsday$Var1 == "BHS_1578") | (sbrssheepvisitsday$Var1 == "BHS_1579") | (sbrssheepvisitsday$Var1 == "BHS_1580") | (sbrssheepvisitsday$Var1 == "BHS_1596") | (sbrssheepvisitsday$Var1 == "BHS_1599") | (sbrssheepvisitsday$Var1 == "BHS_1687") | (sbrssheepvisitsday$Var1 == "BHS_1486") | (sbrssheepvisitsday$Var1 == "BHS_1490") | (sbrssheepvisitsday$Var1 == "BHS_1492") | (sbrssheepvisitsday$Var1 == "BHS_1428") | (sbrssheepvisitsday$Var1 == "BHS_1685") | (sbrssheepvisitsday$Var1 == "BHS_1686") | (sbrssheepvisitsday$Var1 == "BHS_1688") | (sbrssheepvisitsday$Var1 == "BHS_1689"),]
@@ -377,7 +387,7 @@ sbrssheepvisitsday1$Freq[sbrssheepvisitsday1$Freq == 3] <- 1
 sbrssheepvisitsday1$Freq[sbrssheepvisitsday1$Freq == 4] <- 1
 sbrssheepvisitsday1$Freq[sbrssheepvisitsday1$Freq == 5] <- 1
 sbrsindsheepvisitperday <- as.data.frame(tapply(sbrssheepvisitsday1$Freq, list(sbrssheepvisitsday1$Var2), sum))
-View(sbrsindsheepvisitperday)
+# View(sbrsindsheepvisitperday)
 sbrsindsheepvisitperday <- cbind(rownames(sbrsindsheepvisitperday), data.frame(sbrsindsheepvisitperday, row.names = NULL))
 names(sbrsindsheepvisitperday)[names(sbrsindsheepvisitperday) == "rownames(sbrsindsheepvisitperday)"] <- "Date"
 names(sbrsindsheepvisitperday)[names(sbrsindsheepvisitperday) == "tapply.sbrssheepvisitsday1.Freq..list.sbrssheepvisitsday1.Var2..."] <- "NumIndSheep"
@@ -388,7 +398,7 @@ sbrsdatena$Date <- as.Date(sbrsdatena$Date, format = "%Y-%m-%d")
 sbrsdatena$NumIndSheep <- as.numeric(sbrsdatena$NumIndSheep)
 sbrsindsheepvisitperday2 <- rbind(sbrsindsheepvisitperday1, sbrsdatena)
 library(ggplot2)
-plotsbrsnumsheep <- ggplot(data = sbrsindsheepvisitperday2, aes(x = Date, y = NumIndSheep, fill = "supp")) + geom_bar(stat = "identity", color = "black") + scale_x_date(limits = as.Date(c("2019-05-17", "2019-08-15"))) + ggtitle("South Bristols") + xlab("Date") + ylab("Number of Individual Sheep") + theme(legend.position = "none") + ylim(0, 35) + geom_hline(yintercept = 27)
+plotsbrsnumsheep <- ggplot(data = sbrsindsheepvisitperday2, aes(x = Date, y = NumIndSheep, fill = "supp")) + geom_bar(stat = "identity", color = "black") + scale_x_date(limits = as.Date(c("2019-05-17", "2019-08-15"))) + ggtitle("South Bristols") + xlab("Date") + ylab("Number of Individual Sheep") + theme(legend.position = "none") + ylim(0, 35) + geom_hline(yintercept = 24)
 
 #Nopah
 nopaallsheepvisitsday <- as.data.frame(table(nopacutobs$KI_Known_ID, nopacutobs$GO_Date))
@@ -459,11 +469,11 @@ plotmarbpercentsheep1 <- plotmarbpercentsheep %+% scale_y_continuous((name = "Pe
 print(plotmarbpercentsheep1)
 
 # SOUTH BRISTOLS
-sbrsindsheepvisitperday2$TotalNumSheep <- 27
+sbrsindsheepvisitperday2$TotalNumSheep <- 24
 sbrsindsheepvisitperday2$Percentvisited <- (sbrsindsheepvisitperday2$NumIndSheep / sbrsindsheepvisitperday2$TotalNumSheep)
 library(ggplot2)
-plotsbrspercentsheep <- ggplot(data = sbrsindsheepvisitperday2, aes(x = Date, y = Percentvisited, fill = "supp")) + geom_bar(stat = "identity", color = "black") + scale_x_date(limits = as.Date(c("2019-05-17", "2019-08-15"))) + ggtitle("South Bristols (n = 27)") + xlab("Date") + ylab("Percent of Sheep") + theme(legend.position = "none") + ylim(0, 1)
-plotsbrspercentsheep1 <- plotsbrspercentsheep %+% scale_y_continuous((name = "Percent of Collared Sheep"), sec.axis = sec_axis(~. * 27, name = "Number of Collared Sheep"))
+plotsbrspercentsheep <- ggplot(data = sbrsindsheepvisitperday2, aes(x = Date, y = Percentvisited, fill = "supp")) + geom_bar(stat = "identity", color = "black") + scale_x_date(limits = as.Date(c("2019-05-17", "2019-08-15"))) + ggtitle("South Bristols (n = 24)") + xlab("Date") + ylab("Percent of Sheep") + theme(legend.position = "none") + ylim(0, 1)
+plotsbrspercentsheep1 <- plotsbrspercentsheep %+% scale_y_continuous((name = "Percent of Collared Sheep"), sec.axis = sec_axis(~. * 24, name = "Number of Collared Sheep"))
 print(plotsbrspercentsheep1)
 
 # NOPAH
@@ -523,7 +533,7 @@ marbindrd11$visits <- as.numeric(marbindrd11$visits)
 marbindrd11$sd <- as.numeric(marbindrd11$sd)
 marbindrd11$`rownames(marbindrd)` <- as.Date(marbindrd11$`rownames(marbindrd)` , "%Y-%m-%d")
 library(ggplot2)
-p <- ggplot(data = marbindrd11, aes(x = `rownames(marbindrd)`, y = visits)) + geom_point() + geom_errorbar(aes(ymin = visits - sd, ymax = visits + sd), width = .2) + labs(title = "Marbles (n = 35)", x = "Date", y = "Mean Number of Visits by Day") + ylim(0, 2.5) + scale_x_date(limits = as.Date(c("2019-05-17", "2019-08-15"))) + theme_grey(base_size = 10)
+p <- ggplot(data = marbindrd11, aes(x = `rownames(marbindrd)`, y = visits)) + geom_point() + geom_errorbar(aes(ymin = visits - sd, ymax = visits + sd), width = .2) + labs(title = "Marbles (n = 31*)", x = "Date", y = "Mean Number of Visits by Day") + ylim(0, 2.5) + scale_x_date(limits = as.Date(c("2019-05-17", "2019-08-15"))) + theme_grey(base_size = 10)
 # print(p)
 
 # An Attempt to make it boxplots ggplot(data = marbindrd11, aes(x = `rownames(marbindrd)`, y = visits)) + geom_boxplot((aes(group = cut_width(`rownames(marbindrd)`, 1))
@@ -548,7 +558,7 @@ BrsScutobsrdwithdups <- rbind(BrsSonevisitperobs, BrsStwovisitdup, BrsSthreevisi
 sbrsallrd <- as.data.frame(table(BrsScutobsrdwithdups$KI_Known_ID, BrsScutobsrdwithdups$GO_Date))
 # I double-checked that the table function did not remove the duplicates before calculation. It didn't, so this worked.
 # tocompare <- as.data.frame(table(BrsScutobsrd$KI_Known_ID, BrsScutobsrd$GO_Date))
-sbrsallrd1 <- sbrsallrd[(sbrsallrd$Var1 == "BHS_1330") | (sbrsallrd$Var1 == "BHS_1340") | (sbrsallrd$Var1 == "BHS_1337") | (sbrsallrd$Var1 == "BHS_1334") | (sbrsallrd$Var1 == "BHS_1331") | (sbrsallrd$Var1 == "BHS_1329") | (sbrsallrd$Var1 == "BHS_1328") | (sbrsallrd$Var1 == "BHS_1333") | (sbrsallrd$Var1 == "BHS_1425") | (sbrsallrd$Var1 == "BHS_1426") | (sbrsallrd$Var1 == "BHS_1489") | (sbrsallrd$Var1 == "BHS_1491") | (sbrsallrd$Var1 == "BHS_1578") | (sbrsallrd$Var1 == "BHS_1579") | (sbrsallrd$Var1 == "BHS_1580") | (sbrsallrd$Var1 == "BHS_1596") | (sbrsallrd$Var1 == "BHS_1598") | (sbrsallrd$Var1 == "BHS_1599") | (sbrsallrd$Var1 == "BHS_1687") | (sbrsallrd$Var1 == "BHS_1486") | (sbrsallrd$Var1 == "BHS_1490") | (sbrsallrd$Var1 == "BHS_1492") | (sbrsallrd$Var1 == "BHS_1428") | (sbrsallrd$Var1 == "BHS_1685") | (sbrsallrd$Var1 == "BHS_1686") | (sbrsallrd$Var1 == "BHS_1688") | (sbrsallrd$Var1 == "BHS_1689"), ]
+sbrsallrd1 <- sbrsallrd[(sbrsallrd$Var1 == "BHS_1330") | (sbrsallrd$Var1 == "BHS_1337") | (sbrsallrd$Var1 == "BHS_1334") | (sbrsallrd$Var1 == "BHS_1329") | (sbrsallrd$Var1 == "BHS_1328") | (sbrsallrd$Var1 == "BHS_1333") | (sbrsallrd$Var1 == "BHS_1425") | (sbrsallrd$Var1 == "BHS_1426") | (sbrsallrd$Var1 == "BHS_1489") | (sbrsallrd$Var1 == "BHS_1491") | (sbrsallrd$Var1 == "BHS_1578") | (sbrsallrd$Var1 == "BHS_1579") | (sbrsallrd$Var1 == "BHS_1580") | (sbrsallrd$Var1 == "BHS_1596") | (sbrsallrd$Var1 == "BHS_1599") | (sbrsallrd$Var1 == "BHS_1687") | (sbrsallrd$Var1 == "BHS_1486") | (sbrsallrd$Var1 == "BHS_1490") | (sbrsallrd$Var1 == "BHS_1492") | (sbrsallrd$Var1 == "BHS_1428") | (sbrsallrd$Var1 == "BHS_1685") | (sbrsallrd$Var1 == "BHS_1686") | (sbrsallrd$Var1 == "BHS_1688") | (sbrsallrd$Var1 == "BHS_1689"), ]
 sbrsindrd <- as.data.frame(tapply(sbrsallrd1$Freq, list(sbrsallrd1$Var2), mean))
 sbrsindrd$sd <- tapply(sbrsallrd1$Freq, list(sbrsallrd1$Var2), sd)
 sbrsindrd <- cbind(rownames(sbrsindrd), data.frame(sbrsindrd, row.names = NULL))
@@ -560,7 +570,7 @@ sbrsrd11$Meannumvisits <- as.numeric(sbrsrd11$Meannumvisits)
 sbrsrd11$sd <- as.numeric(sbrsrd11$sd)
 sbrsrd11$Date <- as.Date(sbrsrd11$Date, "%Y-%m-%d")
 library(ggplot2)
-sbrsrd11plot <- ggplot(data = sbrsrd11, aes(x = Date, y = Meannumvisits)) + geom_point() + geom_errorbar(aes(ymin = Meannumvisits - sd, ymax = Meannumvisits + sd), width = .2) + labs(title = "South Bristols (n = 27)", x = "Date", y = "Mean Number of Visits by Day") + ylim(0, 2.5) + scale_x_date(limits = as.Date(c("2019-05-17", "2019-08-15"))) + theme_grey(base_size = 10)
+sbrsrd11plot <- ggplot(data = sbrsrd11, aes(x = Date, y = Meannumvisits)) + geom_point() + geom_errorbar(aes(ymin = Meannumvisits - sd, ymax = Meannumvisits + sd), width = .2) + labs(title = "South Bristols (n = 24)", x = "Date", y = "Mean Number of Visits by Day") + ylim(0, 2.5) + scale_x_date(limits = as.Date(c("2019-05-17", "2019-08-15"))) + theme_grey(base_size = 10)
 # print(sbrsrd11plot) 
 
 #NOPAH
@@ -645,12 +655,42 @@ TukeyHSD(PercentMonthsbrs)
 
 # ANOVA on actual numbers and percentages yields the same exact result.
 
+# Marbles
+marbindsheepvisitperday1$Month <- month(marbindsheepvisitperday1$`rownames(marbindsheepvisitperday)`)
+qqnorm(marbindsheepvisitperday1$Percentvisited)
+qqline(marbindsheepvisitperday1$Percentvisited)
+hist(marbindsheepvisitperday1$Percentvisited)
+# slightly left skewed?
+boxplot(Percentvisited ~ Month, data = marbindsheepvisitperday1)
+marbindsheepvisitperday1$Month <- as.factor(marbindsheepvisitperday1$Month)
+PercentMonthMarb <- aov(formula = Percentvisited ~ Month, data = marbindsheepvisitperday1)
+summary.lm(PercentMonthMarb)
+TukeyHSD(PercentMonthMarb)
+# $Month
+#           diff         lwr       upr     p adj
+# 6-5 0.29677419  0.16952135 0.4240270 0.0000023
+# 7-5 0.36344086  0.22740185 0.4994799 0.0000002
+# 8-5 0.38709677  0.23500054 0.5391930 0.0000004
+# 7-6 0.06666667 -0.04088161 0.1742149 0.3517407
+# 8-6 0.09032258 -0.03693026 0.2175754 0.2394620
+# 8-7 0.02365591 -0.11238310 0.1596949 0.9650476
+
 # Nopah - very few sheep so results may not mean much?
 nopaindsheepvisitperday2$Month <- month(nopaindsheepvisitperday2$Date)
 qqnorm(nopaindsheepvisitperday2$NumIndSheep)
 qqline(nopaindsheepvisitperday2$NumIndSheep)
 hist(nopaindsheepvisitperday2$NumIndSheep)
-boxplot()
+# right-skewed b/c very small sample size
+boxplot(Percentvisited ~ Month, data = nopaindsheepvisitperday2)
+# Not going to bother with anova due to small sample size
+
+# Castle Piutes
+cmprindsheepvisitperday2$Month <- month(cmprindsheepvisitperday2$Date)
+qqnorm(cmprindsheepvisitperday2$NumIndSheep)
+qqline(cmprindsheepvisitperday2$NumIndSheep)
+hist(cmprindsheepvisitperday2$NumIndSheep)
+# right-skewed b/c very small sample size
+boxplot(Percentvisited ~ Month, data = cmprindsheepvisitperday2)
 
 # 3. Is there a difference in tarsus size between species?
 # Check assumptions, perform the appropriate test, and create an appropriate plot to visualize.
