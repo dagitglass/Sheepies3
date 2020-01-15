@@ -624,6 +624,27 @@ I then ran statistics associated with the previous figures.
 
 ```{r}
 ## whether there is a significant difference in the number of collared sheep visiting water among months within each mountain range
+
+# Marbles
+marbindsheepvisitperday1$Month <- month(marbindsheepvisitperday1$`rownames(marbindsheepvisitperday)`)
+qqnorm(marbindsheepvisitperday1$Percentvisited)
+qqline(marbindsheepvisitperday1$Percentvisited)
+hist(marbindsheepvisitperday1$Percentvisited)
+# slightly left skewed?
+boxplot(Percentvisited ~ Month, data = marbindsheepvisitperday1, main = "Marbles (n = 31*)", ylab = "Percent of Individual Sheep that Visited Water")
+marbindsheepvisitperday1$Month <- as.factor(marbindsheepvisitperday1$Month)
+PercentMonthMarb <- aov(formula = Percentvisited ~ Month, data = marbindsheepvisitperday1)
+summary.lm(PercentMonthMarb)
+TukeyHSD(PercentMonthMarb)
+# $Month
+#           diff         lwr       upr     p adj
+# 6-5 0.29677419  0.16952135 0.4240270 0.0000023
+# 7-5 0.36344086  0.22740185 0.4994799 0.0000002
+# 8-5 0.38709677  0.23500054 0.5391930 0.0000004
+# 7-6 0.06666667 -0.04088161 0.1742149 0.3517407
+# 8-6 0.09032258 -0.03693026 0.2175754 0.2394620
+# 8-7 0.02365591 -0.11238310 0.1596949 0.9650476
+
 # South Bristols
 library(lubridate)
 sbrsindsheepvisitperday2$Month <- month(sbrsindsheepvisitperday2$Date)
@@ -631,7 +652,7 @@ sbrsindsheepvisitperday2$Month <- month(sbrsindsheepvisitperday2$Date)
 qqnorm(sbrsindsheepvisitperday2$NumIndSheep) 
 qqline(sbrsindsheepvisitperday2$NumIndSheep)
 hist(sbrsindsheepvisitperday2$NumIndSheep)
-boxplot(NumIndSheep ~ Month, data = sbrsindsheepvisitperday2)
+boxplot(NumIndSheep ~ Month, data = sbrsindsheepvisitperday2, main = "South Bristols (n = 24)", ylab = "Percent of Individual Sheep that Visited Water")
 bartlett.test(NumIndSheep ~ Month, data = sbrsindsheepvisitperday2)
 # p value = 0.7447
 sbrsindsheepvisitperday2$Month <- as.factor(sbrsindsheepvisitperday2$Month)
@@ -655,33 +676,13 @@ TukeyHSD(PercentMonthsbrs)
 
 # ANOVA on actual numbers and percentages yields the same exact result.
 
-# Marbles
-marbindsheepvisitperday1$Month <- month(marbindsheepvisitperday1$`rownames(marbindsheepvisitperday)`)
-qqnorm(marbindsheepvisitperday1$Percentvisited)
-qqline(marbindsheepvisitperday1$Percentvisited)
-hist(marbindsheepvisitperday1$Percentvisited)
-# slightly left skewed?
-boxplot(Percentvisited ~ Month, data = marbindsheepvisitperday1)
-marbindsheepvisitperday1$Month <- as.factor(marbindsheepvisitperday1$Month)
-PercentMonthMarb <- aov(formula = Percentvisited ~ Month, data = marbindsheepvisitperday1)
-summary.lm(PercentMonthMarb)
-TukeyHSD(PercentMonthMarb)
-# $Month
-#           diff         lwr       upr     p adj
-# 6-5 0.29677419  0.16952135 0.4240270 0.0000023
-# 7-5 0.36344086  0.22740185 0.4994799 0.0000002
-# 8-5 0.38709677  0.23500054 0.5391930 0.0000004
-# 7-6 0.06666667 -0.04088161 0.1742149 0.3517407
-# 8-6 0.09032258 -0.03693026 0.2175754 0.2394620
-# 8-7 0.02365591 -0.11238310 0.1596949 0.9650476
-
 # Nopah - very few sheep so results may not mean much?
 nopaindsheepvisitperday2$Month <- month(nopaindsheepvisitperday2$Date)
 qqnorm(nopaindsheepvisitperday2$NumIndSheep)
 qqline(nopaindsheepvisitperday2$NumIndSheep)
 hist(nopaindsheepvisitperday2$NumIndSheep)
 # right-skewed b/c very small sample size
-boxplot(Percentvisited ~ Month, data = nopaindsheepvisitperday2)
+boxplot(Percentvisited ~ Month, data = nopaindsheepvisitperday2, main = "Nopah (n = 6)", ylab = "Percent of Individual Sheep that Visited Water")
 # Not going to bother with anova due to small sample size
 
 # Castle Piutes
@@ -690,7 +691,33 @@ qqnorm(cmprindsheepvisitperday2$NumIndSheep)
 qqline(cmprindsheepvisitperday2$NumIndSheep)
 hist(cmprindsheepvisitperday2$NumIndSheep)
 # right-skewed b/c very small sample size
-boxplot(Percentvisited ~ Month, data = cmprindsheepvisitperday2)
+boxplot(Percentvisited ~ Month, data = cmprindsheepvisitperday2, main = "Castle Piutes (n = 4)", ylab = "Percent of Individual Sheep that Visited Water")
+
+par(mfrow = c(2,2))
+#title = "Percent of Individual Sheep that Visited Water by Month")
+boxplot(Percentvisited ~ Month, data = marbindsheepvisitperday1, main = "Marbles (n = 31*)", ylab = "% of Individual Sheep")
+boxplot(NumIndSheep ~ Month, data = sbrsindsheepvisitperday2, main = "South Bristols (n = 24)", ylab = "% of Individual Sheep")
+boxplot(Percentvisited ~ Month, data = nopaindsheepvisitperday2, main = "Nopah (n = 6)", ylab = "% of Individual Sheep")
+boxplot(Percentvisited ~ Month, data = cmprindsheepvisitperday2, main = "Castle Piutes (n = 4)", ylab = "% of Individual Sheep")
+title("Percent of Individual Sheep that Visited Water by Month", line = -1, outer = TRUE)
+
+
+
+
+
+
+# whether there is a significant difference in the mean number of visitations of collared sheep visiting water among months within each mountain range
+
+
+
+
+
+
+
+
+
+
+
 
 # 3. Is there a difference in tarsus size between species?
 # Check assumptions, perform the appropriate test, and create an appropriate plot to visualize.
@@ -745,6 +772,20 @@ TukeyHSD(culsexspe)
 # mutate(air_time2 = as.numeric(end_time - start_time, units="mins"))
 
 ```
+
+
+
+
+- whether there is a statistical difference in visitation between ewes and rams within mountain ranges
+
+```{r}
+
+
+
+```
+
+
+
 
 
 
