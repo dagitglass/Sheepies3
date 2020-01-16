@@ -781,6 +781,8 @@ TukeyHSD(culsexspe)
 - whether there is a statistical difference 
 
 ```{r}
+# SEX
+
 # Marbles has 23 ewes and 8 rams of collared sheep
 nrow(Marbcutobsrd[Marbcutobsrd$KI_Sex == "F", ])
 #544 rows for F
@@ -788,6 +790,50 @@ nrow(Marbcutobsrd[Marbcutobsrd$KI_Sex == "M", ])
 # 201 rows for M
 # nrow(Marbcutobs)
 # Checked that this was the total number of rows - it was.
+chisq.test(x = c(544, 201), p = c(23/31, 8/31))
+# X-squared = 0.53575, df = 1, p-value = 0.4642
+# No significant difference between males and females in Marbles.
+
+# South Bristols has 16 ewes and 8 rams.
+nrow(BrsScutobsrdwithdups[BrsScutobsrdwithdups$KI_Sex == "F", ])
+# 635 rows for F
+nrow(BrsScutobsrdwithdups[BrsScutobsrdwithdups$KI_Sex == "M", ])
+# 277 rows for M
+# nrow(BrsScutobsrdwithdups)
+# Checked that this was the total number of rows - it was.
+chisq.test(x = c(635, 277), p = c(16/24, 8/24))
+# X-squared = 3.597, df = 1, p-value = 0.05788
+# Though close to significant, still not significant
+
+# Nopah has 5 females and 1 male.
+nrow(nopacutobsrd[nopacutobsrd$KI_Sex == "F", ])
+# 22 rows for F
+nrow(nopacutobsrd[nopacutobsrd$KI_Sex == "M", ])
+# 5 rows for M
+# nrow(nopacutobs)
+# correct number of rows
+chisq.test(x = c(22, 5), p = c(5/6, 1/6))
+# There is a warning associated with the small sample size but:
+# X-squared = 0.066667, df = 1, p-value = 0.7963
+
+# Castle Piutes has 3 females and 1 male.
+View(cmprcutobs)
+cmprcutobs1 <- cmprcutobs[(cmprcutobs$KI_Known_ID == "BHS_1730") | (cmprcutobs$KI_Known_ID == "BHS_1733") | (cmprcutobs$KI_Known_ID == "BHS_1734") | (cmprcutobs$KI_Known_ID == "BHS_1728"), ]
+nrow(cmprcutobs1[cmprcutobs1$KI_Sex == "F", ])
+# 22 rows for F
+nrow(cmprcutobs1[cmprcutobs1$KI_Sex == "M", ])
+# 7 rows for M
+nrow(cmprcutobs1)
+# ONLY 26 ROWS - there are some NA's in sex here!
+# but there really is: 20 F, 6 M
+chisq.test(x = c(20, 6), p = c(3/4, 1/4))
+# X-squared = 0.051282, df = 1, p-value = 0.8208
+
+# There is not a significant difference in visitation by sex in any mountain range.
+
+
+
+
 
 # In the October of 2015, Jane saw 12 black-capped chickadees, 2 red-bellied woodpeckers, and a canada goose in her back yard. 
 # This year, she saw 10 back-capped chickadees, 5 red-bellied woodpeckers, and 1 zebra. Has the bird population changed significantly?
