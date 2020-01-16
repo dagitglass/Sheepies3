@@ -776,9 +776,22 @@ TukeyHSD(culsexspe)
 
 
 
-- whether there is a statistical difference in visitation between ewes and rams within mountain ranges
+- whether there is a statistical difference in visitation between ewes and rams within mountain ranges - chi squared
+- whether there is a statistical difference in visitation between bighorn of different ages - chi-squared?
+- whether there is a statistical difference 
 
 ```{r}
+# Marbles has 23 ewes and 8 rams of collared sheep
+nrow(Marbcutobsrd[Marbcutobsrd$KI_Sex == "F", ])
+#544 rows for F
+nrow(Marbcutobsrd[Marbcutobsrd$KI_Sex == "M", ])
+# 201 rows for M
+# nrow(Marbcutobs)
+# Checked that this was the total number of rows - it was.
+
+# In the October of 2015, Jane saw 12 black-capped chickadees, 2 red-bellied woodpeckers, and a canada goose in her back yard. 
+# This year, she saw 10 back-capped chickadees, 5 red-bellied woodpeckers, and 1 zebra. Has the bird population changed significantly?
+chisq.test(x = c(10, 5, 0), p = c(12/15, 2/15, 1/15))
 
 
 
