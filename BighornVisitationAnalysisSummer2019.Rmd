@@ -10,12 +10,9 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-This is my basic analysis of bighorn visitation to water, Summer 2019. First, I combined all of my observations into one dataframe. Due to some technical difficulties with the database at the CDFW office, I included observations from both a version of the database from 7/3 and 7/22 since I thought some had gotten deleted from the 7/22. I then removed fully duplicated rows in order to remove data that were in both the 7/3 and 7/22 database. The dataframe had 2108 observations before eliminating duplicated rows, and 2062 observations after the removal of duplicated rows. This makes sense as the approximate number of observations that I had input into the database by 7/3. Before coding further, I went through the SBrs and Marb data and visually checked that there were observations for every date that were supposedly covered. The only discrepancy that I found was that there were no observations in the Marbles on 6/25 after 14:49 pm. I went into the photo data and confirmed that this was indeed the case. Perhaps it was a really cool afternoon?
+This is my preliminary analysis of bighorn visitation to water, Summer 2019. First, I combined all of my observations into one dataframe. Due to some technical difficulties with the database at the CDFW office, I included observations from both a version of the database from 7/3 and 7/22 since I thought some had gotten deleted from the 7/22. I then removed fully duplicated rows in order to remove data that were in both the 7/3 and 7/22 database. The dataframe had 2108 observations before eliminating duplicated rows, and 2062 observations after the removal of duplicated rows. This makes sense as the approximate number of observations that I had input into the database by 7/3. Before coding further, I went through the SBrs and Marb data and visually checked that there were observations for every date that were supposedly covered. The only discrepancy that I found was that there were no observations in the Marbles on 6/25 after 14:49 pm. I went into the photo data and confirmed that this was indeed the case. Perhaps it was a really cool afternoon?
 
 I then formatted the data where major things needed to be fixed. I changed the cells of  KI_DG_FirstPhotoTime2, KI_DG_FirstPhotoTime3, KI_DG_FirstPhotoTime4, KI_DG_LastPhotoTime2, KI_DG_LastPhotoTime3, and KI_DG_LastPhotoTime4 that were '0' or blank to NAs. I also changed the cells of KI_DG_SheepDrank2, KI_DG_SheepDrank3, and KI_DG_SheepDrank4 that were blank to NAs. 
-
-
-
 
 ```{r}
 AshleyDataall <- read.csv("AshleyDatabasequeryall121419.csv", header = TRUE, sep = ",")
@@ -24,12 +21,12 @@ firstpartdgobs <- read.csv("NopaCMPRMarbfirstpartofsummerDanielleObservations.cs
 threedf <- rbind(AshleyDataall, twodbobs, firstpartdgobs)
 library(tidyverse)
 nodups <- distinct(threedf)
-table(duplicated(nodups))
-table(duplicated(nodups$DateObsTimeIDwaterspecific))
+# table(duplicated(nodups))
+# table(duplicated(nodups$DateObsTimeIDwaterspecific))
 # THERE ARE NO DUPLICATES OF THE ROWS OVERALL, BUT THERE ARE 204 DUPLICATES OF THE NODUPS$DateObsTimeODwaterspecific. WHY?!!!!!!! B/C some of the observations have the capture data and some don't. I SHOULD BE ABLE TO FIX THIS AFTER INPUTTING THE CORRECT WEIGHTS, BODY LENGTHS, AND CHEST GIRTHS THAT ARE MISSING.
 # View(duplicated(nodups$DateObsTimeIDwaterspecific))
 
-as.character(nodups$KI_DG_FirstPhotoTime2, nodups$KI_DG_LastPhotoTime2, nodups$KI_DG_FirstPhotoTime3, nodups$KI_DG_LastPhotoTime3, nodups$KI_DG_FirstPhotoTime4, nodups$KI_DG_LastPhotoTime4)
+# as.character(nodups$KI_DG_FirstPhotoTime2, nodups$KI_DG_LastPhotoTime2, nodups$KI_DG_FirstPhotoTime3, nodups$KI_DG_LastPhotoTime3, nodups$KI_DG_FirstPhotoTime4, nodups$KI_DG_LastPhotoTime4)
 nodups$KI_DG_FirstPhotoTime2[nodups$KI_DG_FirstPhotoTime2 == "0"] <- NA
 nodups$KI_DG_FirstPhotoTime2[nodups$KI_DG_FirstPhotoTime2 == ""] <- NA
 nodups$KI_DG_LastPhotoTime2[nodups$KI_DG_LastPhotoTime2 == "0"] <- NA
@@ -44,14 +41,14 @@ nodups$KI_DG_LastPhotoTime4[nodups$KI_DG_LastPhotoTime4 == "0"] <- NA
 nodups$KI_DG_LastPhotoTime4[nodups$KI_DG_LastPhotoTime4 == ""] <- NA
 
 
-as.character(nodups$KI_DG_SheepDrank2, nodups$KI_DG_SheepDrank3, nodups$KI_DG_SheepDrank4)
+# as.character(nodups$KI_DG_SheepDrank2, nodups$KI_DG_SheepDrank3, nodups$KI_DG_SheepDrank4)
 nodups$KI_DG_SheepDrank2[nodups$KI_DG_SheepDrank2 == ""] <- NA
 nodups$KI_DG_SheepDrank3[nodups$KI_DG_SheepDrank3 == ""] <- NA
 nodups$KI_DG_SheepDrank4[nodups$KI_DG_SheepDrank4 == ""] <- NA
 
-as.character(nodups$GO_DG_SpecificSource)
+# as.character(nodups$GO_DG_SpecificSource)
 nodups$GO_DG_SpecificSource[nodups$GO_DG_SpecificSource == ""] <- NA
-as.factor(nodups$GO_DG_SpecificSource)
+# as.factor(nodups$GO_DG_SpecificSource)
 
 ```
 A List of everything that needs to be fixed:
@@ -59,7 +56,7 @@ A List of everything that needs to be fixed:
 - change the data type of every column to the correct type
 - at some point, subset the KI_Known_ID for the sheep I am interested in for the GPS analysis
 - input the missing KI_Sex cells - DONE
-- input the missing KI_DG_FirstPhotoTime and KI_DG_LastPhotoTime times, and the missing Ki_DG_SheepDrank (there's a ton of these - Ashley???)- Don't need to - these are the other sheep
+- input the missing KI_DG_FirstPhotoTime and KI_DG_LastPhotoTime times, and the missing Ki_DG_SheepDrank (there's a ton of these - Ashley???)- Don't need to - these are the other sheep - DONE
 - check that all of the comp numbers are numbers and are appropriate. And that there are no blanks and NAs.
 - If possible, fill in the weights, body lengths, and chest girths that are missing.- DONE
 -KI_DatObsT_ID has 1858 levels, but there are 2062 entries - DONE
@@ -75,14 +72,13 @@ A List of everything that needs to be fixed:
 
 
 
-In an attempt to figure out why there was still duplicated rows, I made a column with everything needed to make each observation individually identifiable. I discovered that some rows did not have the capture data needed, and that this was what was making the duplicated rows not seen as duplicated. I then worked to input the missing information - weight, body length, and chest girth. I subset by the distinct rows and this equaled the previous number of individually identifiable observations. 
-
+I noted that there were still some duplicate observations that had not been removed despite the previous code chunk. In an attempt to figure out why there were still duplicated rows, I made a column with everything needed to make each observation individually identifiable. I discovered that some rows did not have the capture data needed, and that this was what was making the duplicated rows not seen as duplicated. I then worked to input the missing information - weight, body length, and chest girth. I subset by the distinct rows and this equaled the previous number of individually identifiable observations. No more duplicates!
 
 ```{r}
-as.character(nodups$GO_Date, nodups$KI_Known_ID, nodups$GO_Time_HHMM, nodups$GO_WaterSource, nodups$GO_DG_SpecificSource)
+# as.character(nodups$GO_Date, nodups$KI_Known_ID, nodups$GO_Time_HHMM, nodups$GO_WaterSource, nodups$GO_DG_SpecificSource)
 nodups$DateObsTimeIDwaterspecific <- paste(nodups$GO_Date, nodups$KI_Known_ID, nodups$GO_Time_HHMM, nodups$GO_WaterSource, nodups$GO_DG_SpecificSource, sep = "")
-as.character(nodups$KI_Sex)
-as.character(nodups$KI_Known_ID)
+# as.character(nodups$KI_Sex)
+# as.character(nodups$KI_Known_ID)
 # table(nodups$KI_Sex)
 nodups$KI_Sex[nodups$KI_Known_ID == "BHS_1489" | nodups$KI_Known_ID == "BHS_1596" | nodups$KI_Known_ID == "BHS_1361" | nodups$KI_Known_ID == "BHS_1357" | nodups$KI_Known_ID == "BHS_1367" | nodups$KI_Known_ID == "BHS_1362" | nodups$KI_Known_ID == "BHS_1584" | nodups$KI_Known_ID == "BHS_1585" | nodups$KI_Known_ID == "BHS_1583" | nodups$KI_Known_ID == "BHS_1582" | nodups$KI_Known_ID == "BHS_1588" | nodups$KI_Known_ID == "BHS_1365" | nodups$KI_Known_ID == "BHS_1574" | nodups$KI_Known_ID == "BHS_1366" | nodups$KI_Known_ID == "BHS_1594" | nodups$KI_Known_ID == "BHS_1577" | nodups$KI_Known_ID == "BHS_1581" | nodups$KI_Known_ID == "BHS_1576" | nodups$KI_Known_ID == "BHS_1416" | nodups$KI_Known_ID == "BHS_1587" | nodups$KI_Known_ID == "BHS_1575" | nodups$KI_Known_ID == "BHS_1592" | nodups$KI_Known_ID == "BHS_1589" | nodups$KI_Known_ID == "BHS_1421" | nodups$KI_Known_ID == "BHS_1740" | nodups$KI_Known_ID == "BHS_1738" | nodups$KI_Known_ID == "BHS_1736" | nodups$KI_Known_ID == "BHS_1734" | nodups$KI_Known_ID == "BHS_1733" | nodups$KI_Known_ID == "BHS_1741"] <- "F"
 
@@ -95,9 +91,9 @@ nodups$KI_Sex[nodups$KI_Known_ID == "BHS_1494" | nodups$KI_Known_ID == "BHS_1684
 # nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == ""]
 #### NEED TO FIX ID THAT HAS "BHs_1596" to "BHS_1596"!!!!!!!!
 
-as.character(nodups$KI_Known_ID)
+# as.character(nodups$KI_Known_ID)
 nodups$KI_Known_ID[nodups$KI_Known_ID == "BHs_1596"] <- "BHS_1596"
-as.factor(nodups$KI_Known_ID)
+# as.factor(nodups$KI_Known_ID)
 # now comes back at BHs_1596 = 0, BHS_1596=78 - did this truly fix the problem?
 
 # Four of the bighorn have two different numbers at their measurements. I am going to set them to the lower number b/c the higher number is probably the untarred number.
@@ -106,7 +102,7 @@ as.factor(nodups$KI_Known_ID)
 # There are measurements that are not in the 7/22 database that are in my datasheet. I need to add the measurements for the sheep that this is true so as to make there be no duplicated rows. 
 
 # BODY LENGTHS:
-as.character(nodups$CP_BdyLgth_cm)
+# as.character(nodups$CP_BdyLgth_cm)
 nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == "BHS_1420"] <- "155.0"
 nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == "BHS_1428"] <- "149.0"
 nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == "BHS_1490"] <- "158.2"
@@ -137,11 +133,11 @@ nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == "BHS_1734"] <- "149.5"
 nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == "BHS_1736"] <- "118.0"
 nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == "BHS_1738"] <- "130.5"
 nodups$CP_BdyLgth_cm[nodups$KI_Known_ID == "BHS_1739"] <- "145.0"
-as.numeric(nodups$CP_BdyLgth_cm)
+# as.numeric(nodups$CP_BdyLgth_cm)
 
 
 #CHEST GIRTHS
-as.character(nodups$CP_ChstGth_cm)
+# as.character(nodups$CP_ChstGth_cm)
 nodups$CP_ChstGth_cm[nodups$KI_Known_ID == "BHS_1420"] <- "111.5"
 nodups$CP_ChstGth_cm[nodups$KI_Known_ID == "BHS_1428"] <- "100.0"
 nodups$CP_ChstGth_cm[nodups$KI_Known_ID == "BHS_1490"] <- "101.8"
@@ -172,10 +168,10 @@ nodups$CP_ChstGth_cm[nodups$KI_Known_ID == "BHS_1734"] <- "96.0"
 nodups$CP_ChstGth_cm[nodups$KI_Known_ID == "BHS_1736"] <- "82.5"
 nodups$CP_ChstGth_cm[nodups$KI_Known_ID == "BHS_1738"] <- "84.5"
 nodups$CP_ChstGth_cm[nodups$KI_Known_ID == "BHS_1739"] <- "96.0"
-as.numeric(nodups$CP_ChstGth_cm)
+# as.numeric(nodups$CP_ChstGth_cm)
 
 #WEIGHT - this is unadjusted, raw weight (no tar)b/c the vast majority of the entries do not have a tar weight or a net weight.
-as.character(nodups$CP_Weight..kg.)
+# as.character(nodups$CP_Weight..kg.)
 nodups$CP_Weight..kg.[nodups$KI_Known_ID == "BHS_1420"] <- "96.5"
 nodups$CP_Weight..kg.[nodups$KI_Known_ID == "BHS_1428"] <- "63.0"
 nodups$CP_Weight..kg.[nodups$KI_Known_ID == "BHS_1490"] <- "82.0"
@@ -206,10 +202,10 @@ nodups$CP_Weight..kg.[nodups$KI_Known_ID == "BHS_1734"] <- "58.6"
 nodups$CP_Weight..kg.[nodups$KI_Known_ID == "BHS_1736"] <- "47.1"
 nodups$CP_Weight..kg.[nodups$KI_Known_ID == "BHS_1738"] <- "44.2"
 nodups$CP_Weight..kg.[nodups$KI_Known_ID == "BHS_1739"] <- "71.8"
-as.numeric(nodups$CP_Weight..kg.)
+# as.numeric(nodups$CP_Weight..kg.)
 
 # AGE AT TIME OF CAPTURE:
-as.character(nodups$CP_AgeYears)
+# as.character(nodups$CP_AgeYears)
 nodups$CP_AgeYears[nodups$KI_Known_ID == "BHS_1420"] <- "6"
 nodups$CP_AgeYears[nodups$KI_Known_ID == "BHS_1428"] <- "3"
 nodups$CP_AgeYears[nodups$KI_Known_ID == "BHS_1490"] <- "7"
@@ -240,13 +236,13 @@ nodups$CP_AgeYears[nodups$KI_Known_ID == "BHS_1734"] <- "6"
 nodups$CP_AgeYears[nodups$KI_Known_ID == "BHS_1736"] <- "2"
 nodups$CP_AgeYears[nodups$KI_Known_ID == "BHS_1738"] <- "1"
 nodups$CP_AgeYears[nodups$KI_Known_ID == "BHS_1739"] <- "4"
-as.integer(nodups$CP_AgeYears)
+# as.integer(nodups$CP_AgeYears)
 
 
 library(tidyverse)
 renodups <- distinct(nodups)
-table(duplicated(renodups))
-table(duplicated(renodups$DateObsTimeIDwaterspecific))
+# table(duplicated(renodups))
+# table(duplicated(renodups$DateObsTimeIDwaterspecific))
 # Before Age Years, 177 duplicates.
 # Down to 80 duplicates after Age Years fixed.
 # Now down to 54 duplicates.
@@ -257,21 +253,6 @@ table(duplicated(renodups$DateObsTimeIDwaterspecific))
 Then, just to be sure, I cut the visitation data to the time periods when all cameras were running. This data should have already been cut, but I know that Ashley was not super meticulous in only going through the photos in the time period when all of the cameras in the range were running, so I feel like this is a good check.
 
 At this time, I also checked that the GO_WaterSource and GO_RangeCode made sense for each range. I changed two entries that were actually Nopah but mistakenly CMPR.
-
-I also checked to see if every sheep came into water at least once in every range. Marb BHS_1589, Marb BHS_1413, BHS_1496, BHS_1497, and BHS_1597 never came into water. South Bristols BHS_1340, BHS_1331, and BHS_1598 never came into water. Nopah BHS_1737 never came into water. All of the CMPR sheep that I limited this analysis to (for reasons listed below) came into water.
-
-Some notes on the whereabouts of these sheep as per their GPS collars. Marb BHS_1589 literally just chilled on Castle Peak. BHS_1413 also no longer working (Vectronics website is down). BHS_1497 and BHS_1597's collars are no longer working. South Bristols BHS_1340 and BHS_1331 no longer had working GPS collars (is this true for BHS_1598 too? Vectronics website is currently down). Nopah BHS_1737 was between the Nopah and El Si Guzzler - looks like stayed as high elevation? 
-
-1589 - Febuary 28th
-1413 - not in last seen table
-1496 - last seen 2018 
-1497 - last seen in November 2019
-1597 - 
-1340 - last seen in November 2019
-1331 - 
-1598 - 
-
-NEED TO FIGURE OUT THE STATUS OF 1496!!!
 
 ``` {r}
 
@@ -292,10 +273,10 @@ BrsSobs <- renodups[renodups$GO_RangeCode == "BrsS", ]
 BrsScutobs <- BrsSobs[(BrsSobs$DateTimect >= as.POSIXct("2019-06-04 15:04:00") & BrsSobs$DateTimect <= as.POSIXct("2019-06-16 08:27:00")) | (BrsSobs$DateTimect >= as.POSIXct("2019-06-18 17:36:00") & BrsSobs$DateTimect <= as.POSIXct("2019-06-25 16:25:00")) | (BrsSobs$DateTimect >= as.POSIXct("2019-06-25 17:05:00") & BrsSobs$DateTimect <= as.POSIXct("2019-07-29 10:36:00")) | (BrsSobs$DateTimect >= as.POSIXct("2019-08-01 14:32:00") & BrsSobs$DateTimect <= as.POSIXct("2019-08-12 11:13:00")),]
 
 # I found a couple of entries that need to be fixed.
-as.character(renodups$GO_RangeCode)
+# as.character(renodups$GO_RangeCode)
 renodups$GO_RangeCode[renodups$DateObsTimeIDwaterspecific == "20190718BHS_174112:46NopaNA"] <- "Nopa"
 renodups$GO_RangeCode[renodups$DateObsTimeIDwaterspecific == "20190722BHS_17405:26NopaNA"] <- "Nopa"
-as.factor(renodups$GO_RangeCode)
+# as.factor(renodups$GO_RangeCode)
 
 cmprobs <- renodups[renodups$GO_RangeCode == "CMPR", ]
 cmprcutobs <-  cmprobs[(cmprobs$DateTimect >= as.POSIXct("2019-05-23 15:48:00") & cmprobs$DateTimect <= as.POSIXct("2019-05-31 11:18:00")) | (cmprobs$DateTimect >= as.POSIXct("2019-06-20 17:47:00") & cmprobs$DateTimect <= as.POSIXct("2019-06-27 02:09:00")) | (cmprobs$DateTimect >= as.POSIXct("2019-07-11 18:25:00") & cmprobs$DateTimect <= as.POSIXct("2019-07-14 18:28:00")) | (cmprobs$DateTimect >= as.POSIXct("2019-07-30 14:30:00") & cmprobs$DateTimect <= as.POSIXct("2019-08-03 16:46:00")) | (cmprobs$DateTimect >= as.POSIXct("2019-08-05 19:10:00") & cmprobs$DateTimect <= as.POSIXct("2019-08-15 07:27:00")),]
@@ -306,7 +287,40 @@ nopacutobs <- nopaobs[(nopaobs$DateTimect >= as.POSIXct("2019-06-06 09:18:00") &
 allcut <- rbind(Marbcutobs, BrsScutobs, cmprcutobs, nopacutobs)
 # write.xlsx(allcut, file = "allcutVisitationData122719.xlsx")
 ```
-I then created figures of the number of individual sheep coming into water by day. I only included times when all cameras in the mountain range were running. This is given that sheep use more than one water source and move around throughout the mountain range. When examining the data, I noticed that the days at the beginning and end of each period when all of the cameras were running had a lower number of sheep coming in than the rest of the days. This is easily attributable to the cameras being up and running for only part of these days. As such, I cut out these days from my dataset (which probably decreased by dataset by about ~20%). 
+
+I checked to make sure that every sheep that I thought was alive for the summer actually had documented proof of life for the entire summer. When counting the number of sheep in my sample, I made sure not to include sheep that are assumed dead (Marbles: BHS_1413 (dead harvest), BHS_1496, BHS_1597, South Bristols: BHS_1340, BHS_1331, BHS_1598). I also made sure to include sheep that were not seen at water all summer, but are documented to be alive (Marbles BHS_1497, Nopah BHS_1737). All of the South Bristols, and all of the CMPR sheep that I limited this analysis to (for reasons listed below), came into water at least once during the summer.
+
+
+Some notes on the whereabouts of these sheep as per their GPS collars. Marb BHS_1589 literally just chilled on Castle Peak. BHS_1413 also no longer working (Vectronics website is down). BHS_1497 and BHS_1597's collars are no longer working. South Bristols BHS_1340 and BHS_1331 no longer had working GPS collars (is this true for BHS_1598 too? Vectronics website is currently down). Nopah BHS_1737 was between the Nopah and El Si Guzzler - looks like stayed as high elevation? 
+# Took out 1413 b/c dead, 1589 and 1597 because assumed dead
+1589 - Febuary 28th
+1413 - not in last seen table
+1496 - last seen 2018 
+1497 - last seen in November 2019
+1597 - 
+1340 - last seen in November 2019
+1331 - 
+1598 - 
+
+NEED TO FIGURE OUT THE STATUS OF 1496!!!
+
+I fixed some observations that were incorrect.
+
+
+
+```{r}
+# One observation accidentally 1578 instead of 1576
+Marbcutobs$KI_Known_ID[Marbcutobs$DateObsTimeIDwaterspecific == "20190804BHS_15787:24VernNA"] <- "BHS_1576"
+# A different observation 1685 instead of 1590
+Marbcutobs$KI_Known_ID[Marbcutobs$DateObsTimeIDwaterspecific == "20190722BHS_168511:23TherBoss Tank"] <- "BHS_1590"
+# Another observation changing 1713 for 1582
+Marbcutobs$KI_Known_ID[Marbcutobs$DateObsTimeIDwaterspecific == "20190803BHS_17139:37TherBoss Tank"] <- "BHS_1582"
+
+
+```
+
+
+I then created figures of the number of individual sheep coming into water by day. I only included times when all cameras in the mountain range were running. This is given that sheep use more than one water source and move around throughout the mountain range. When examining the data, I noticed that the days at the beginning and end of each period when all of the cameras were running had a lower number of sheep coming in than the rest of the days. This is easily attributable to the cameras being up and running for only part of these days. As such, I cut out these days from my dataset (which probably decreased by dataset by about ~10%). 
 
 I did leave in a couple of days that had very near complete coverage. I decided that it was ok to keep these days given the short periods of time when 1 of the cameras was down for, and the relative bias of sheep for diurnality, which was confirmed when going through camera photos. For the Marbles, I did leave in one day when the cameras were only not running between 11 pm and 12 am. In the South Bristols, I included 6/25/19 which was not fully covered for 45 minutes. In the Castle Piutes, I included 7/14 and 8/3 because one of the cameras went out at night. I will need to limit other analyses to these time periods given the incomplete data on the start/end days.
 
