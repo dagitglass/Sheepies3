@@ -823,7 +823,7 @@ qqline(allindsheepvisitperday$Percentvisited)
 # IS THIS HISTOGRAM OK?
 hist(allindsheepvisitperday$Percentvisited)
 boxplot(Percentvisited ~ MtnRange, data = allindsheepvisitperday, main = "Percent of Individual Sheep that Visited Water in a Given Day by Mountain Range", ylab = "Percent of Individual Sheep", xlab = "Mountain Range")
-allindsheepvisitperday$Month <- as.factor(allindsheepvisitperday$Month)
+allindsheepvisitperday$MtnRange <- as.factor(allindsheepvisitperday$MtnRange)
 PercentVisitMtnRange <- aov(Percentvisited ~ MtnRange, data = allindsheepvisitperday)
 summary.lm(PercentVisitMtnRange)
 #  p-value: < 2.2e-16
@@ -836,6 +836,35 @@ TukeyHSD(PercentVisitMtnRange)
 # CMPR-BrsS -0.185168686 -0.30038982 -0.06994756 0.0002885
 # CMPR-Nopa  0.164378337  0.03997543  0.28878124 0.0042406
 
+
+## whether there is a significant difference in the number of visitations between mountain ranges ##
+names(marbindrd11)[names(marbindrd11) == "rownames(marbindrd)"] <- "Date"
+names(marbindrd11)[names(marbindrd11) == "visits"] <- "Meannumvisits"
+marbindrd11$MtnRange <- "Marb"
+sbrsrd11$MtnRange <- "BrsS"
+nopard11$MtnRange <- "Nopa"
+cmprrd11$MtnRange <- "CMPR"
+marbindrd11$MtnRange <- as.factor(marbindrd11$MtnRange)
+sbrsrd11$MtnRange <- as.factor(sbrsrd11$MtnRange)
+nopard11$MtnRange <- as.factor(nopard11$MtnRange)
+cmprrd11$MtnRange <- as.factor(cmprrd11$MtnRange)
+allindrd11 <- rbind(marbindrd11, sbrsrd11, nopard11, cmprrd11)
+qqnorm(allindrd11$Meannumvisits)
+qqline(allindrd11$Meannumvisits)
+hist(allindrd11$Meannumvisits)
+boxplot(Meannumvisits ~ MtnRange, data = allindrd11, main = "Mean Number of Visitations of Collared Bighorn to Water in a Given Day by Mountain Range", ylab = "Mean Number of Visitations", xlab = "Mountain Range")
+allindrd11$MtnRange <- as.factor(allindrd11$MtnRange)
+MeanVisitationMtnRange <- aov(Meannumvisits ~ MtnRange, data = allindrd11)
+summary.lm(MeanVisitationMtnRange)
+# p-value: 1.084e-15
+TukeyHSD(MeanVisitationMtnRange)
+#                  diff        lwr         upr     p adj
+# BrsS-Marb  0.08276173 -0.0457863  0.21130977 0.3424864
+# Nopa-Marb -0.37468619 -0.5184595 -0.23091286 0.0000000
+# CMPR-Marb -0.22707749 -0.3969096 -0.05724541 0.0036673
+# Nopa-BrsS -0.45744792 -0.5914880 -0.32340783 0.0000000
+# CMPR-BrsS -0.30983922 -0.4715145 -0.14816390 0.0000096
+# CMPR-Nopa  0.14760870 -0.0264174  0.32163479 0.1271620
 
 ```
 
