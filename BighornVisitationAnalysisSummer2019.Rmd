@@ -634,14 +634,14 @@ library(gridExtra)
 grid.arrange(p, sbrsrd11plot, nopard11plot, cmprrd11plot, nrow = 2, top = "Mean Number of Visits Per Day Given All Collared Sheep")
 ```
 I then ran statistics associated with the previous figures.
-- whether there is a significant difference in the number of collared sheep visiting water among months within each mountain range
-- whether there is a significant difference in the mean number of visitations of collared sheep visiting water among months within each mountain range
+- whether there is a significant difference in the number of collared sheep visiting water among months within each mountain range - DONE
+- whether there is a significant difference in the mean number of visitations of collared sheep visiting water among months within each mountain range - DONE
 - whether there is a significant difference in the number of visitations of collared sheep visiting water among months within each mountain range?? (don't do any sort of by-day calculation)???
 - whether there is a significant difference in the percent of collared sheep visiting water between mountain ranges 
 
 
 ```{r}
-## whether there is a significant difference in the number of collared sheep visiting water among months within each mountain range
+## whether there is a significant difference in the number of collared sheep visiting water among months within each mountain range ##
 
 # Marbles
 marbindsheepvisitperday1$Month <- month(marbindsheepvisitperday1$`rownames(marbindsheepvisitperday)`)
@@ -720,65 +720,90 @@ boxplot(Percentvisited ~ Month, data = cmprindsheepvisitperday2, main = "Castle 
 title("Percent of Individual Sheep that Visited Water by Month", line = -1, outer = TRUE)
 
 
+## whether there is a significant difference in the mean number of visitations of collared sheep visiting water among months within each mountain range ##
 
 
+library(lubridate)
+marbindrd11$Month <- month(marbindrd11$`rownames(marbindrd)`)
+qqnorm(marbindrd11$visits)
+qqline(marbindrd11$visits)
+hist(marbindrd11$visits)
+boxplot(visits ~ Month, data = marbindrd11, main = "Marbles (n = 32*)", ylab = "Mean Number of Visits")
+marbindrd11$Month <- as.factor(marbindrd11$Month)
+MeanVisitsMonthMarb <- aov(formula = visits ~ Month, data = marbindrd11)
+summary.lm(MeanVisitsMonthMarb)
+# p-value: 0.0002828
+TukeyHSD(MeanVisitsMonthMarb)
+#          diff         lwr       upr     p adj
+# 6-5 0.30213934  0.07318684 0.5310918 0.0054388
+# 7-5 0.39552316  0.15581593 0.6352304 0.0003925
+# 8-5 0.41789875  0.16192207 0.6738754 0.0004537
+# 7-6 0.09338382 -0.08339269 0.2701603 0.4984561
+# 8-6 0.11575941 -0.08251927 0.3140381 0.4110441
+# 8-7 0.02237559 -0.18823008 0.2329813 0.9918760
 
+# South Bristols
+sbrsrd11$Month <- month(sbrsrd11$Date)
+qqnorm(sbrsrd11$Meannumvisits)
+qqline(sbrsrd11$Meannumvisits)
+hist(sbrsrd11$Meannumvisits)
+boxplot(Meannumvisits ~ Month, data = sbrsrd11, main = "South Bristols (n = 24)", ylab = "Mean Number of Visits")
+sbrsrd11$Month <- as.factor(sbrsrd11$Month)
+MeanVisitsMonthSbrs <- aov(formula = Meannumvisits ~ Month, data = sbrsrd11)
+summary.lm(MeanVisitsMonthSbrs)
+# p-value: 0.001847
+TukeyHSD(MeanVisitsMonthSbrs)
+# 7-6 0.1035732 -0.05770139 0.2648478 0.2784047
+# 8-6 0.3200483  0.11436138 0.5257352 0.0011822
+# 8-7 0.2164751  0.01821764 0.4147325 0.0291954
 
-# whether there is a significant difference in the mean number of visitations of collared sheep visiting water among months within each mountain range
+#Nopah 
+nopard11$Month <- month(nopard11$Date)
+qqnorm(nopard11$Meannumvisits)
+qqline(nopard11$Meannumvisits)
+hist(nopard11$Meannumvisits)
+boxplot(Meannumvisits ~ Month, data = nopard11, main = "Nopah (n = 6)", ylab = "Mean Number of Visits")
+nopard11$Month <- as.factor(nopard11$Month)
+MeanVisitsMonthNopa <- aov(formula = Meannumvisits ~ Month, data = nopard11)
+summary.lm(MeanVisitsMonthNopa)
+#  p-value: 3.149e-09
+TukeyHSD(MeanVisitsMonthNopa)
+# 7-6 0.0500000 -0.07666386 0.1766639 0.6040199
+# 8-6 0.5261905  0.35972154 0.6926594 0.0000000
+# 8-7 0.4761905  0.32342811 0.6289528 0.0000000
 
+#Castle Piutes
+cmprrd11$Month <- month(cmprrd11$Date)
+qqnorm(cmprrd11$Meannumvisits)
+qqline(cmprrd11$Meannumvisits)
+hist(cmprrd11$Meannumvisits)
+boxplot(Meannumvisits ~ Month, data = cmprrd11, main = "Castle Piutes (n = 4)", ylab = "Mean Number of Visits")
+cmprrd11$Month <- as.factor(cmprrd11$Month)
+MeanVisitsMonthCmpr <- aov(formula = Meannumvisits ~ Month, data = cmprrd11)
+summary.lm(MeanVisitsMonthCmpr)
+# p-value: 0.02232
+TukeyHSD(MeanVisitsMonthCmpr)
+# 6-5 0.2916667 -0.14405020 0.7273835 0.2683879
+# 7-5 0.4375000 -0.05337924 0.9283792 0.0910373
+# 8-5 0.5000000  0.06428314 0.9357169 0.0211369
+# 7-6 0.1458333 -0.35970223 0.6513689 0.8484271
+# 8-6 0.2083333 -0.24383142 0.6604981 0.5767064
+# 8-7 0.0625000 -0.44303557 0.5680356 0.9851190
 
+par(mfrow = c(2,2))
+boxplot(visits ~ Month, data = marbindrd11, main = "Marbles (n = 32*)", ylab = "Mean Number of Visits")
+boxplot(Meannumvisits ~ Month, data = sbrsrd11, main = "South Bristols (n = 24)", ylab = "Mean Number of Visits")
+boxplot(Meannumvisits ~ Month, data = nopard11, main = "Nopah (n = 6)", ylab = "Mean Number of Visits")
+boxplot(Meannumvisits ~ Month, data = cmprrd11, main = "Castle Piutes (n = 4)", ylab = "Mean Number of Visits")
+title("Mean Number of Visits to Water by Month", line = -1, outer = TRUE)
 
+## whether there is a significant difference in the percent of collared sheep visiting water between mountain ranges ##
 
+# Need to change the names of the rows for Marb
+# Need to add a row in all four data sets saying what mountain range it is
+# then rbind the four mountain ranges
+# 
 
-
-
-
-
-
-
-
-# 3. Is there a difference in tarsus size between species?
-# Check assumptions, perform the appropriate test, and create an appropriate plot to visualize.
-qqnorm(Sparrow$Tarsus)
-qqline(Sparrow$Tarsus)
-shapiro.test(Sparrow$Tarsus)
-shapiro.test(Sparrow$Tarsus[Sparrow$Species == "SESP"])
-shapiro.test(Sparrow$Tarsus[Sparrow$Species == "SSTS"])
-hist(Sparrow$Tarsus)
-var.test(x = Sparrow$Tarsus[Sparrow$Species == "SESP"], y = Sparrow$Tarsus[Sparrow$Species == "SSTS"])
-# The above tests show that tarsus size is not quite normally distributed, but it is close enough
-# to a normal distribution to allow us to use a two-way t-test.The tarsus data approximately fits a 
-# line in the normal quantile plot, and the histogram looks approximately normally distributed, if a 
-# little right-skewed.
-t.test(Tarsus ~ Species, data = Sparrow)
-# p-value < 2.2e-16 There is a significant difference between the two species.
-boxplot(Sparrow$Tarsus ~ Sparrow$Species)
-# 4. Was there an influence of observer on culmen measurements? If so, which observers had significantly different measurements from each other?
-# Check assumptions and perform the appropriate test. Be sure that your observer variable is properly encoded as a factor.
-qqnorm(Sparrow$Culmen)
-qqline(Sparrow$Culmen)
-shapiro.test(Sparrow$Culmen)
-boxplot(Culmen ~ Observer, data = Sparrow)
-bartlett.test(Culmen ~ Observer, data = Sparrow)
-# The data is normally distributed enough to perform an ANOVA. Looking at the boxplot, there are not obvious standouts in culmen size by observer.
-is.factor(Sparrow$Observer)
-str(Sparrow$Observer)
-Sparrow$Observer <- as.factor(Sparrow$Observer)
-str(Sparrow$Observer)
-CulObs <- aov(Culmen ~ Observer, data = Sparrow)
-summary.lm(CulObs)
-TukeyHSD(CulObs)
-# Observer did influence culmen measurements. Observers that had significantly different measurements
-# from each other are: 3-2, 8-2, 4-3, 7-3, 6-4, 8-4, 8-6, and 8-7.
-# 5. Is there an interaction between Sex and Species on Culmen size?
-# Perform the appropriate test and interpret the model output. Run a post-hoc test if needed.
-culsexspe <- aov(Culmen ~ Sex * Species, data = Sparrow)
-summary(culsexspe)
-TukeyHSD(culsexspe)
-# P-value for Sex:Species = 0.000238. There is a significant interaction between sex and species on culmen size. This is interesting because
-# species has a significant effect on culmen size, while sex does not. Looking at the results of the Tukey's test, all sex-species combinations had a 
-# significant effect on culmen size except Male SSTS-Female SSTS. This means that the relationship between
-# sex and culmen size changes depending on which species you are looking at.
 
 ```
 
