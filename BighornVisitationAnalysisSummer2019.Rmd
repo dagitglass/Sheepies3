@@ -633,15 +633,14 @@ cmprrd11plot <- ggplot(data = cmprrd11, aes(x = Date, y = Meannumvisits)) + geom
 library(gridExtra)
 grid.arrange(p, sbrsrd11plot, nopard11plot, cmprrd11plot, nrow = 2, top = "Mean Number of Visits Per Day Given All Collared Sheep")
 ```
-I then ran statistics associated with the previous figures.
-- whether there is a significant difference in the number of collared sheep visiting water among months within each mountain range - DONE
-- whether there is a significant difference in the mean number of visitations of collared sheep visiting water among months within each mountain range - DONE
-- whether there is a significant difference in the percent of collared sheep visiting water between mountain ranges 
-- whether there is a significant difference in the number of visitations between mountain ranges
+I then ran statistics associated with the previous figures. In the Marbles, there was a significant difference in the percent of collared sheep visiting water on a given day by month between May and June/July/August, though not among June, July, and August. In the South Bristols, there was a significant difference between July and August, and between June and August, thought not between June and July. In the Nopahs, June and July were not significant different, though they were both different from August. In the Castle Piutes, the only significant differences between months were between May and July, and May and August. Whether two months were significantly different on the mean number of visits to water on a given day was exactly the same as whether two months were significantly different in the percent of collared sheep visiting on a given day by month. To me, this suggests that the number of visits was not significantly different between different individual sheep.
 
+***The figures of the 'Mean Number of Visits to Water on a Given Day by Month' and 'Percent of Individual Sheep that Visited Water on a Given Day by Month' are exceedingly similar. When I double-checked how I calculated these, I didn't find a problem. Can someone double check me? If this is true, it suggests that there was basically no different in the number of visits to water between different sheep... 
+
+There was a significant difference in the percentage of collared sheep coming into water between mountain ranges. All populations were significantly different from each other except the Marbles from the South Bristols. There was also a significant difference in the number of visitations to water between mountain ranges. All populations were significantly different from each other except the Marbles and the South Bristols, and the Castle Piutes and Nopah.
 
 ```{r}
-## whether there is a significant difference in the number of collared sheep visiting water among months within each mountain range ##
+## whether there is a significant difference in the percentage of collared sheep visiting water among months within each mountain range ##
 
 # Marbles
 marbindsheepvisitperday1$Month <- month(marbindsheepvisitperday1$`rownames(marbindsheepvisitperday)`)
@@ -701,7 +700,15 @@ qqline(nopaindsheepvisitperday2$NumIndSheep)
 hist(nopaindsheepvisitperday2$NumIndSheep)
 # right-skewed b/c very small sample size
 boxplot(Percentvisited ~ Month, data = nopaindsheepvisitperday2, main = "Nopah (n = 6)", ylab = "Percent of Individual Sheep that Visited Water")
-# Not going to bother with anova due to small sample size
+nopaindsheepvisitperday2$Month <- as.factor(nopaindsheepvisitperday2$Month)
+PercentMonthNopa <- aov(formula = Percentvisited ~ Month, data = nopaindsheepvisitperday2)
+summary.lm(PercentMonthNopa)
+# p-value: 1.247e-09
+TukeyHSD(PercentMonthNopa)
+#           diff        lwr       upr     p adj
+# 7-6 0.05555556 -0.0339505 0.1450616 0.2945005
+# 8-6 0.41666667  0.2946172 0.5387161 0.0000000
+# 8-7 0.36111111  0.2497894 0.4724329 0.0000000
 
 # Castle Piutes
 cmprindsheepvisitperday2$Month <- month(cmprindsheepvisitperday2$Date)
@@ -710,6 +717,19 @@ qqline(cmprindsheepvisitperday2$NumIndSheep)
 hist(cmprindsheepvisitperday2$NumIndSheep)
 # right-skewed b/c very small sample size
 boxplot(Percentvisited ~ Month, data = cmprindsheepvisitperday2, main = "Castle Piutes (n = 4)", ylab = "Percent of Individual Sheep that Visited Water")
+cmprindsheepvisitperday2$Month <- as.factor(cmprindsheepvisitperday2$Month)
+PercentMonthCMPR <- aov(formula = Percentvisited ~ Month, data = cmprindsheepvisitperday2)
+summary.lm(PercentMonthCMPR)
+# p-value: 0.01747
+TukeyHSD(PercentMonthCMPR)
+#           diff          lwr       upr     p adj
+# 6-5 0.25000000 -0.147049891 0.6470499 0.3173379
+# 7-5 0.43750000 -0.009816973 0.8848170 0.0565871
+# 8-5 0.45833333  0.061283442 0.8553832 0.0202925
+# 7-6 0.18750000 -0.273172651 0.6481727 0.6675089
+# 8-6 0.20833333 -0.203704812 0.6203715 0.5018073
+# 8-7 0.02083333 -0.439839317 0.4815060 0.9992381
+
 
 par(mfrow = c(2,2))
 #title = "Percent of Individual Sheep that Visited Water by Month")
@@ -717,7 +737,7 @@ boxplot(Percentvisited ~ Month, data = marbindsheepvisitperday1, main = "Marbles
 boxplot(NumIndSheep ~ Month, data = sbrsindsheepvisitperday2, main = "South Bristols (n = 24)", ylab = "% of Individual Sheep")
 boxplot(Percentvisited ~ Month, data = nopaindsheepvisitperday2, main = "Nopah (n = 6)", ylab = "% of Individual Sheep")
 boxplot(Percentvisited ~ Month, data = cmprindsheepvisitperday2, main = "Castle Piutes (n = 4)", ylab = "% of Individual Sheep")
-title("Percent of Individual Sheep that Visited Water by Month", line = -1, outer = TRUE)
+title("Percent of Individual Sheep that Visited Water on a Given Day by Month", line = -1, outer = TRUE)
 
 
 ## whether there is a significant difference in the mean number of visitations of collared sheep visiting water among months within each mountain range ##
@@ -790,12 +810,13 @@ TukeyHSD(MeanVisitsMonthCmpr)
 # 8-6 0.2083333 -0.24383142 0.6604981 0.5767064
 # 8-7 0.0625000 -0.44303557 0.5680356 0.9851190
 
+# If not working, change visits to 'Meannumvisits' for Marbles
 par(mfrow = c(2,2))
-boxplot(visits ~ Month, data = marbindrd11, main = "Marbles (n = 32*)", ylab = "Mean Number of Visits")
+boxplot(Meannumvisits ~ Month, data = marbindrd11, main = "Marbles (n = 32*)", ylab = "Mean Number of Visits")
 boxplot(Meannumvisits ~ Month, data = sbrsrd11, main = "South Bristols (n = 24)", ylab = "Mean Number of Visits")
 boxplot(Meannumvisits ~ Month, data = nopard11, main = "Nopah (n = 6)", ylab = "Mean Number of Visits")
 boxplot(Meannumvisits ~ Month, data = cmprrd11, main = "Castle Piutes (n = 4)", ylab = "Mean Number of Visits")
-title("Mean Number of Visits to Water by Month", line = -1, outer = TRUE)
+title("Mean Number of Visits to Water on a Given Day by Month", line = -1, outer = TRUE)
 
 ## whether there is a significant difference in the percent of collared sheep visiting water between mountain ranges ##
 
