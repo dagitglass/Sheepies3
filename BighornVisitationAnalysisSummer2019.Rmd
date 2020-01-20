@@ -636,8 +636,8 @@ grid.arrange(p, sbrsrd11plot, nopard11plot, cmprrd11plot, nrow = 2, top = "Mean 
 I then ran statistics associated with the previous figures.
 - whether there is a significant difference in the number of collared sheep visiting water among months within each mountain range - DONE
 - whether there is a significant difference in the mean number of visitations of collared sheep visiting water among months within each mountain range - DONE
-- whether there is a significant difference in the number of visitations of collared sheep visiting water among months within each mountain range?? (don't do any sort of by-day calculation)???
 - whether there is a significant difference in the percent of collared sheep visiting water between mountain ranges 
+- whether there is a significant difference in the number of visitations between mountain ranges
 
 
 ```{r}
@@ -800,9 +800,41 @@ title("Mean Number of Visits to Water by Month", line = -1, outer = TRUE)
 ## whether there is a significant difference in the percent of collared sheep visiting water between mountain ranges ##
 
 # Need to change the names of the rows for Marb
+names(marbindsheepvisitperday1)[names(marbindsheepvisitperday1) == "rownames(marbindsheepvisitperday)"] <- "Date"
+names(marbindsheepvisitperday1)[names(marbindsheepvisitperday1) == "visits"] <- "NumIndSheep"
+marbindsheepvisitperday1$datenum <- NULL
+library(lubridate)
+marbindsheepvisitperday1$Month <- month(marbindsheepvisitperday1$Date)
 # Need to add a row in all four data sets saying what mountain range it is
+marbindsheepvisitperday1$MtnRange <- "Marb"
+sbrsindsheepvisitperday2$MtnRange <- "BrsS"
+nopaindsheepvisitperday2$MtnRange <- "Nopa"
+cmprindsheepvisitperday2$MtnRange <- "CMPR"
+marbindsheepvisitperday1$MtnRange <- as.factor(marbindsheepvisitperday1$MtnRange)
+sbrsindsheepvisitperday2$MtnRange <- as.factor(sbrsindsheepvisitperday2$MtnRange)
+nopaindsheepvisitperday2$MtnRange <- as.factor(nopaindsheepvisitperday2$MtnRange)
+cmprindsheepvisitperday2$MtnRange <- as.factor(cmprindsheepvisitperday2$MtnRange)
 # then rbind the four mountain ranges
-# 
+nopaindsheepvisitperday2$TotalNumSheep <- 6
+cmprindsheepvisitperday2$TotalNumSheep <- 4
+allindsheepvisitperday <- rbind(marbindsheepvisitperday1, sbrsindsheepvisitperday2, nopaindsheepvisitperday2, cmprindsheepvisitperday2)
+qqnorm(allindsheepvisitperday$Percentvisited)
+qqline(allindsheepvisitperday$Percentvisited)
+# IS THIS HISTOGRAM OK?
+hist(allindsheepvisitperday$Percentvisited)
+boxplot(Percentvisited ~ MtnRange, data = allindsheepvisitperday, main = "Percent of Individual Sheep that Visited Water in a Given Day by Mountain Range", ylab = "Percent of Individual Sheep", xlab = "Mountain Range")
+allindsheepvisitperday$Month <- as.factor(allindsheepvisitperday$Month)
+PercentVisitMtnRange <- aov(Percentvisited ~ MtnRange, data = allindsheepvisitperday)
+summary.lm(PercentVisitMtnRange)
+#  p-value: < 2.2e-16
+TukeyHSD(PercentVisitMtnRange)
+#                   diff         lwr         upr     p adj
+# BrsS-Marb -0.006644472 -0.10476697  0.09147802 0.9980599
+# Nopa-Marb -0.356191495 -0.46494901 -0.24743398 0.0000000
+# CMPR-Marb -0.191813158 -0.31684832 -0.06677799 0.0005967
+# Nopa-BrsS -0.349547023 -0.44686256 -0.25223148 0.0000000
+# CMPR-BrsS -0.185168686 -0.30038982 -0.06994756 0.0002885
+# CMPR-Nopa  0.164378337  0.03997543  0.28878124 0.0042406
 
 
 ```
