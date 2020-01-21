@@ -891,10 +891,33 @@ TukeyHSD(MeanVisitationMtnRange)
 
 
 ```{r}
+# Whether there is a large spread in the number of individual visits between individual sheep
+
+MarbNumVisitbyID <- as.data.frame(table(Marbcutobs$KI_Known_ID))
+MarbNumVisitbyID1 <- MarbNumVisitbyID[(MarbNumVisitbyID$Var1 == "BHS_1367") |  (MarbNumVisitbyID$Var1 == "BHS_1365") | (MarbNumVisitbyID$Var1 == "BHS_1361") | (MarbNumVisitbyID$Var1 == "BHS_1362") | (MarbNumVisitbyID$Var1 == "BHS_1357") | (MarbNumVisitbyID$Var1 == "BHS_1416") | (MarbNumVisitbyID$Var1 == "BHS_1421") | (MarbNumVisitbyID$Var1 == "BHS_1581") | (MarbNumVisitbyID$Var1 == "BHS_1577") | (MarbNumVisitbyID$Var1 == "BHS_1574") | (MarbNumVisitbyID$Var1 == "BHS_1576") | (MarbNumVisitbyID$Var1 == "BHS_1583") | (MarbNumVisitbyID$Var1 == "BHS_1584") | (MarbNumVisitbyID$Var1 == "BHS_1585") | (MarbNumVisitbyID$Var1 == "BHS_1587") | (MarbNumVisitbyID$Var1 == "BHS_1582") | (MarbNumVisitbyID$Var1 == "BHS_1575") | (MarbNumVisitbyID$Var1 == "BHS_1592") | (MarbNumVisitbyID$Var1 == "BHS_1594") | (MarbNumVisitbyID$Var1 == "BHS_1420") | (MarbNumVisitbyID$Var1 == "BHS_1493") | (MarbNumVisitbyID$Var1 == "BHS_1494") | (MarbNumVisitbyID$Var1 == "BHS_1590") | (MarbNumVisitbyID$Var1 == "BHS_1591") | (MarbNumVisitbyID$Var1 == "BHS_1682") | (MarbNumVisitbyID$Var1 == "BHS_1683") | (MarbNumVisitbyID$Var1 == "BHS_1684") | (MarbNumVisitbyID$Var1 == "BHS_1366") | (MarbNumVisitbyID$Var1 == "BHS_1497") | (MarbNumVisitbyID$Var1 == "BHS_1588") | (MarbNumVisitbyID$Var1 == "BHS_1595") | (MarbNumVisitbyID$Var1 == "BHS_1589"), ]
+
 # Time between sheep coming into water
 
-# mutate(air_time = end_time - start_time)
-# mutate(air_time2 = as.numeric(end_time - start_time, units="mins"))
+BrsScutobslong <- BrsScutobs[(BrsScutobs$DateTimect >= as.POSIXct("2019-06-25 17:05:00") & BrsScutobs$DateTimect <= as.POSIXct("2019-07-29 10:36:00")), ]
+# 25 sheep
+# https://stackoverflow.com/questions/32999460/how-to-calculate-time-difference-with-previous-row-of-a-data-frame-by-group/32999651
+BrsScutobslong$DateTime <- as.POSIXct(BrsScutobslong$DateTime, format = )
+library(dplyr)
+BrsSlongtimedif <- BrsScutobslong %>% 
+  arrange(KI_Known_ID, DateTimect) %>%
+  group_by(KI_Known_ID) %>%
+  mutate(Timediff = DateTimect - lag(DateTimect), diff_hours = as.numeric(Timediff, units = 'hours'))
+# mean(BrsSlongtimedif$diff_hours, na.rm = TRUE)
+# [1] 37.57339
+boxplot(BrsSlongtimedif$diff_hours, ylab = "Time Between Visits to Water (hours)", main = "Time between Visits to Water for all Sheep")
+
+
+
+
+
+
+
+
 
 ```
 
