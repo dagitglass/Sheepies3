@@ -893,8 +893,46 @@ TukeyHSD(MeanVisitationMtnRange)
 ```{r}
 # Whether there is a large spread in the number of individual visits between individual sheep
 
-MarbNumVisitbyID <- as.data.frame(table(Marbcutobs$KI_Known_ID))
-MarbNumVisitbyID1 <- MarbNumVisitbyID[(MarbNumVisitbyID$Var1 == "BHS_1367") |  (MarbNumVisitbyID$Var1 == "BHS_1365") | (MarbNumVisitbyID$Var1 == "BHS_1361") | (MarbNumVisitbyID$Var1 == "BHS_1362") | (MarbNumVisitbyID$Var1 == "BHS_1357") | (MarbNumVisitbyID$Var1 == "BHS_1416") | (MarbNumVisitbyID$Var1 == "BHS_1421") | (MarbNumVisitbyID$Var1 == "BHS_1581") | (MarbNumVisitbyID$Var1 == "BHS_1577") | (MarbNumVisitbyID$Var1 == "BHS_1574") | (MarbNumVisitbyID$Var1 == "BHS_1576") | (MarbNumVisitbyID$Var1 == "BHS_1583") | (MarbNumVisitbyID$Var1 == "BHS_1584") | (MarbNumVisitbyID$Var1 == "BHS_1585") | (MarbNumVisitbyID$Var1 == "BHS_1587") | (MarbNumVisitbyID$Var1 == "BHS_1582") | (MarbNumVisitbyID$Var1 == "BHS_1575") | (MarbNumVisitbyID$Var1 == "BHS_1592") | (MarbNumVisitbyID$Var1 == "BHS_1594") | (MarbNumVisitbyID$Var1 == "BHS_1420") | (MarbNumVisitbyID$Var1 == "BHS_1493") | (MarbNumVisitbyID$Var1 == "BHS_1494") | (MarbNumVisitbyID$Var1 == "BHS_1590") | (MarbNumVisitbyID$Var1 == "BHS_1591") | (MarbNumVisitbyID$Var1 == "BHS_1682") | (MarbNumVisitbyID$Var1 == "BHS_1683") | (MarbNumVisitbyID$Var1 == "BHS_1684") | (MarbNumVisitbyID$Var1 == "BHS_1366") | (MarbNumVisitbyID$Var1 == "BHS_1497") | (MarbNumVisitbyID$Var1 == "BHS_1588") | (MarbNumVisitbyID$Var1 == "BHS_1595") | (MarbNumVisitbyID$Var1 == "BHS_1589"), ]
+## It is worth noting that I have not deleted replicate observations from Theresa from this dataset. So if a sheep went to 'Theresa Seep' and 'Theresa Drinker Box' within the same visit, it still counts as two visits to water. NEED TO FIX AT SOME POINT.
+# Also, Marbles has including the total, completely covered time frame (only includes complete days)
+# Note that the exact numbers are not comparable between mountain ranges b/c of different amounts of time that cameras were functioning within each range. Didn't use a modifer b/c comparing between ranges isn't what I'm interested in right now.
+
+MarbNumVisitbyID <- as.data.frame(table(Marbcutobsrd$KI_Known_ID))
+## Removing the two sheep that didn't live through the whole time period: BHS_1595 & BHS_1367
+MarbNumVisitbyID1 <- MarbNumVisitbyID[(MarbNumVisitbyID$Var1 == "BHS_1365") | (MarbNumVisitbyID$Var1 == "BHS_1361") | (MarbNumVisitbyID$Var1 == "BHS_1362") | (MarbNumVisitbyID$Var1 == "BHS_1357") | (MarbNumVisitbyID$Var1 == "BHS_1416") | (MarbNumVisitbyID$Var1 == "BHS_1421") | (MarbNumVisitbyID$Var1 == "BHS_1581") | (MarbNumVisitbyID$Var1 == "BHS_1577") | (MarbNumVisitbyID$Var1 == "BHS_1574") | (MarbNumVisitbyID$Var1 == "BHS_1576") | (MarbNumVisitbyID$Var1 == "BHS_1583") | (MarbNumVisitbyID$Var1 == "BHS_1584") | (MarbNumVisitbyID$Var1 == "BHS_1585") | (MarbNumVisitbyID$Var1 == "BHS_1587") | (MarbNumVisitbyID$Var1 == "BHS_1582") | (MarbNumVisitbyID$Var1 == "BHS_1575") | (MarbNumVisitbyID$Var1 == "BHS_1592") | (MarbNumVisitbyID$Var1 == "BHS_1594") | (MarbNumVisitbyID$Var1 == "BHS_1420") | (MarbNumVisitbyID$Var1 == "BHS_1493") | (MarbNumVisitbyID$Var1 == "BHS_1494") | (MarbNumVisitbyID$Var1 == "BHS_1590") | (MarbNumVisitbyID$Var1 == "BHS_1591") | (MarbNumVisitbyID$Var1 == "BHS_1682") | (MarbNumVisitbyID$Var1 == "BHS_1683") | (MarbNumVisitbyID$Var1 == "BHS_1684") | (MarbNumVisitbyID$Var1 == "BHS_1366") | (MarbNumVisitbyID$Var1 == "BHS_1497") | (MarbNumVisitbyID$Var1 == "BHS_1588") | (MarbNumVisitbyID$Var1 == "BHS_1589"), ]
+# boxplot(MarbNumVisitbyID1$Freq)
+summary(MarbNumVisitbyID1$Freq)
+# Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#   2.00   22.00   25.00   25.41   30.00   46.00
+
+# South Bristols only covers complete days
+BrsSNumVisitbyID <- as.data.frame(table(BrsScutobsrdwithdups$KI_Known_ID))
+# boxplot(BrsSNumVisitbyID$Freq)
+summary(BrsSNumVisitbyID$Freq)
+#Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#   2.00   23.00   35.00   36.48   54.00   78.00 
+
+# Nopah
+NopaNumVisitbyID <- as.data.frame(table((nopacutobsrd$KI_Known_ID)))
+NopaNumVisitbyID1 <- NopaNumVisitbyID[(NopaNumVisitbyID$Var1 == "BHS_1737") | (NopaNumVisitbyID == "BHS_1740") | (NopaNumVisitbyID$Var1 == "BHS_1741") | (NopaNumVisitbyID$Var1 == "BHS_1738") | (NopaNumVisitbyID$Var1 == "BHS_1736") | (NopaNumVisitbyID$Var1 == "BHS_1739"),]
+# boxplot(NopaNumVisitbyID1$Freq)
+summary(NopaNumVisitbyID1$Freq)
+#   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+#    1.0     4.0     5.0     5.4     5.0    12.0
+
+CMPRNumVisitbyID <- as.data.frame(table((cmprcutobs$KI_Known_ID)))
+CMPRNumVisitbyID1 <- CMPRNumVisitbyID[(CMPRNumVisitbyID$Var1 == "BHS_1730") | (CMPRNumVisitbyID$Var1 == "BHS_1733") | (CMPRNumVisitbyID$Var1 == "BHS_1734") | (CMPRNumVisitbyID$Var1 == "BHS_1728"), ]
+# boxplot(CMPRNumVisitbyID1$Freq)
+summary(CMPRNumVisitbyID$Freq)
+# Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+# 0.0000  0.0000  0.0000  0.4085  0.0000 11.0000
+
+par(mfrow = c(2,2))
+boxplot(MarbNumVisitbyID1$Freq, ylab = "Number of Visits", main = "Marbles (n = 29)")
+boxplot(BrsSNumVisitbyID$Freq, ylab = "Number of Visits", main = "South Bristols (n = 27)")
+boxplot(NopaNumVisitbyID1$Freq, ylab = "Number of Visits", main = "Nopah (n = 6)")
+boxplot(CMPRNumVisitbyID1$Freq, ylab = "Number of Visits", main = "Castle Piute (n = 4)")
+title("Total Number of Visits to Water by Individual Bighorn", line = -1, outer = TRUE)
 
 # Time between sheep coming into water
 
@@ -909,15 +947,26 @@ BrsSlongtimedif <- BrsScutobslong %>%
   mutate(Timediff = DateTimect - lag(DateTimect), diff_hours = as.numeric(Timediff, units = 'hours'))
 # mean(BrsSlongtimedif$diff_hours, na.rm = TRUE)
 # [1] 37.57339
-boxplot(BrsSlongtimedif$diff_hours, ylab = "Time Between Visits to Water (hours)", main = "Time between Visits to Water for all Sheep")
-
-
-
-
-
-
-
-
+# boxplot(BrsSlongtimedif$diff_hours, ylab = "Time Between Visits to Water (hours)", main = "Time between Visits to Water for all Sheep")
+summary(BrsSlongtimedif$diff_hours)
+# Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+#  0.10   11.87   28.53   37.57   47.16  456.88      25 
+qqnorm(BrsSlongtimedif$diff_hours)
+qqline(BrsSlongtimedif$diff_hours)
+shapiro.test(BrsSlongtimedif$diff_hours)
+# p-value < 2.2e-16 NOT NORMALLY DISTRIBUTED? Shouldn't use anova?
+hist(BrsSlongtimedif$diff_hours)
+# very right-skewed - log transform
+hist(log(BrsSlongtimedif$diff_hours))
+boxplot(log(diff_hours) ~ KI_Known_ID, data = BrsSlongtimedif)
+boxplot(log(diff_hours) ~ KI_Known_ID, data = BrsSlongtimedif)
+# Looking at the non-logged boxplot, there is one sheep that is super off compared to the rest of them???
+BrsSdiffhoursindsheep <- aov(log(diff_hours) ~ KI_Known_ID, data = BrsSlongtimedif)
+summary.lm(BrsSdiffhoursindsheep)
+# p-value: < 8.52e-16
+TukeyHSD(BrsSdiffhoursindsheep)
+# Just a few combos are significantly different?
+# DID I DO THIS RIGHT???
 
 ```
 
