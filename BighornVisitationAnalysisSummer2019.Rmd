@@ -893,21 +893,21 @@ TukeyHSD(MeanVisitationMtnRange)
 ```{r}
 # Whether there is a large spread in the number of individual visits between individual sheep
 
-## It is worth noting that I have not deleted replicate observations from Theresa from this dataset. So if a sheep went to 'Theresa Seep' and 'Theresa Drinker Box' within the same visit, it still counts as two visits to water. NEED TO FIX AT SOME POINT.
+## It is worth noting that I have not deleted replicate observations from Theresa from this dataset. So if a sheep went to 'Theresa Seep' and 'Theresa Drinker Box' within the same visit, it still counts as two visits to water. SHOULD I FIX THIS AT SOME POINT, OR SHOULD THESE COUNT AS SEPARATE OBSERVATIONS?
 # Also, Marbles has including the total, completely covered time frame (only includes complete days)
 # Note that the exact numbers are not comparable between mountain ranges b/c of different amounts of time that cameras were functioning within each range. Didn't use a modifer b/c comparing between ranges isn't what I'm interested in right now.
 
 MarbNumVisitbyID <- as.data.frame(table(Marbcutobsrd$KI_Known_ID))
 ## Removing the two sheep that didn't live through the whole time period: BHS_1595 & BHS_1367
 MarbNumVisitbyID1 <- MarbNumVisitbyID[(MarbNumVisitbyID$Var1 == "BHS_1365") | (MarbNumVisitbyID$Var1 == "BHS_1361") | (MarbNumVisitbyID$Var1 == "BHS_1362") | (MarbNumVisitbyID$Var1 == "BHS_1357") | (MarbNumVisitbyID$Var1 == "BHS_1416") | (MarbNumVisitbyID$Var1 == "BHS_1421") | (MarbNumVisitbyID$Var1 == "BHS_1581") | (MarbNumVisitbyID$Var1 == "BHS_1577") | (MarbNumVisitbyID$Var1 == "BHS_1574") | (MarbNumVisitbyID$Var1 == "BHS_1576") | (MarbNumVisitbyID$Var1 == "BHS_1583") | (MarbNumVisitbyID$Var1 == "BHS_1584") | (MarbNumVisitbyID$Var1 == "BHS_1585") | (MarbNumVisitbyID$Var1 == "BHS_1587") | (MarbNumVisitbyID$Var1 == "BHS_1582") | (MarbNumVisitbyID$Var1 == "BHS_1575") | (MarbNumVisitbyID$Var1 == "BHS_1592") | (MarbNumVisitbyID$Var1 == "BHS_1594") | (MarbNumVisitbyID$Var1 == "BHS_1420") | (MarbNumVisitbyID$Var1 == "BHS_1493") | (MarbNumVisitbyID$Var1 == "BHS_1494") | (MarbNumVisitbyID$Var1 == "BHS_1590") | (MarbNumVisitbyID$Var1 == "BHS_1591") | (MarbNumVisitbyID$Var1 == "BHS_1682") | (MarbNumVisitbyID$Var1 == "BHS_1683") | (MarbNumVisitbyID$Var1 == "BHS_1684") | (MarbNumVisitbyID$Var1 == "BHS_1366") | (MarbNumVisitbyID$Var1 == "BHS_1497") | (MarbNumVisitbyID$Var1 == "BHS_1588") | (MarbNumVisitbyID$Var1 == "BHS_1589"), ]
-# boxplot(MarbNumVisitbyID1$Freq)
+boxplot(MarbNumVisitbyID1$Freq, ylab = "Number of Visits", main = "Marbles (n = 29)")
 summary(MarbNumVisitbyID1$Freq)
 # Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 #   2.00   22.00   25.00   25.41   30.00   46.00
 
 # South Bristols only covers complete days
 BrsSNumVisitbyID <- as.data.frame(table(BrsScutobsrdwithdups$KI_Known_ID))
-# boxplot(BrsSNumVisitbyID$Freq)
+boxplot(BrsSNumVisitbyID$Freq, ylab = "Number of Visits", main = "South Bristols (n = 27)")
 summary(BrsSNumVisitbyID$Freq)
 #Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 #   2.00   23.00   35.00   36.48   54.00   78.00 
@@ -915,24 +915,19 @@ summary(BrsSNumVisitbyID$Freq)
 # Nopah
 NopaNumVisitbyID <- as.data.frame(table((nopacutobsrd$KI_Known_ID)))
 NopaNumVisitbyID1 <- NopaNumVisitbyID[(NopaNumVisitbyID$Var1 == "BHS_1737") | (NopaNumVisitbyID == "BHS_1740") | (NopaNumVisitbyID$Var1 == "BHS_1741") | (NopaNumVisitbyID$Var1 == "BHS_1738") | (NopaNumVisitbyID$Var1 == "BHS_1736") | (NopaNumVisitbyID$Var1 == "BHS_1739"),]
-# boxplot(NopaNumVisitbyID1$Freq)
+boxplot(NopaNumVisitbyID1$Freq, ylab = "Number of Visits", main = "Nopah (n = 6)")
 summary(NopaNumVisitbyID1$Freq)
 #   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
 #    1.0     4.0     5.0     5.4     5.0    12.0
 
 CMPRNumVisitbyID <- as.data.frame(table((cmprcutobs$KI_Known_ID)))
 CMPRNumVisitbyID1 <- CMPRNumVisitbyID[(CMPRNumVisitbyID$Var1 == "BHS_1730") | (CMPRNumVisitbyID$Var1 == "BHS_1733") | (CMPRNumVisitbyID$Var1 == "BHS_1734") | (CMPRNumVisitbyID$Var1 == "BHS_1728"), ]
-# boxplot(CMPRNumVisitbyID1$Freq)
+boxplot(CMPRNumVisitbyID1$Freq, ylab = "Number of Visits", main = "Castle Piute (n = 4)")
 summary(CMPRNumVisitbyID$Freq)
 # Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 # 0.0000  0.0000  0.0000  0.4085  0.0000 11.0000
 
-par(mfrow = c(2,2))
-boxplot(MarbNumVisitbyID1$Freq, ylab = "Number of Visits", main = "Marbles (n = 29)")
-boxplot(BrsSNumVisitbyID$Freq, ylab = "Number of Visits", main = "South Bristols (n = 27)")
-boxplot(NopaNumVisitbyID1$Freq, ylab = "Number of Visits", main = "Nopah (n = 6)")
-boxplot(CMPRNumVisitbyID1$Freq, ylab = "Number of Visits", main = "Castle Piute (n = 4)")
-title("Total Number of Visits to Water by Individual Bighorn", line = -1, outer = TRUE)
+# Note - different mountain ranges are not comparable b/c are over different amounts of time. Just looking at spread within each mountain range.
 
 # Time between sheep coming into water
 
@@ -968,9 +963,52 @@ TukeyHSD(BrsSdiffhoursindsheep)
 # Just a few combos are significantly different?
 # DID I DO THIS RIGHT???
 
+# 276 combos - 36 of which are significant- 13% are significant
+# Combos that are significantly different:
+# BHS_1486 - BHS_1328
+# BHS_1337 - BHS_1329
+# 1486 - 1329
+# 1490 - 1329
+# 1596 - 1329
+# 1685 - 1329
+# 1486 - 1330
+# 1490 - 1330
+# 1683 - 1330
+# 1337 - 1333
+# 1486 - 1333
+# 1490 - 1333
+# 1596 - 1333
+# 1685 - 1333
+# 1688 - 1333
+# 1580 - 1337
+# 1486 - 1425
+# 1486 - 1426
+# 1490 - 1426
+# 1685 - 1426
+# 1489 - 1486
+# 1491 - 1486
+# 1492 - 1486
+# 1578 - 1486
+# 1580 - 1486
+# 1687 - 1486
+# 1490 - 1489
+# 1685 - 1489
+# 1492 - 1490
+# 1580 - 1490
+# 1687 - 1490
+# 1685 - 1492
+# 1596 - 1580
+# 1685 - 1580
+# 1688 - 1580
+# 1687 - 1685
+
+
+
+# last is 1599 - 1578 seen
+
 ```
 
-
+Does it make sense to do these separately by mountain range???
 
 
 - whether there is a statistical difference in visitation between ewes and rams within mountain ranges - chi squared
