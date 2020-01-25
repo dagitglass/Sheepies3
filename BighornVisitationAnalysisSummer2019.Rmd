@@ -1167,9 +1167,25 @@ chisq.test(x = c(4, 11, 11), p = c(1/4, 1/4, 2/4))
 - whether there is a significant difference in how often sheep in large groups come in vs. sheep in small groups come in
 
 
+```{r}
+# Decided to break the day down into 1-5, 5-9, 9-13, 13-17, 17-21, 21-1. This is b/c hottest time of day is 3pm, sunset during the midpoint during the study period (June 23rd) in the Mojave is at 8:05 pm, and sunrise during the midpoint during the study period in the Mojave is at 5:35 am
 
+# First need to put 
 
+allrangetime <- rbind(Marbcutobsrd, BrsScutobsrdwithdups, nopacutobsrd, cmprcutobs1)
+allrangetime$timeofday <- allrangetime$KI_DG_FirstPhotoTime
+write.csv(allrangetime, 'allrangetime.csv')
+# Because it seemed easier to just transfer the times of the 2nd/3rd/4th visits in the few observations with multiple visits/observations into the same column by hand than write out a complicated code, I did just that.
+allrangetime1 <- read.csv("allrangetime.csv", header = TRUE, sep = ",")
+# View(allrangetime1)
+# Double-checked that everything was correct - it was
+allrangetime1$X.1 <- NULL
+allrangetime1$X.2 <- NULL
+allrangetime1$X.3 <- NULL
+library(hms)
+# PICK UP HERE TOMORROW!!!
 
+```
 
 ```{r}
 # NOPAH PLOT
