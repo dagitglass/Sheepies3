@@ -1004,7 +1004,7 @@ TukeyHSD(BrsSdiffhoursindsheep)
 
 
 
-# last is 1599 - 1578 seen
+
 
 ```
 
@@ -1013,7 +1013,7 @@ Does it make sense to do these separately by mountain range???
 
 - whether there is a statistical difference in visitation between ewes and rams within mountain ranges - chi squared
 - whether there is a statistical difference in visitation between bighorn of different ages - chi-squared?
-- whether there is a statistical difference 
+
 
 ```{r}
 # SEX
@@ -1066,17 +1066,105 @@ chisq.test(x = c(20, 6), p = c(3/4, 1/4))
 
 # There is not a significant difference in visitation by sex in any mountain range.
 
+# AGE
+
+# See BighornAgeSummer2019 for age calculations
+Marbcutobsrd$Age2019 <- NA
+Marbcutobsrd$Age2019[Marbcutobsrd$KI_Known_ID == "BHS_1365"] <- 9
+Marbcutobsrd$Age2019[Marbcutobsrd$KI_Known_ID == "BHS_1361"] <- 9
+Marbcutobsrd$Age2019[Marbcutobsrd$KI_Known_ID == "BHS_1362"] <- 8
+Marbcutobsrd$Age2019[Marbcutobsrd$KI_Known_ID == "BHS_1357"] <- 8
+Marbcutobsrd$Age2019[Marbcutobsrd$KI_Known_ID == "BHS_1416"] <- 11
+Marbcutobsrd$Age2019[Marbcutobsrd$KI_Known_ID == "BHS_1421"] <- 9
+Marbcutobsrd$Age2019[Marbcutobsrd$KI_Known_ID == "BHS_1581"] <- 7
+Marbcutobsrd$Age2019[Marbcutobsrd$KI_Known_ID == "BHS_1577"] <- 7
+Marbcutobsrd$Age2019[Marbcutobsrd$KI_Known_ID == "BHS_1574"] <- 12
+Marbcutobsrd$Age2019[Marbcutobsrd$KI_Known_ID == "BHS_1576"] <- 10
+Marbcutobsrd$Age2019[Marbcutobsrd$KI_Known_ID == "BHS_1583"] <- 8
+Marbcutobsrd$Age2019[Marbcutobsrd$KI_Known_ID == "BHS_1584"] <- 9
+Marbcutobsrd$Age2019[Marbcutobsrd$KI_Known_ID == "BHS_1585"] <- 7
+Marbcutobsrd$Age2019[Marbcutobsrd$KI_Known_ID == "BHS_1587"] <- 8
+Marbcutobsrd$Age2019[Marbcutobsrd$KI_Known_ID == "BHS_1582"] <- 7
+Marbcutobsrd$Age2019[Marbcutobsrd$KI_Known_ID == "BHS_1575"] <- 7
+Marbcutobsrd$Age2019[Marbcutobsrd$KI_Known_ID == "BHS_1592"] <- 7
+Marbcutobsrd$Age2019[Marbcutobsrd$KI_Known_ID == "BHS_1594"] <- 9
+Marbcutobsrd$Age2019[Marbcutobsrd$KI_Known_ID == "BHS_1590"] <- 12
+Marbcutobsrd$Age2019[Marbcutobsrd$KI_Known_ID == "BHS_1591"] <- 9
+Marbcutobsrd$Age2019[Marbcutobsrd$KI_Known_ID == "BHS_1682"] <- 4
+Marbcutobsrd$Age2019[Marbcutobsrd$KI_Known_ID == "BHS_1683"] <- 4
+Marbcutobsrd$Age2019[Marbcutobsrd$KI_Known_ID == "BHS_1684"] <- 13
+Marbcutobsrd$Age2019[Marbcutobsrd$KI_Known_ID == "BHS_1588"] <- 8
+Marbcutobsrd$Age2019[Marbcutobsrd$KI_Known_ID == "BHS_1595"] <- 8
+# 1367, 1366, and 1497 were of unknown age
+table(Marbcutobsrd$Age2019[(Marbcutobsrd$KI_Known_ID != "BHS_1367") & (Marbcutobsrd$KI_Known_ID != "BHS_1366") & (Marbcutobsrd$KI_Known_ID != "BHS_1497")])
+#  4   7   8   9  10  11  12  13 
+# 76 184 132 150  25  15  51  10
+chisq.test(x = c(76, 184, 132, 150, 25, 15, 51, 10), p = c(2/25, 6/25, 6/25, 6/25, 1/25, 1/25, 2/25, 1/25))
+# p-value = 1.176e-05
+# But is this really a significant finding? I'm question it.
+
+BrsScutobsrdwithdups$Age2019 <- NA
+BrsScutobsrdwithdups$Age2019[BrsScutobsrdwithdups$KI_Known_ID == "BHS_1330"] <- 8
+BrsScutobsrdwithdups$Age2019[BrsScutobsrdwithdups$KI_Known_ID == "BHS_1334"] <- 8
+BrsScutobsrdwithdups$Age2019[BrsScutobsrdwithdups$KI_Known_ID == "BHS_1333"] <- 9
+BrsScutobsrdwithdups$Age2019[BrsScutobsrdwithdups$KI_Known_ID == "BHS_1425"] <- 10
+BrsScutobsrdwithdups$Age2019[BrsScutobsrdwithdups$KI_Known_ID == "BHS_1489"] <- 7
+BrsScutobsrdwithdups$Age2019[BrsScutobsrdwithdups$KI_Known_ID == "BHS_1491"] <- 10
+BrsScutobsrdwithdups$Age2019[BrsScutobsrdwithdups$KI_Known_ID == "BHS_1578"] <- 7
+BrsScutobsrdwithdups$Age2019[BrsScutobsrdwithdups$KI_Known_ID == "BHS_1579"] <- 3
+BrsScutobsrdwithdups$Age2019[BrsScutobsrdwithdups$KI_Known_ID == "BHS_1596"] <- 7
+BrsScutobsrdwithdups$Age2019[BrsScutobsrdwithdups$KI_Known_ID == "BHS_1599"] <- 7
+BrsScutobsrdwithdups$Age2019[BrsScutobsrdwithdups$KI_Known_ID == "BHS_1687"] <- 9
+BrsScutobsrdwithdups$Age2019[BrsScutobsrdwithdups$KI_Known_ID == "BHS_1486"] <- 8
+BrsScutobsrdwithdups$Age2019[BrsScutobsrdwithdups$KI_Known_ID == "BHS_1490"] <- 12
+BrsScutobsrdwithdups$Age2019[BrsScutobsrdwithdups$KI_Known_ID == "BHS_1492"] <- 10
+BrsScutobsrdwithdups$Age2019[BrsScutobsrdwithdups$KI_Known_ID == "BHS_1428"] <- 8
+BrsScutobsrdwithdups$Age2019[BrsScutobsrdwithdups$KI_Known_ID == "BHS_1685"] <- 3
+BrsScutobsrdwithdups$Age2019[BrsScutobsrdwithdups$KI_Known_ID == "BHS_1686"] <- 6
+BrsScutobsrdwithdups$Age2019[BrsScutobsrdwithdups$KI_Known_ID == "BHS_1688"] <- 2
+BrsScutobsrdwithdups$Age2019[BrsScutobsrdwithdups$KI_Known_ID == "BHS_1689"] <- 10
+table(BrsScutobsrdwithdups$Age2019)
+ # 2   3   6   7   8   9  10  12 
+ # 58 101  23 239 120  48 103  54 
+chisq.test(x = c(58, 101, 23, 239, 120, 48, 103, 54), p = c(1/19, 2/19, 1/19, 4/19, 4/19, 2/19, 4/19, 1/19))
+# X-squared = 109.61, df = 7, p-value < 2.2e-16
+# Could it be that middle-aged sheep are visiting water more often b/c they are more likely to have lambs make it to the summer? Is that even true???? Though ewes did not visit more than rams
+
+nopacutobsrd$Age2019 <- NA
+nopacutobsrd$Age2019[nopacutobsrd$KI_Known_ID == "BHS_1737"] <- 3
+nopacutobsrd$Age2019[nopacutobsrd$KI_Known_ID == "BHS_1740"] <- 2
+nopacutobsrd$Age2019[nopacutobsrd$KI_Known_ID == "BHS_1741"] <- 8
+nopacutobsrd$Age2019[nopacutobsrd$KI_Known_ID == "BHS_1738"] <- 2
+nopacutobsrd$Age2019[nopacutobsrd$KI_Known_ID == "BHS_1736"] <- 3
+nopacutobsrd$Age2019[nopacutobsrd$KI_Known_ID == "BHS_1739"] <- 5
+table(nopacutobsrd$Age2019)
+# 2  3  5  8 
+# 16  5  5  1 
+chisq.test( x = c(16, 5, 5, 1), p = c(2/6, 2/6, 1/6, 1/6))
+# X-squared = 10, df = 3, p-value = 0.01857
+# warning: Chi-squared approximation may be incorrect
+
+cmprcutobs1$Age2019 <- NA
+cmprcutobs1$Age2019[cmprcutobs1$KI_Known_ID == "BHS_1730"] <- 5
+cmprcutobs1$Age2019[cmprcutobs1$KI_Known_ID == "BHS_1733"] <- 9
+cmprcutobs1$Age2019[cmprcutobs1$KI_Known_ID == "BHS_1734"] <- 7
+cmprcutobs1$Age2019[cmprcutobs1$KI_Known_ID == "BHS_1728"] <- 9
+table(cmprcutobs1$Age2019)
+# 5  7  9 
+# 4 11 11 
+chisq.test(x = c(4, 11, 11), p = c(1/4, 1/4, 2/4))
+# X-squared = 4.3846, df = 2, p-value = 0.1117
 
 
-
-
-# In the October of 2015, Jane saw 12 black-capped chickadees, 2 red-bellied woodpeckers, and a canada goose in her back yard. 
-# This year, she saw 10 back-capped chickadees, 5 red-bellied woodpeckers, and 1 zebra. Has the bird population changed significantly?
-chisq.test(x = c(10, 5, 0), p = c(12/15, 2/15, 1/15))
 
 
 
 ```
+
+- whether there is a significant difference in the amount of time spent drinking between sheep
+- whether there is a significant different in the number of visits by time of day
+- whether there is a significant difference in how often ewes with lambs come in vs. ewes without lambs
+- whether there is a significant difference in how often sheep in large groups come in vs. sheep in small groups come in
 
 
 
@@ -1085,7 +1173,6 @@ chisq.test(x = c(10, 5, 0), p = c(12/15, 2/15, 1/15))
 
 ```{r}
 # NOPAH PLOT
-
 NopahData <- read.csv("NopahBighornVisitsSummer2019csv.csv", header = TRUE, sep = ",")
 View(NopahData)
 str(NopahData)
