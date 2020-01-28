@@ -51,26 +51,6 @@ nodups$GO_DG_SpecificSource[nodups$GO_DG_SpecificSource == ""] <- NA
 # as.factor(nodups$GO_DG_SpecificSource)
 
 ```
-A List of everything that needs to be fixed:
-- input the GPS location as per the GO_WaterSource. Make sure to input the type of GPS data (UTM, latlong) that is relevant to the GPS Data cleaning stuff.
-- change the data type of every column to the correct type
-- at some point, subset the KI_Known_ID for the sheep I am interested in for the GPS analysis
-- input the missing KI_Sex cells - DONE
-- input the missing KI_DG_FirstPhotoTime and KI_DG_LastPhotoTime times, and the missing Ki_DG_SheepDrank (there's a ton of these - Ashley???)- Don't need to - these are the other sheep - DONE
-- check that all of the comp numbers are numbers and are appropriate. And that there are no blanks and NAs.
-- If possible, fill in the weights, body lengths, and chest girths that are missing.- DONE
--KI_DatObsT_ID has 1858 levels, but there are 2062 entries - DONE
-- GO_DatObsTime and KI_DatObsT_ID are wrong for some entries. Need to remake in order to use!- DONE
-- put in age for some of them- DONE
-- also missing chest girth, body length, weight for some (BHS_1492)- DONE
-- Fix ages
-
-- subset to the correct mtn ranges
-- figure out the replication for the ones that have multiple visits in 1 observation -DONE
-- sheep drank has 53 blanks and 1 problematic Y
-- Cat 2 has a NA that probs should be 0?
-
-
 
 I noted that there were still some duplicate observations that had not been removed despite the previous code chunk. In an attempt to figure out why there were still duplicated rows, I made a column with everything needed to make each observation individually identifiable. I discovered that some rows did not have the capture data needed, and that this was what was making the duplicated rows not seen as duplicated. I then worked to input the missing information - weight, body length, and chest girth. I subset by the distinct rows and this equaled the previous number of individually identifiable observations. No more duplicates!
 
@@ -250,6 +230,7 @@ renodups <- distinct(nodups)
 # View(duplicated(renodups$DateObsTimeIDwaterspecific))
 
 ```
+
 Then, just to be sure, I cut the visitation data to the time periods when all cameras were running. This data should have already been cut, but I know that Ashley was not super meticulous in only going through the photos in the time period when all of the cameras in the range were running, so I feel like this is a good check.
 
 At this time, I also checked that the GO_WaterSource and GO_RangeCode made sense for each range. I changed two entries that were actually Nopah but mistakenly CMPR.
@@ -322,13 +303,11 @@ Marbcutobs$KI_Known_ID[Marbcutobs$DateObsTimeIDwaterspecific == "20190722BHS_168
 Marbcutobs$KI_Known_ID[Marbcutobs$DateObsTimeIDwaterspecific == "20190803BHS_17139:37TherBoss Tank"] <- "BHS_1582"
 ```
 
-
 I then created figures of the number of individual sheep coming into water by day. I only included times when all cameras in the mountain range were running. This is given that sheep use more than one water source and move around throughout the mountain range. When examining the data, I noticed that the days at the beginning and end of each period when all of the cameras were running had a lower number of sheep coming in than the rest of the days. This is easily attributable to the cameras being up and running for only part of these days. As such, I cut out these days from my dataset (which probably decreased by dataset by about ~10%).
 
 I did leave in a couple of days that had very near complete coverage. I decided that it was ok to keep these days given the short periods of time when 1 of the cameras was down for, and the relative bias of sheep for diurnality, which was confirmed when going through camera photos. For the Marbles, I did leave in one day when the cameras were only not running between 11 pm and 12 am. In the South Bristols, I included 6/25/19 which was not fully covered for 45 minutes. In the Castle Piutes, I included 7/14 and 8/3 because one of the cameras went out at night. I will need to limit other analyses to these time periods given the incomplete data on the start/end days.
 
 Afterwards, I realized that the plots that I made here are not nearly as useful as percent visitation by day, as I did in the next chunk.
-
 
 ```{r}
 # Number of Individual Sheep Coming into Water by Day
@@ -378,7 +357,7 @@ plotmarbnumsheep <- ggplot(data = marbindsheepvisitperday1, aes(x = `rownames(ma
   geom_bar(stat="identity", color = "black") + scale_x_date(limits = as.Date(c("2019-05-17", "2019-08-15"))) + ggtitle("Marbles") + xlab("Date") + ylab("Number of Individual Sheep") + theme(legend.position = "none") + ylim(0, 35) + geom_hline(yintercept = 32)
 print(plotmarbnumsheep)
 
-## DG note to self: MARBLES NEED TO KNOW WHEN SHEEP DIED AND ADD IN LINE!!!
+## DG note to self: Marbles when sheep died not added as line in this figure, but added in the better figure below.
 
 
 
@@ -467,7 +446,9 @@ plotcmprnumsheep <- ggplot(data = cmprindsheepvisitperday2, aes(x = Date, y = Nu
 # grid.arrange(plotmarbnumsheep, plotsbrsnumsheep, plotnopasheepnum, plotcmprnumsheep, nrow = 2, top = "Number of Individual Sheep Coming to Water by Day")
 
 ```
+
 I then made figures of the percent of individual sheep coming into water by day. Given the extreme difference in the number of sheep between different mountain ranges, I also included the absolute number of sheep coming in as a secondary y axis. For the Marbles, the absolute number of collared sheep decreases towards the end of the summer due to multiple mortalities.
+
 ```{r}
 
 # MARBLES
@@ -512,7 +493,9 @@ grid.arrange(plotmarbpercentsheep1, plotsbrspercentsheep1, plotnopapercentsheep1
 # grid.arrange(plotmarbnumsheep, plotsbrsnumsheep, plotnopasheepnum, plotcmprnumsheep, nrow = 2, top = "Number of Individual Sheep Coming to Water by Day")
 
 ```
+
 I then made figures of the mean number of visits per day by collared sheep. The error bars are the standard deviations around the mean for a given day.
+
 ```{r}
 # Mean Number of Visits Per Day for all sheep (and Standard Deviations)
  
@@ -633,6 +616,7 @@ cmprrd11plot <- ggplot(data = cmprrd11, aes(x = Date, y = Meannumvisits)) + geom
 library(gridExtra)
 grid.arrange(p, sbrsrd11plot, nopard11plot, cmprrd11plot, nrow = 2, top = "Mean Number of Visits Per Day Given All Collared Sheep")
 ```
+
 I then ran statistics associated with the previous figures. In the Marbles, there was a significant difference in the percent of collared sheep visiting water on a given day by month between May and June/July/August, though not among June, July, and August. In the South Bristols, there was a significant difference between July and August, and between June and August, thought not between June and July. In the Nopahs, June and July were not significant different, though they were both different from August. In the Castle Piutes, the only significant differences between months were between May and July, and May and August. Whether two months were significantly different on the mean number of visits to water on a given day was exactly the same as whether two months were significantly different in the percent of collared sheep visiting on a given day by month. To me, this suggests that the number of visits was not significantly different between different individual sheep.
 
 ***The figures of the 'Mean Number of Visits to Water on a Given Day by Month' and 'Percent of Individual Sheep that Visited Water on a Given Day by Month' are exceedingly similar. When I double-checked how I calculated these, I didn't find a problem. Can someone double check me? If this is true, it suggests that there was basically no different in the number of visits to water between different sheep...
@@ -2257,8 +2241,11 @@ TukeyHSD(MeanVisitationMtnRange)
 # CMPR-Nopa  0.14760870 -0.0264174  0.32163479 0.1271620
 
 ```
+Next, I did a more general examination of the spread in the number of individual visits between individual sheep. In doing this, I was not trying to examine the difference in number of visits by individual sheep between mountain ranges, but rather what was the general spread of the number of visits within each mountain range (these spreads are therefore not comparable because I did not account for the different study time periods within the different ranges). In the Marbles, the spread of the data was relatively small (mean of 25.41, 1st quartile at 22, 3rd quartile at 30). In the South Bristols, the spread was larger (mean of 36.48, 1st quartile of 23, 3rd quartile of 54).
 
+I also looked at the amount of time between visits by individual sheep. The relatively small chunks of time when all of the cameras were running were not worth analyzing because they would be biased against long amounts of time between visits. Therefore, I only analyzed the time period in the South Bristols when the cameras ran for 33 complete days straight (6/26/19 - 7/28/19). I only included complete days to have this analysis be at the same relative time period as my other analyses.
 
+The mean number of hours between visits by an individual sheep was 37.57. The first quartile was 11.87 hours, while the third quartile was 47.16 hours. There was a significant difference between sheep in the amount of time between visits to water (p-value: < 8.52e-16), though only 13% of combinations between individual sheep (36 out of 276 possible combinations) were significantly different.
 ```{r}
 # Whether there is a large spread in the number of individual visits between individual sheep
 
@@ -2376,13 +2363,11 @@ TukeyHSD(BrsSdiffhoursindsheep)
 
 
 ```
+I examined whether there is a statistical difference in visitation between ewes and rams within each mountain range. There was no significant difference in visitation between the sexes in any mountain range (Marbles p-value = 0.4642, South Bristols p-value = 0.05788, Nopah p-value = 0.7963, Castle Piute = 0.8208).
 
-Does it make sense to do these separately by mountain range???
+I also examined whether there is a statistical different in visitation between bighorn of different ages. There was significantly different visitation between bighorn of different ages in the Marbles (p-value = 1.176e-05), South Bristols (p-value < 2.2e-16), and Nopahs (p-value = 0.01857), but not in the Castle Piutes (p-value = 0.1117). Looking more closely at the numbers, I do not see an age in the Marbles data that is super different than the expected ratio. In the South Bristols, it seems like the visitation of middle-aged sheep (ages 7 through 10) are noteably different, though different ages within this subset have greater or less visitation than what would be expected if all ages had equal visitation. Overall, I don't think this significance is meaningful, as I don't know biologically why a 7 year-old sheep would go into water way more often than an 8 year-old sheep.
 
-
-- whether there is a statistical difference in visitation between ewes and rams within mountain ranges - chi squared
-- whether there is a statistical difference in visitation between bighorn of different ages - chi-squared?
-
+Just checking, it does make sense to do these separately by mountain range???
 
 ```{r}
 # SEX
@@ -2437,7 +2422,7 @@ chisq.test(x = c(20, 6), p = c(3/4, 1/4))
 
 # AGE
 
-# See BighornAgeSummer2019 for age calculations
+# See BighornAgeSummer2019 (in Danielle's google drive) for age calculations
 Marbcutobsrd$Age2019 <- NA
 Marbcutobsrd$Age2019[Marbcutobsrd$KI_Known_ID == "BHS_1365"] <- 9
 Marbcutobsrd$Age2019[Marbcutobsrd$KI_Known_ID == "BHS_1361"] <- 9
@@ -2524,20 +2509,10 @@ table(cmprcutobs1$Age2019)
 chisq.test(x = c(4, 11, 11), p = c(1/4, 1/4, 2/4))
 # X-squared = 4.3846, df = 2, p-value = 0.1117
 
-
-
-
-
 ```
-
-- whether there is a significant difference in the amount of time spent drinking between sheep
-- whether there is a significant different in the number of visits by time of day
-- whether there is a significant difference in how often ewes with lambs come in vs. ewes without lambs
-- whether there is a significant difference in how often sheep in large groups come in vs. sheep in small groups come in
-
-
+I looked at what time of day sheep come in to water. I decided to break down the day into comparable four-hour chunks: 1-5, 5-9, 9-13, 13-17, 17-21, 21-1. I decided on these specific time periods (1-5 instead of 0-4 for example) for the following reasons: 1) the hottest time of the day is 3 pm, 2)  sunset during the midpoint during the study period (June 23rd) in the Mojave is at 8:05 pm, and 3) sunrise during the midpoint during the study period in the Mojave is at 5:35 am. Visitation to water kept line with bighorn diurnality, with 97% of visits (1652/1698) occurring between 5 am and 9 pm. 45% of visits (773/1698) occurred between 9 am and 1 pm, while another 26% of visits (453/1698) occurred between 5 am and 9 pm. Needless to say, there was a significant difference in the number of visits to water among these time chunks (p-value < 2.2e-16).
 ```{r}
-# Decided to break the day down into 1-5, 5-9, 9-13, 13-17, 17-21, 21-1. This is b/c hottest time of day is 3pm, sunset during the midpoint during the study period (June 23rd) in the Mojave is at 8:05 pm, and sunrise during the midpoint during the study period in the Mojave is at 5:35 am
+# Decided to break the day down into 1-5, 5-9, 9-13, 13-17, 17-21, 21-1. This is b/c hottest time of day is 3pm, sunset during the midpoint during the study period (June 23rd) in the Mojave is at 8:05 pm, and sunrise during the midpoint during the study period in the Mojave is at 5:35 am. 
 
 # First need to put
 
@@ -2574,7 +2549,9 @@ lbls <- c("1 to 5", "5 to 9", "9 to 13", "13 to 17", "17 to 21")
 pie(slices, labels = lbls, main = "Number of Visits by Time of Day")
 chisq.test(x = c(19, 453, 773, 297, 129, 27), p = c(4/24, 4/24, 4/24, 4/24, 4/24, 4/24))
 # X-squared = 1512.9, df = 5, p-value < 2.2e-16
-
-# hi!
-
 ```
+This is where I am going to leave off my basic analyses of the visitation data for the moment. When I have time, I still want to do the following analyses.
+
+- how much time individual bighorn spend drinking water when they visit (and whether this differs by age, sex)
+- whether there is a significant difference in how often ewes with lambs come in vs. ewes without lambs (or ewe groups with lambs come in vs. ewe groups without lambs)
+- whether there is a significant difference in how often sheep in large groups come in vs. sheep in small groups come in
