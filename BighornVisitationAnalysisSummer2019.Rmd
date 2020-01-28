@@ -639,6 +639,8 @@ I then ran statistics associated with the previous figures. In the Marbles, ther
 
 There was a significant difference in the percentage of collared sheep coming into water between mountain ranges. All populations were significantly different from each other except the Marbles from the South Bristols. There was also a significant difference in the number of visitations to water between mountain ranges. All populations were significantly different from each other except the Marbles and the South Bristols, and the Castle Piutes and Nopah.
 
+hi
+
 ```{r}
 # whether there is a significant difference in the percentage of collared sheep visiting water among months within each mountain range #
 
