@@ -1,9 +1,9 @@
 ---
 title: "RBighornVisitationAnalysis"
 output:
+  word_document: default
   html_document: default
   pdf_document: default
-  word_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -237,7 +237,7 @@ At this time, I also checked that the GO_WaterSource and GO_RangeCode made sense
 
 ``` {r}
 
-as.character(renodups$GO_Date, renodups$GO_Time_HHMM)
+# as.character(renodups$GO_Date, renodups$GO_Time_HHMM)
 renodups$DateTime <- paste(renodups$GO_Date, renodups$GO_Time_HHMM, sep = " ")
 library(lubridate)
 renodups$DateTime <- strptime(renodups$DateTime, "%Y%m%d %H:%M")
@@ -722,7 +722,7 @@ boxplot(NumIndSheep ~ Month, data = sbrsindsheepvisitperday2, main = "South Bris
 boxplot(Percentvisited ~ Month, data = nopaindsheepvisitperday2, main = "Nopah (n = 6)", ylab = "% of Individual Sheep")
 boxplot(Percentvisited ~ Month, data = cmprindsheepvisitperday2, main = "Castle Piutes (n = 4)", ylab = "% of Individual Sheep")
 title("Percent of Individual Sheep that Visited Water on a Given Day by Month", line = -1, outer = TRUE)
-
+dev.off()
 
 ## whether there is a significant difference in the mean number of visitations of collared sheep visiting water among months within each mountain range ##
 
@@ -796,7 +796,7 @@ TukeyHSD(MeanVisitsMonthCmpr)
 
 # If not working, change visits to 'Meannumvisits' for Marbles
 par(mfrow = c(2,2))
-boxplot(Meannumvisits ~ Month, data = marbindrd11, main = "Marbles (n = 32*)", ylab = "Mean Number of Visits")
+boxplot(visits ~ Month, data = marbindrd11, main = "Marbles (n = 32*)", ylab = "Mean Number of Visits")
 boxplot(Meannumvisits ~ Month, data = sbrsrd11, main = "South Bristols (n = 24)", ylab = "Mean Number of Visits")
 boxplot(Meannumvisits ~ Month, data = nopard11, main = "Nopah (n = 6)", ylab = "Mean Number of Visits")
 boxplot(Meannumvisits ~ Month, data = cmprrd11, main = "Castle Piutes (n = 4)", ylab = "Mean Number of Visits")
