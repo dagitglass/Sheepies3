@@ -2555,6 +2555,10 @@ allrangetime1$X.4 <- NULL
 allrangetime1$TimeBreaks <- NA
 allrangetime1$TimeBreaks <- as.character(allrangetime1$TimeBreaks)
 # There are empty cells for allrangetime1$Hour - need to go back through photos and fix these entries!
+library(lubridate)
+allrangetime1$timeofday <- hm(allrangetime1$timeofday)
+allrangetime1$Hour <- NA
+allrangetime1$Hour <- hour(allrangetime1$timeofday)
 allrangetime1$TimeBreaks[(allrangetime1$Hour >= 1) & (allrangetime1$Hour <= 4)] <- "1to5"
 allrangetime1$TimeBreaks[(allrangetime1$Hour >= 5) & (allrangetime1$Hour <= 8)] <- "5to9"
 allrangetime1$TimeBreaks[(allrangetime1$Hour >= 9) & (allrangetime1$Hour <= 12)] <- "9to13"
@@ -2562,10 +2566,6 @@ allrangetime1$TimeBreaks[(allrangetime1$Hour >= 13) & (allrangetime1$Hour <= 16)
 allrangetime1$TimeBreaks[(allrangetime1$Hour >= 17) & (allrangetime1$Hour <= 20)] <- "17to21"
 allrangetime1$TimeBreaks[(allrangetime1$Hour >= 21) | (allrangetime1$Hour <= 0)] <- "21to1"
 allrangetime1$TimeBreaks <- as.factor(allrangetime1$TimeBreaks)
-## NEED TO FIX EXCEL SPREADSHEET!!!!!
-
-# CHECK AND MAKE SURE THIS IS ALL CORRECT
-
 table(allrangetime1$TimeBreaks)
 # 13to17 17to21   1to5  21to1   5to9  9to13
 #   297    129     19     27    453    773
@@ -2575,7 +2575,6 @@ pie(slices, labels = lbls, main = "Number of Visits by Time of Day")
 chisq.test(x = c(19, 453, 773, 297, 129, 27), p = c(4/24, 4/24, 4/24, 4/24, 4/24, 4/24))
 # X-squared = 1512.9, df = 5, p-value < 2.2e-16
 
-library(hms)
-# PICK UP HERE TOMORROW!!!!!
+# hi!
 
 ```
