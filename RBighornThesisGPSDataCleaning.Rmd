@@ -12,17 +12,31 @@ setwd("/Users/Danielle Glass/Documents/RWorkingDirectory/Sheepies2/Sheepies2")
 
 First, I uploaded the GPS data. I checked for duplicates - there were none. Then, I subset the data for only the mountain ranges that I am interested in: South Bristols (BrsS), Marbles (Marb), Nopah (Nopa), Castle-Piute (CMPR), and Newberry-Rodman-Ord (NROM). Then I subset to only the individual bighorn that I am interested in - those with fix rates of 4 hours or less.
 
+A list of bighorn whose collars are every four hours:
+
+Marbles: BHS_1581 F, BHS_1595 F (died on 8/5), BHS_1588 F
+South Bristols: BHS_1580 F, 
+Nopah: BHS_1738 F
+CMPR: none
+NROM: BHS_1568 F (went to community center), BHS_1565 F, BHS_1567 F, BHS_1564 F, BHS_1677 F, BHS_1563 M (should cut off early b/c travels into East Ord)
+
+
+A list of bighorn whose collars are every hour or less:
+
+Marbles: BHS_1589 F (very beginning every four hours?), BHS_1584 F, BHS_1582 F, BHS_1577 F, BHS_1683 M, BHS_1682 M, BHS_1684 M (died on 8/17)
+South Bristols: BHS_1688 M, BHS_1685 M, BHS_1689 M, BHS_1687 F, BHS_1686 M
+Nopah: BHS_1736 F, BHS_1740 F, BHS_1739 M
+CMPR: BHS_1730 F, BHS_1733 F
+NROM: none
+
 ```{r}
-library(rmarkdown)
-# This doesn't work in R Markdown for some reason. Why?
 allgpsdata <- read.csv("AllGPSData20190501to20190912.csv", header = TRUE, sep = ",")
-View(allgpsdata)
-str(allgpsdata)
+# str(allgpsdata)
 library(tidyverse)
 summary(duplicated(allgpsdata))
 rangegpsdata <- allgpsdata[allgpsdata$MountainRange == "BrsS" | allgpsdata$MountainRange == "Marb" | allgpsdata$MountainRange == "Nopa" | allgpsdata$MountainRange == "CMPR" | allgpsdata$MountainRange == "NROM", ]
 View(rangegpsdata)
-str(rangegpsdata)
+# str(rangegpsdata)
 rangegpsdata$BHSID <- as.factor(rangegpsdata$BHSID)
 # This does not take into account the Castle-Piute sheep being in the wrong place or the question of the NROM sheep. All possible sheep with 1 or 4 hour fix rates are included.
 rangeidgpsdata <- rangegpsdata[rangegpsdata$BHSID == "1581" | rangegpsdata$BHSID == "1589" |rangegpsdata$BHSID == "1595" | rangegpsdata$BHSID == "1584" | rangegpsdata$BHSID == "1588" | rangegpsdata$BHSID == "1582" | rangegpsdata$BHSID == "1577" | rangegpsdata$BHSID == "1683" | rangegpsdata$BHSID == "1682" | rangegpsdata$BHSID == "1684" | rangegpsdata$BHSID == "1688" | rangegpsdata$BHSID == "1685" | rangegpsdata$BHSID == "1689" | rangegpsdata$BHSID == "1687" | rangegpsdata$BHSID == "1580" | rangegpsdata$BHSID == "1686" | rangegpsdata$BHSID == "1568" | rangegpsdata$BHSID == "1565" | rangegpsdata$BHSID == "1567" | rangegpsdata$BHSID == "1564" | rangegpsdata$BHSID == "1677" | rangegpsdata$BHSID == "1563" | rangegpsdata$BHSID == "1727" | rangegpsdata$BHSID == "1731" | rangegpsdata$BHSID == "1730" | rangegpsdata$BHSID == "1733" | rangegpsdata$BHSID == "1736" | rangegpsdata$BHSID == "1738" | rangegpsdata$BHSID == "1740" | rangegpsdata$BHSID == "1739", ]
