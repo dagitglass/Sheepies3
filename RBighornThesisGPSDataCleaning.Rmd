@@ -37,13 +37,71 @@ summary(duplicated(allgpsdata))
 rangegpsdata <- allgpsdata[allgpsdata$MountainRange == "BrsS" | allgpsdata$MountainRange == "Marb" | allgpsdata$MountainRange == "Nopa" | allgpsdata$MountainRange == "CMPR" | allgpsdata$MountainRange == "NROM", ]
 View(rangegpsdata)
 # str(rangegpsdata)
-rangegpsdata$BHSID <- as.factor(rangegpsdata$BHSID)
-# This does not take into account the Castle-Piute sheep being in the wrong place or the question of the NROM sheep. All possible sheep with 1 or 4 hour fix rates are included.
-rangeidgpsdata <- rangegpsdata[rangegpsdata$BHSID == "1581" | rangegpsdata$BHSID == "1589" |rangegpsdata$BHSID == "1595" | rangegpsdata$BHSID == "1584" | rangegpsdata$BHSID == "1588" | rangegpsdata$BHSID == "1582" | rangegpsdata$BHSID == "1577" | rangegpsdata$BHSID == "1683" | rangegpsdata$BHSID == "1682" | rangegpsdata$BHSID == "1684" | rangegpsdata$BHSID == "1688" | rangegpsdata$BHSID == "1685" | rangegpsdata$BHSID == "1689" | rangegpsdata$BHSID == "1687" | rangegpsdata$BHSID == "1580" | rangegpsdata$BHSID == "1686" | rangegpsdata$BHSID == "1568" | rangegpsdata$BHSID == "1565" | rangegpsdata$BHSID == "1567" | rangegpsdata$BHSID == "1564" | rangegpsdata$BHSID == "1677" | rangegpsdata$BHSID == "1563" | rangegpsdata$BHSID == "1727" | rangegpsdata$BHSID == "1731" | rangegpsdata$BHSID == "1730" | rangegpsdata$BHSID == "1733" | rangegpsdata$BHSID == "1736" | rangegpsdata$BHSID == "1738" | rangegpsdata$BHSID == "1740" | rangegpsdata$BHSID == "1739", ]
+rangeidgpsdata <- rangegpsdata[rangegpsdata$KI_Known_ID == "BHS_1581" | rangegpsdata$KI_Known_ID == "BHS_1595" | rangegpsdata$KI_Known_ID == "BHS_1588" | rangegpsdata$KI_Known_ID == "BHS_1580" | rangegpsdata$KI_Known_ID == "BHS_1738" | rangegpsdata$KI_Known_ID == "BHS_1568" | rangegpsdata$KI_Known_ID == "BHS_1565" | rangegpsdata$KI_Known_ID == "BHS_1567" | rangegpsdata$KI_Known_ID == "BHS_1564" | rangegpsdata$KI_Known_ID == "BHS_1677" | rangegpsdata$KI_Known_ID == "BHS_1563" | rangegpsdata$KI_Known_ID == "BHS_1589" | rangegpsdata$KI_Known_ID == "BHS_1584" | rangegpsdata$KI_Known_ID == "BHS_1582" | rangegpsdata$KI_Known_ID == "BHS_1577" | rangegpsdata$KI_Known_ID == "BHS_1683" | rangegpsdata$KI_Known_ID == "BHS_1682" | rangegpsdata$KI_Known_ID == "BHS_1684" | rangegpsdata$KI_Known_ID == "BHS_1688" | rangegpsdata$KI_Known_ID == "BHS_1685" | rangegpsdata$KI_Known_ID == "BHS_1689" | rangegpsdata$KI_Known_ID == "BHS_1687" | rangegpsdata$KI_Known_ID == "BHS_1686" | rangegpsdata$KI_Known_ID == "BHS_1736" | rangegpsdata$KI_Known_ID == "BHS_1740" | rangegpsdata$KI_Known_ID == "BHS_1739" | rangegpsdata$KI_Known_ID == "BHS_1730" | rangegpsdata$KI_Known_ID == "BHS_1733", ]
 View(rangeidgpsdata)
 ```
+Subsetting the data to when I had camera data for
 
-## Subsetting to every four hour
+I next subset the data to the time periods that I had camera data for. Keeping with my visitation analyses, I cut the GPS data to only include days when the whole 24-hour had camera coverage, and camera coverage was complete.
+
+Marbles:
+2019-05-18 - 2019-05-24
+2019-06-05 - 2019-06-11
+2019-06-19 - 2019-06-22
+2019-06-26 - 2019-06-29
+2019-07-11 - 2019-07-13
+2019-07-18 - 2019-07-24
+2019-08-01 - 2019-08-03
+2019-08-07 - 2019-08-09
+
+South Bristols:
+2019-06-05 - 2019-06-15
+2019-06-19 - 2019-07-28
+2019-08-02 - 2019-08-11
+
+Nopah:
+2019-06-07 - 2019-06-12
+2019-06-26 - 2019-07-07
+2019-07-17 - 2019-07-28
+2019-07-30 - 2019-08-06
+
+Castle Piutes:
+2019-05-24 - 2019-05-30
+2019-06-21 - 2019-06-26
+2019-07-12 - 2019-07-14
+2019-07-31 - 2019-08-03
+2019-08-06 - 2019-08-14
+
+NROM:
+2019-06-28 - 2019-07-01
+2019-07-10 - 2019-07-12
+2019-07-21
+2019-08-09 - 2019-08-18
+2019-08-21
+
+```{r}
+marbidgpsdata <- rangeidgpsdata[rangeidgpsdata$MountainRange == "Marb", ]
+marbidgpsdatacut <- marbidgpsdata[(marbidgpsdata$DateTimeLocalTestct >= as.POSIXct("2019-05-18 00:00:00") & marbidgpsdata$DateTimeLocalTestct <= as.POSIXct("2019-05-24 23:59:59")) | (marbidgpsdata$DateTimeLocalTestct >= as.POSIXct("2019-06-05 00:00:00") & marbidgpsdata$DateTimeLocalTestct <= as.POSIXct("2019-06-11 23:59:59")) | (marbidgpsdata$DateTimeLocalTestct >= as.POSIXct("2019-06-19 00:00:00") & marbidgpsdata$DateTimeLocalTestct <= as.POSIXct("2019-06-22 23:59:59")) | (marbidgpsdata$DateTimeLocalTestct >= as.POSIXct("2019-06-26 00:00:00") & marbidgpsdata$DateTimeLocalTestct <= as.POSIXct("2019-06-29 23:59:59")) | (marbidgpsdata$DateTimeLocalTestct >= as.POSIXct("2019-07-11 00:00:00") & marbidgpsdata$DateTimeLocalTestct <= as.POSIXct("2019-07-13 23:59:59")) | (marbidgpsdata$DateTimeLocalTestct >= as.POSIXct("2019-07-18 00:00:00") & marbidgpsdata$DateTimeLocalTestct <= as.POSIXct("2019-07-24 23:59:59")) | (marbidgpsdata$DateTimeLocalTestct >= as.POSIXct("2019-08-01 00:00:00") & marbidgpsdata$DateTimeLocalTestct <= as.POSIXct("2019-08-03 23:59:59")) | (marbidgpsdata$DateTimeLocalTestct >= as.POSIXct("2019-08-07 00:00:00") & marbidgpsdata$DateTimeLocalTestct <= as.POSIXct("2019-08-09 23:59:59")), ]
+
+sbrsidgpsdata <- rangeidgpsdata[rangeidgpsdata$MountainRange == "BrsS", ]
+sbrsidgpsdatacut <- sbrsidgpsdata[(sbrsidgpsdata$DateTimeLocalTestct >= as.POSIXct("2019-06-05 00:00:00") & sbrsidgpsdata$DateTimeLocalTestct <= as.POSIXct("2019-06-15 23:59:59")) | (sbrsidgpsdata$DateTimeLocalTestct >= as.POSIXct("2019-06-19 00:00:00") & sbrsidgpsdata$DateTimeLocalTestct <= as.POSIXct("2019-07-28 23:59:59")) | (sbrsidgpsdata$DateTimeLocalTestct >= as.POSIXct("2019-08-02 00:00:00") & sbrsidgpsdata$DateTimeLocalTestct <= as.POSIXct("2019-08-11 23:59:59")), ]
+
+cmpridgpsdata <- rangeidgpsdata[rangeidgpsdata$MountainRange == "CMPR", ]
+cmpridgpsdatacut <- cmpridgpsdata[(cmpridgpsdata$DateTimeLocalTestct >= as.POSIXct("2019-05-24 00:00:00") & cmpridgpsdata$DateTimeLocalTestct <= as.POSIXct("2019-05-30 23:59:59")) | (cmpridgpsdata$DateTimeLocalTestct >= as.POSIXct("2019-06-21 00:00:00") & cmpridgpsdata$DateTimeLocalTestct <= as.POSIXct("2019-06-26 23:59:59")) | (cmpridgpsdata$DateTimeLocalTestct >= as.POSIXct("2019-07-12 00:00:00") & cmpridgpsdata$DateTimeLocalTestct <= as.POSIXct("2019-07-14 23:59:59")) | (cmpridgpsdata$DateTimeLocalTestct >= as.POSIXct("2019-07-31 00:00:00") & cmpridgpsdata$DateTimeLocalTestct <= as.POSIXct("2019-08-03 23:59:59")) | (cmpridgpsdata$DateTimeLocalTestct >= as.POSIXct("2019-08-06 00:00:00") & cmpridgpsdata$DateTimeLocalTestct <= as.POSIXct("2019-08-14 23:59:59")), ]
+
+nopaidgpsdata <- rangeidgpsdata[rangeidgpsdata$MountainRange == "Nopa", ]
+nopaidgpsdatacut <- nopaidgpsdata[(nopaidgpsdata$DateTimeLocalTestct >= as.POSIXct("2019-06-07 00:00:00") & nopaidgpsdata$DateTimeLocalTestct <= as.POSIXct("2019-06-12 23:59:59")) | (nopaidgpsdata$DateTimeLocalTestct >= as.POSIXct("2019-06-26 00:00:00") & nopaidgpsdata$DateTimeLocalTestct <= as.POSIXct("2019-07-07 23:59:59")) | (nopaidgpsdata$DateTimeLocalTestct >= as.POSIXct("2019-07-17 00:00:00") & nopaidgpsdata$DateTimeLocalTestct <= as.POSIXct("2019-07-28 23:59:59")) | (nopaidgpsdata$DateTimeLocalTestct >= as.POSIXct("2019-07-30 00:00:00") & nopaidgpsdata$DateTimeLocalTestct <= as.POSIXct("2019-08-06 23:59:59")), ]
+
+nromidgpsdata <- rangeidgpsdata[rangeidgpsdata$MountainRange == "NROM", ]
+nromidgpsdatacut <- nromidgpsdata[(nromidgpsdata$DateTimeLocalTestct >= as.POSIXct("2019-06-28 00:00:00") & nromidgpsdata$DateTimeLocalTestct <= as.POSIXct("2019-07-01 23:59:59")) | (nromidgpsdata$DateTimeLocalTestct >= as.POSIXct("2019-07-10 00:00:00") & nromidgpsdata$DateTimeLocalTestct <= as.POSIXct("2019-07-12 23:59:59")) | (nromidgpsdata$DateTimeLocalTestct >= as.POSIXct("2019-07-21 00:00:00") & nromidgpsdata$DateTimeLocalTestct <= as.POSIXct("2019-07-21 23:59:59")) | (nromidgpsdata$DateTimeLocalTestct >= as.POSIXct("2019-08-09 00:00:00") & nromidgpsdata$DateTimeLocalTestct <= as.POSIXct("2019-08-18 23:59:59")) | (nromidgpsdata$DateTimeLocalTestct >= as.POSIXct("2019-08-21 00:00:00") & nromidgpsdata$DateTimeLocalTestct <= as.POSIXct("2019-08-21 23:59:59")), ]
+
+allidgpsdatacut <- rbind(marbidgpsdatacut, sbrsidgpsdatacut, cmpridgpsdatacut, nopaidgpsdatacut, nromidgpsdatacut)
+
+
+
+```
+
+Subsetting to every hour and four hour
 
 To remove the locations that were taken at 20 minute fix rates, I subset by the rows where the minutes were between 55 and 10. The number of rows before subsetting was `r nrow(rangeidgpsdata` while the number of rows after subsetting was `r nrow(rangeidhour)`, demonstrating that rows with locations taken not close to the hour mark were removed. 
 
@@ -51,56 +109,83 @@ After double checking that all the four-hour collars were on the same schedule, 
 
 ```{r}
 
+## PICK UP HERE TOMORROW!!! NEED TO SWITCH VARIABLES TO NEW VARIABLES!!!!!
+
 rangeidgpsdata$TimeLocal <- as.character(rangeidgpsdata$TimeLocal)
 rangeidgpsdata$DateTimeLocalTest <- rangeidgpsdata$DateTimeLocal
 library(lubridate)
 
 rangeidgpsdata$DateTimeLocalTest <- strptime(rangeidgpsdata$DateTimeLocalTest, "%m/%d/%Y %H:%M")
 rangeidgpsdata$DateTimeLocalTestct <- as.POSIXct(rangeidgpsdata$DateTimeLocalTest, tz = "America/Los_Angeles", format = "%m/%d/%Y %H:%M")
+# Removing the 20 min fixes
 rangeidhour <- subset(rangeidgpsdata, format(rangeidgpsdata$DateTimeLocalTest, "%M") %in% c('00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '55', '56', '57', '58', '59', '54', '53', '52', '51', '50'))
-## Double check the ones that are every four hours to make sure that they are on a 0-4-8-12-16-20-24 schedule. Do this using summary - starting at NROM 1564E.
+## I double checked the sheep that are every four hours to make sure that they are on a 0-4-8-12-16-20-24 schedule. They are all.
 rangeidfourhour <- subset(rangeidhour, format(rangeidhour$DateTimeLocalTest, "%H") %in% c('00', '04', '08', '12', '16', '20', '24'))
 
 
 ```
-I next subset the data to the time periods that I had camera data for. Due to not covering the creek at the bottom of the Castle Piutes, and realizing at the end of the summer that bighorn go back and forth between this creek and Paiute Guzzler, I decided to limit my analysis of the Castle Piutes to the mine area. This means that the Castle Piute dates are only for Hart Mine tank, Hart Mine Cattails, Kidney Spring Tank, and Kidney Spring Seep.
 
-Marbles: 
-2019-05-17 10:49:00 - 2019-05-24 23:59:59
-2019-06-04 20:00:00 - 2019-06-12 13:32:00
-2019-06-18 17:19:00 - 2019-06-22 23:59:59
-2019-06-25 14:49:00 - 2019-06-30 10:46:00
-2019-07-10 08:45:00 - 2019-07-13 23:00:18
-2019-07-17 11:46:00 - 2019-07-25 10:30:00
-2019-07-31 20:52:00 - 2019-08-04 13:13:03
-2019-08-06 12:03:00 - 2019-08-10 12:03:23
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+I next subset the data to the time periods that I had camera data for. Keeping with my visitation analyses, I cut the GPS data to only include days when the whole 24-hour had camera coverage, and camera coverage was complete.
+
+Complete Days by Range:
+
+Marbles:
+2019-05-18 - 2019-05-24
+2019-06-05 - 2019-06-11
+2019-06-19 - 2019-06-22
+2019-06-26 - 2019-06-29
+2019-07-11 - 2019-07-13
+2019-07-18 - 2019-07-24
+2019-08-01 - 2019-08-03
+2019-08-07 - 2019-08-09
 
 South Bristols:
-2019-06-04 15:04:00 - 2019-06-16 08:27:00
-2019-06-18 17:36:00 - 2019-06-25 16:25:00
-2019-06-25 17:05:00 - 2019-07-29 10:36:00
-2019-08-01 14:32:00 - 2019-08-12 11:13:00
-
-Castle Piute:
-2019-05-23 15:48:00 - 2019-05-31 11:18:00
-2019-06-20 17:47:00 - 2019-06-27 02:09:00
-2019-07-11 18:25:00 - 2019-07-14 18:28:00
-2019-07-30 14:30:00 - 2019-08-03 16:46:00
-2019-08-05 19:10:00 - 2019-08-15 07:27:00
+2019-06-05 - 2019-06-15
+2019-06-19 - 2019-07-28
+2019-08-02 - 2019-08-11
 
 Nopah:
-2019-06-06 09:18:00 - 2019-06-13 11:04:00
-2019-06-25 09:00:00 - 2019-07-08 12:35:00
-2019-07-16 19:03:00 - 2019-07-29 15:06:00
-2019-07-29 19:55:00 - 2019-08-07 14:49:00
+2019-06-07 - 2019-06-12
+2019-06-26 - 2019-07-07
+2019-07-17 - 2019-07-28
+2019-07-30 - 2019-08-06
 
-Also due to the lack of coverage in the Castle Piutes along the southern stream, I limited the analysis to bighorn that located in the mine area (1730, 1733, 1734, 1728 - which doesn't have a working GPS collar), and sheep that were in the Paiute Guzzler area for the vast majority of the time (1726, 1732, 1731). 1732 will need to be cut for the time around July 30th - August 4th because it went close to the southern stream. 1731 will need to be cut for the time around July 12-13th for the same reason. 1727 will not be included at all because she was only around the southern stream.
+Castle Piutes:
+2019-05-24 - 2019-05-30
+2019-06-21 - 2019-06-26
+2019-07-12 - 2019-07-14
+2019-07-31 - 2019-08-03
+2019-08-06 - 2019-08-14
 
-
-
-Also have to figure out South Nopah vs. rest of Nopahs
+NROM:
+2019-06-28 - 2019-07-01
+2019-07-10 - 2019-07-12
+2019-07-21
+2019-08-09 - 2019-08-18
+2019-08-21
 
 ```{r}
+
+
+
+
+
 marbfourhour <- rangeidfourhour[rangeidfourhour$MountainRange == "Marb", ]
 marbcutfourhour <- marbfourhour[(marbfourhour$DateTimeLocalTestct >= as.POSIXct("2019-05-17 10:49:00") & marbfourhour$DateTimeLocalTestct <= as.POSIXct("2019-05-24 23:59:59")) | (marbfourhour$DateTimeLocalTestct >= as.POSIXct("2019-06-04 20:00:00") & marbfourhour$DateTimeLocalTestct <= as.POSIXct("2019-06-12 13:32:00")) | (marbfourhour$DateTimeLocalTestct >= as.POSIXct("2019-06-18 17:19:00") & marbfourhour$DateTimeLocalTestct <= as.POSIXct("2019-06-22 23:59:59"))| (marbfourhour$DateTimeLocalTestct >= as.POSIXct("2019-06-25 14:49:00") & marbfourhour$DateTimeLocalTestct <= as.POSIXct("2019-06-30 10:46:00"))| (marbfourhour$DateTimeLocalTestct >= as.POSIXct("2019-07-10 08:45:00") & marbfourhour$DateTimeLocalTestct <= as.POSIXct("2019-07-13 23:00:18")) | (marbfourhour$DateTimeLocalTestct >= as.POSIXct("2019-07-17 11:46:00") & marbfourhour$DateTimeLocalTestct <= as.POSIXct("2019-07-25 10:30:00")) | (marbfourhour$DateTimeLocalTestct >= as.POSIXct("2019-07-31 20:52:00") & marbfourhour$DateTimeLocalTestct <= as.POSIXct("2019-08-04 13:13:03")) | (marbfourhour$DateTimeLocalTestct >= as.POSIXct("2019-08-06 12:03:00") & marbfourhour$DateTimeLocalTestct <= as.POSIXct("2019-08-10 12:03:23")), ]
 
