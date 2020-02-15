@@ -136,11 +136,63 @@ rangeidfourhour <- subset(rangeidhour, format(rangeidhour$DateTimeLocalTest, "%H
 
 ```{r}
 # Making an individually identifiable ID for each point
-rangeidhour$IndPoint <- paste(rangeidhour$DateTimeLocal, rangeidhour$KI_Known_ID)
+rangeidhour$IndPoint <- paste(rangeidhour$KI_Known_ID, rangeidhour$DateTimeLocalTestct)
 
 library(maptools)
 plotattempt <- SpatialPointsDataFrame(rangeidhour[6:5], rangeidhour[21])
 plot(plotattempt)
+
+library(adehabitatLT)
+ltrangeidhour <- as.ltraj(xy = rangeidhour[, c("Latitude", "Longitude")], date = rangeidhour$DateTimeLocalTestct, id = rangeidhour$IndPoint)
+View(ltrangeidhour)
+
+data.lt_Desert <- as.ltraj(xy = DesertDataDanielleNoDuplicates[, c("UTME", "UTMN")], date = DesertDataDanielleNoDuplicates$DateTimeC, id = DesertDataDanielleNoDuplicates$ID)
+#maybe need to convert to UTM first?
+
+library(moveHMM)
+
+names(rangeidhour)[names(rangeidhour) == "KI_Known_ID"] <- "ID"
+rangeidhour1 <- rangeidhour[with(rangeidhour, order(ID, DateTimeLocalTestct)), ]
+prangeidhour <- prepData(rangeidhour1, type = "LL", coordNames = c("Longitude", "Latitude"))
+plot(prangeidhour, compact = T)
+library(ggmap)
+# plotSat(prangeidhour, zoom = 8)
+# Doesn't work because need Google API key????
+
+# Marbles before cleaning
+marbidhour <- rangeidhour1[rangeidhour1$MountainRange == "Marb", ]
+pmarbidhour <- prepData(marbidhour, type = "LL", coordNames = c("Longitude", "Latitude"))
+plot(pmarbidhour, compact = T)
+nrow(pmarbidhour)
+#5688 points for Marbles before cleaning.
+
+# South Bristols before cleaning
+sbrsidhour <- rangeidhour1[rangeidhour1$MountainRange == "BrsS", ]
+psbrsidhour <- prepData(sbrsidhour, type = "LL", coordNames = c("Longitude", "Latitude"))
+plot(psbrsidhour, compact = T)
+nrow(psbrsidhour)
+# 7533 points for SBrs before cleaning.
+
+#Nopah before cleaning
+nopaidhour <- rangeidhour1[rangeidhour1$MountainRange == "Nopa", ]
+pnopaidhour <- prepData(nopaidhour, type = "LL", coordNames = c("Longitude", "Latitude"))
+plot(pnopaidhour, compact = T)
+nrow(pnopaidhour)
+#2655 points for Nopa before cleaning.
+
+#Castle Piute before cleaning
+cmpridhour <- rangeidhour1[rangeidhour1$MountainRange == "CMPR", ]
+pcmpridhour <- prepData(cmpridhour, type = "LL", coordNames = c("Longitude", "Latitude"))
+plot(pcmpridhour, compact = T)
+nrow(pcmpridhour)
+#1135 points for CMPR before cleaning.
+
+# NROM before cleaning
+nromidhour <- rangeidhour1[rangeidhour1$MountainRange == "NROM", ]
+pnromidhour <- prepData(nromidhour, type = "LL", coordNames = c("Longitude", "Latitude"))
+plot(pnromidhour, compact = T)
+nrow(pnromidhour)
+# 754 locations for NROM before cleaning.
 
 ```
 
