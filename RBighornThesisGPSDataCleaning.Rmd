@@ -155,6 +155,7 @@ names(rangeidhour)[names(rangeidhour) == "KI_Known_ID"] <- "ID"
 rangeidhour1 <- rangeidhour[with(rangeidhour, order(ID, DateTimeLocalTestct)), ]
 prangeidhour <- prepData(rangeidhour1, type = "LL", coordNames = c("Longitude", "Latitude"))
 plot(prangeidhour, compact = T)
+
 library(ggmap)
 # plotSat(prangeidhour, zoom = 8)
 # Doesn't work because need Google API key????
@@ -195,7 +196,7 @@ nrow(pnromidhour)
 # 754 locations for NROM before cleaning.
 
 ```
-
+First, I cleaned them using elevation data. If the 
 
 Using CalTopo: 
 Marbles: 597' - 3840' (181 m - 1171 m)
