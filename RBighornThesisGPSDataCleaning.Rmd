@@ -171,7 +171,7 @@ marbidhour <- rangeidhour1[rangeidhour1$MountainRange == "Marb", ]
 pmarbidhour <- prepData(marbidhour, type = "LL", coordNames = c("Longitude", "Latitude"))
 plot(pmarbidhour, compact = T)
 nrow(pmarbidhour)
-#5688 points for Marbles before cleaning.
+#5670 points for Marbles before cleaning.
 
 # South Bristols before cleaning
 sbrsidhour <- rangeidhour1[rangeidhour1$MountainRange == "BrsS", ]
