@@ -207,8 +207,8 @@ Before looking at HDOP, I first deleted points considered to have location error
 Using CalTopo: 
 Marbles: 597' - 3840' (181 m - 1171 m)
 South Bristols: 703' - 3269' (214 m - 997 m)
-NROM: 1862'-3978' (567 m - 1213 m)
-Castle Piute: 2201'-5258' (670 m - 1603 m)
+NROM: 1800'-6095' (548 m - 1858 m)
+Castle Piute: 4000'-5185' (1219 m - 1580 m)
 Nopah: 1392'-5249' (424 m - 1599 m)
 
 ```{r}
@@ -216,15 +216,36 @@ Nopah: 1392'-5249' (424 m - 1599 m)
 boxplot(pmarbidhour$Altitude)
 pmarbidhouralt <- pmarbidhour[(pmarbidhour$Altitude >= 181) & (pmarbidhour$Altitude <= 1171), ]
 nrow(pmarbidhouralt)
-# Marbles now have 5475 points, instead of 5688 points.
+# Marbles now have 5475 points, instead of 5670 points.
 plot(pmarbidhouralt, compact = T)
 
+# South Bristols
+boxplot(psbrsidhour$Altitude)
+psbrsidhouralt <- psbrsidhour[(psbrsidhour$Altitude >= 214) & (psbrsidhour$Altitude <= 997), ]
+nrow(psbrsidhouralt)
+# South Bristols now has 7196 points, before had 7533 points.
+plot(psbrsidhouralt, compact = T)
 
+#Nopah
+boxplot(pnopaidhour$Altitude)
+pnopaidhouralt <- pnopaidhour[(pnopaidhour$Altitude >= 424) & (pnopaidhour$Altitude <= 1599), ]
+nrow(pnopaidhouralt)
+# Nopah now has 2390 points, before had 2655 points.
+plot(pnopaidhouralt, compact = T)
 
+#Castle Piutes
+boxplot(pcmpridhour$Altitude)
+pcmpridhouralt <- pcmpridhour[(pcmpridhour$Altitude >= 1219) & (pcmpridhour$Altitude <= 1580), ]
+nrow(pcmpridhouralt)
+# Castle Piute now has 1075 points, before had 1135 points.
+plot(pcmpridhouralt, compact = T)
 
-
-
-
+# NROM
+boxplot(pnromidhour$Altitude)
+pnromidhouralt <- pnromidhour[(pnromidhour$Altitude >= 548) & (pnromidhour$Altitude <= 1858), ]
+nrow(pnromidhouralt)
+# NROM has 723 points, before had 754 points.
+plot(pnromidhouralt, compact = T)
 
 
 library(rosm)
