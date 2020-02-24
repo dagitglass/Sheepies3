@@ -125,6 +125,7 @@ After double checking that all the four-hour collars were on the same schedule, 
 ```{r}
 
 # Removing the 20 min fixes
+# rangeidhour includes collars on both 1-hour and 4-hour fix rates
 rangeidhour <- subset(allidgpsdatacut3, format(allidgpsdatacut3$DateTimeLocalTest, "%M") %in% c('00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '55', '56', '57', '58', '59', '54', '53', '52', '51', '50'))
 ## I double checked the sheep that are every four hours to make sure that they are on a 0-4-8-12-16-20-24 schedule. They are all.
 rangeidfourhour <- subset(rangeidhour, format(rangeidhour$DateTimeLocalTest, "%H") %in% c('00', '04', '08', '12', '16', '20', '24'))
@@ -246,8 +247,57 @@ pnromidhouralt <- pnromidhour[(pnromidhour$Altitude >= 548) & (pnromidhour$Altit
 nrow(pnromidhouralt)
 # NROM has 723 points, before had 754 points.
 plot(pnromidhouralt, compact = T)
+```
+
+I then eliminated the points with a DOP above 10 (Lewis et al. 2007), as these points most likely are not spatially accurate due to minimum distribution of the satellites locating the collar. It is worth noting that these points 
 
 
+```{r}
+# Marbles
+boxplot(pmarbidhouralt$DOP)
+dopmarb <- pmarbidhouralt[pmarbidhouralt$DOP <= 10, ]
+nrow(dopmarb)
+# Marb now has 5420 points, before had 5475.
+plot(dopmarb, compact = T)
+
+# South Bristols
+boxplot(psbrsidhouralt$DOP)
+dopsbrs <- psbrsidhouralt[psbrsidhouralt$DOP <= 10, ]
+nrow(dopsbrs)
+# SBrs now has 7150 points, before had 7196.
+plot(dopsbrs, compact = T)
+
+# Nopah
+boxplot(pnopaidhouralt$DOP)
+dopnopa <- pnopaidhouralt[pnopaidhouralt$DOP <= 10, ]
+nrow(dopnopa)
+# Nopah now has 2371 points, before had 2390.
+plot(dopnopa, compact = T)
+
+# Castle Piute
+boxplot(pcmpridhouralt$DOP)
+dopcmpr <- pcmpridhouralt[pcmpridhouralt$DOP <= 10, ]
+nrow(dopcmpr)
+# Castle Piute now has 1065 points, before had 1075 points.
+plot(dopcmpr, compact = T)
+
+# NROM
+boxplot(pnromidhouralt$DOP)
+dopnrom <- pnromidhouralt[pnromidhouralt$DOP <= 10, ]
+nrow(dopnrom)
+# NROM now has 720 points, before had 723.
+plot(dopnrom, compact = T)
+```
+
+I next examined the relative fix rate by mountain range to check for topographic bias. 
+
+```{r}
+
+
+
+```
+
+```{r}
 library(rosm)
 library(prettymapr)
 
