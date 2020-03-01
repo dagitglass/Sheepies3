@@ -20,7 +20,9 @@ Marbles: BHS_1581 F, BHS_1595 F (died on 8/5), BHS_1588 F
 South Bristols: BHS_1580 F, 
 Nopah: BHS_1738 F
 CMPR: none
-NROM: BHS_1568 F (went to community center), BHS_1565 F, BHS_1567 F, BHS_1564 F, BHS_1677 F, BHS_1563 M (should cut off early b/c travels into East Ord)
+NROM: BHS_1568 F (went to community center), BHS_1565 F, BHS_1567 F, BHS_1564 F, BHS_1677 F
+
+***am not including NROM BHS_1563M b/c travels into East Ord)
 
 
 A list of bighorn whose collars are every hour or less:
@@ -39,7 +41,7 @@ summary(duplicated(allgpsdata))
 rangegpsdata <- allgpsdata[allgpsdata$MountainRange == "BrsS" | allgpsdata$MountainRange == "Marb" | allgpsdata$MountainRange == "Nopa" | allgpsdata$MountainRange == "CMPR" | allgpsdata$MountainRange == "NROM", ]
 # View(rangegpsdata)
 # str(rangegpsdata)
-rangeidgpsdata <- rangegpsdata[rangegpsdata$KI_Known_ID == "BHS_1581" | rangegpsdata$KI_Known_ID == "BHS_1595" | rangegpsdata$KI_Known_ID == "BHS_1588" | rangegpsdata$KI_Known_ID == "BHS_1580" | rangegpsdata$KI_Known_ID == "BHS_1738" | rangegpsdata$KI_Known_ID == "BHS_1568" | rangegpsdata$KI_Known_ID == "BHS_1565" | rangegpsdata$KI_Known_ID == "BHS_1567" | rangegpsdata$KI_Known_ID == "BHS_1564" | rangegpsdata$KI_Known_ID == "BHS_1677" | rangegpsdata$KI_Known_ID == "BHS_1563" | rangegpsdata$KI_Known_ID == "BHS_1589" | rangegpsdata$KI_Known_ID == "BHS_1584" | rangegpsdata$KI_Known_ID == "BHS_1582" | rangegpsdata$KI_Known_ID == "BHS_1577" | rangegpsdata$KI_Known_ID == "BHS_1683" | rangegpsdata$KI_Known_ID == "BHS_1682" | rangegpsdata$KI_Known_ID == "BHS_1684" | rangegpsdata$KI_Known_ID == "BHS_1688" | rangegpsdata$KI_Known_ID == "BHS_1685" | rangegpsdata$KI_Known_ID == "BHS_1689" | rangegpsdata$KI_Known_ID == "BHS_1687" | rangegpsdata$KI_Known_ID == "BHS_1686" | rangegpsdata$KI_Known_ID == "BHS_1736" | rangegpsdata$KI_Known_ID == "BHS_1740" | rangegpsdata$KI_Known_ID == "BHS_1739" | rangegpsdata$KI_Known_ID == "BHS_1730" | rangegpsdata$KI_Known_ID == "BHS_1733", ]
+rangeidgpsdata <- rangegpsdata[rangegpsdata$KI_Known_ID == "BHS_1581" | rangegpsdata$KI_Known_ID == "BHS_1595" | rangegpsdata$KI_Known_ID == "BHS_1588" | rangegpsdata$KI_Known_ID == "BHS_1580" | rangegpsdata$KI_Known_ID == "BHS_1738" | rangegpsdata$KI_Known_ID == "BHS_1568" | rangegpsdata$KI_Known_ID == "BHS_1565" | rangegpsdata$KI_Known_ID == "BHS_1567" | rangegpsdata$KI_Known_ID == "BHS_1564" | rangegpsdata$KI_Known_ID == "BHS_1677" | rangegpsdata$KI_Known_ID == "BHS_1589" | rangegpsdata$KI_Known_ID == "BHS_1584" | rangegpsdata$KI_Known_ID == "BHS_1582" | rangegpsdata$KI_Known_ID == "BHS_1577" | rangegpsdata$KI_Known_ID == "BHS_1683" | rangegpsdata$KI_Known_ID == "BHS_1682" | rangegpsdata$KI_Known_ID == "BHS_1684" | rangegpsdata$KI_Known_ID == "BHS_1688" | rangegpsdata$KI_Known_ID == "BHS_1685" | rangegpsdata$KI_Known_ID == "BHS_1689" | rangegpsdata$KI_Known_ID == "BHS_1687" | rangegpsdata$KI_Known_ID == "BHS_1686" | rangegpsdata$KI_Known_ID == "BHS_1736" | rangegpsdata$KI_Known_ID == "BHS_1740" | rangegpsdata$KI_Known_ID == "BHS_1739" | rangegpsdata$KI_Known_ID == "BHS_1730" | rangegpsdata$KI_Known_ID == "BHS_1733", ]
 # View(rangeidgpsdata)
 rangeidgpsdata$TimeLocal <- as.character(rangeidgpsdata$TimeLocal)
 rangeidgpsdata$DateTimeLocalTest <- rangeidgpsdata$DateTimeLocal
@@ -200,7 +202,7 @@ nromidhour <- rangeidhour1[rangeidhour1$MountainRange == "NROM", ]
 pnromidhour <- prepData(nromidhour, type = "LL", coordNames = c("Longitude", "Latitude"))
 plot(pnromidhour, compact = T)
 nrow(pnromidhour)
-# 754 locations for NROM before cleaning.
+# 698 locations for NROM before cleaning.
 
 ```
 Before looking at HDOP, I first deleted points considered to have location error based on their impossible elevation data (D'Eon et al. 2002).The range of elevations possible in each mountain range was calculated by drawing a polygon around each mountain range outside of CDFW's bighorn population range maps using Caltopo. All points outside of these possible range were eliminated.
@@ -245,7 +247,7 @@ plot(pcmpridhouralt, compact = T)
 boxplot(pnromidhour$Altitude)
 pnromidhouralt <- pnromidhour[(pnromidhour$Altitude >= 548) & (pnromidhour$Altitude <= 1858), ]
 nrow(pnromidhouralt)
-# NROM has 723 points, before had 754 points.
+# NROM has 672 points, before had 698 points.
 plot(pnromidhouralt, compact = T)
 ```
 
@@ -285,14 +287,54 @@ plot(dopcmpr, compact = T)
 boxplot(pnromidhouralt$DOP)
 dopnrom <- pnromidhouralt[pnromidhouralt$DOP <= 10, ]
 nrow(dopnrom)
-# NROM now has 720 points, before had 723.
+# NROM now has 669 points, before had 672.
 plot(dopnrom, compact = T)
 ```
 
 I next examined the relative fix rate by mountain range to check for topographic bias. 
 
-```{r}
+Sheep 1589 switched from 4 hour fix rate to 1 hour fix rate on 2019-06-15 16:00:00.
 
+
+
+```{r}
+dopall <- rbind(dopmarb, dopsbrs, dopcmpr, dopnopa, dopnrom)
+# The points after BHS_1595 died are already eliminated from the dataset
+# I went back and removed BHS_1692 from the dataset because he went over to East Ord for such a large percentage of the time and I am not confident in my absence of water sources in East Ord.
+
+##Subsetting by sheep to differentiate between sheep with 4-hour collars and sheep with every-hour collars
+
+# First differentiated between BHS_1589 and all other sheep
+just1589 <- dopall[dopall$ID == "BHS_1589", ]
+dopall1 <- dopall[dopall$ID != "BHS_1589", ]
+just1589before <- just1589[just1589$DateTimeLocalTestct < as.POSIXct("2019-06-15 16:00:00"), ]
+just1589after <- just1589[just1589$DateTimeLocalTestct >= as.POSIXct("2019-06-15 16:00:00"), ]
+# 1 hour fix rate
+dopall2 <- dopall1[dopall1$ID == "BHS_1584" |  dopall1$ID == "BHS_1582" | dopall1$ID == "BHS_1577" | dopall1$ID == "BHS_1683" | dopall1$ID == "BHS_1682" | dopall1$ID == "BHS_1684" | dopall1$ID == "BHS_1688" | dopall1$ID == "BHS_1685" | dopall1$ID == "BHS_1689" | dopall1$ID == "BHS_1687" | dopall1$ID == "BHS_1686" | dopall1$ID == "BHS_1736" | dopall1$ID == "BHS_1740" | dopall1$ID == "BHS_1739" | dopall1$ID == "BHS_1730" | dopall1$ID == "BHS_1733", ]
+cln1hrfix <- rbind(dopall2, just1589after)
+# 4 hour fix rate
+dopall3 <- dopall1[dopall1$ID == "BHS_1581" | dopall1$ID == "BHS_1595" | dopall1$ID == "BHS_1588" | dopall1$ID == "BHS_1580" | dopall1$ID == "BHS_1738" | dopall1$ID == "BHS_1568" | dopall1$ID == "BHS_1565" | dopall1$ID == "BHS_1567" | dopall1$ID == "BHS_1564" | dopall1$ID == "BHS_1677", ]
+clan4hrfix <- rbind(dopall3, just1589before)
+
+## Counting the difference between the actual number of observations and what number there should be if there is assuming a 100% fix rate and no deletion of points while data cleaning
+
+# 1 hr fix rate
+
+# Marbles: 
+nrow(cln1hrfix[cln1hrfix$MountainRange == "Marb", ])
+# There are 4758 fixes for Marb.
+# Based on basic math I did in my google doc, there should be 6048 fixes for Marb.
+# 4758/6048 = 78.67% fix rate
+
+# South Bristols:
+nrow(cln1hrfix[cln1hrfix$MountainRange == "BrsS", ])
+# There are 6691 fixes for South Bristols.
+
+
+nrow(cln1hrfix)
+# Total Actual = 14694 fixes
+# Total fixes there should be:
+# 16 sheep not including 1589: 
 
 
 ```
