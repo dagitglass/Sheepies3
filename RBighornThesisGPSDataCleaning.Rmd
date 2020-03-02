@@ -17,12 +17,13 @@ First, I uploaded the GPS data. I checked for duplicates - there were none. Then
 A list of bighorn whose collars are every four hours:
 
 Marbles: BHS_1581 F, BHS_1595 F (died on 8/5), BHS_1588 F
-South Bristols: BHS_1580 F, 
+South Bristols: BHS_1580 F (actually was 1 hour for some time????), 
 Nopah: BHS_1738 F
 CMPR: none
 NROM: BHS_1568 F (went to community center), BHS_1565 F, BHS_1567 F, BHS_1564 F, BHS_1677 F
 
 ***am not including NROM BHS_1563M b/c travels into East Ord)
+*** SBrs BHS_1580 2019-07-24 4:00 switches from 4 hour to 1 hour, holds steady on that until the end-- COULD INCLUDE IN 1 HOUR FIX Rate
 
 
 A list of bighorn whose collars are every hour or less:
@@ -304,17 +305,26 @@ dopall <- rbind(dopmarb, dopsbrs, dopcmpr, dopnopa, dopnrom)
 
 ##Subsetting by sheep to differentiate between sheep with 4-hour collars and sheep with every-hour collars
 
-# First differentiated between BHS_1589 and all other sheep
+# SBrs BHS_1580 2019-07-24 4:00 switches from 4 hour to 1 hour, holds steady on that until the end-- COULD INCLUDE IN 1 HOUR FIX Rate
+
+# First differentiated between BHS_1589, BHS_1580 and all other sheep
 just1589 <- dopall[dopall$ID == "BHS_1589", ]
-dopall1 <- dopall[dopall$ID != "BHS_1589", ]
+dopall1 <- dopall[(dopall$ID != "BHS_1589") & (dopall$ID != "BHS_1580"), ]
 just1589before <- just1589[just1589$DateTimeLocalTestct < as.POSIXct("2019-06-15 16:00:00"), ]
 just1589after <- just1589[just1589$DateTimeLocalTestct >= as.POSIXct("2019-06-15 16:00:00"), ]
+just1580 <- dopall[dopall$ID == "BHS_1580", ]
+just1580before <- just1580[just1580$DateTimeLocalTestct < as.POSIXct("2019-07-24 04:00:00"), ]
+just1580after <- just1580[just1580$DateTimeLocalTestct >= as.POSIXct("2019-07-24 04:00:00"), ]
 # 1 hour fix rate
 dopall2 <- dopall1[dopall1$ID == "BHS_1584" |  dopall1$ID == "BHS_1582" | dopall1$ID == "BHS_1577" | dopall1$ID == "BHS_1683" | dopall1$ID == "BHS_1682" | dopall1$ID == "BHS_1684" | dopall1$ID == "BHS_1688" | dopall1$ID == "BHS_1685" | dopall1$ID == "BHS_1689" | dopall1$ID == "BHS_1687" | dopall1$ID == "BHS_1686" | dopall1$ID == "BHS_1736" | dopall1$ID == "BHS_1740" | dopall1$ID == "BHS_1739" | dopall1$ID == "BHS_1730" | dopall1$ID == "BHS_1733", ]
-cln1hrfix <- rbind(dopall2, just1589after)
+cln1hrfix <- rbind(dopall2, just1589after, just1580after)
 # 4 hour fix rate
-dopall3 <- dopall1[dopall1$ID == "BHS_1581" | dopall1$ID == "BHS_1595" | dopall1$ID == "BHS_1588" | dopall1$ID == "BHS_1580" | dopall1$ID == "BHS_1738" | dopall1$ID == "BHS_1568" | dopall1$ID == "BHS_1565" | dopall1$ID == "BHS_1567" | dopall1$ID == "BHS_1564" | dopall1$ID == "BHS_1677", ]
-clan4hrfix <- rbind(dopall3, just1589before)
+dopall3 <- dopall1[dopall1$ID == "BHS_1581" | dopall1$ID == "BHS_1595" | dopall1$ID == "BHS_1588" | dopall1$ID == "BHS_1738" | dopall1$ID == "BHS_1568" | dopall1$ID == "BHS_1565" | dopall1$ID == "BHS_1567" | dopall1$ID == "BHS_1564" | dopall1$ID == "BHS_1677", ]
+clan4hrfix <- rbind(dopall3, just1589before, just1580before)
+# This only includes sheep that are set to 4 hours fix rate. But, can subset 1 hour fix rate to every four hours and include that too.
+clan4hrfix1 <- subset(clan4hrfix, format(clan4hrfix$DateTimeLocalTest, "%H") %in% c('00', '04', '08', '12', '16', '20', '24'))
+onetofour <- subset(cln1hrfix, format(cln1hrfix$DateTimeLocalTest, "%H") %in% c('00', '04', '08', '12', '16', '20', '24'))
+clean4hrfixall <- rbind(clan4hrfix1, onetofour)
 
 ## Counting the difference between the actual number of observations and what number there should be if there is assuming a 100% fix rate and no deletion of points while data cleaning
 
@@ -328,15 +338,73 @@ nrow(cln1hrfix[cln1hrfix$MountainRange == "Marb", ])
 
 # South Bristols:
 nrow(cln1hrfix[cln1hrfix$MountainRange == "BrsS", ])
-# There are 6691 fixes for South Bristols.
+# There are 6921 fixes for South Bristols.
+# Based on basic math I did in my google doc, there should be 7676 fixes for SBrs.
+# 6691/7320 = 90.16% fix rate
 
+# Nopah
+nrow(cln1hrfix[cln1hrfix$MountainRange == "Nopa", ])
+# There are 2180 fixes for Nopah.
+# There should be 2664 fixes.
+# 2180/2664 = 81.83% fix rate
 
+# CMPR
+nrow(cln1hrfix[cln1hrfix$MountainRange == "CMPR", ])
+# There are 1065 fixes for CMPR.
+# There should be 1392 fixes. 
+# 1065/1392 = 76.51% fix rate.
+
+# All ranges together
 nrow(cln1hrfix)
-# Total Actual = 14694 fixes
-# Total fixes there should be:
-# 16 sheep not including 1589: 
+# Total Actual = 14924 fixes
+# Total fixes there should be: 17780
+# 14694/17424= 83.94% fix rate
 
 
+
+# 4 hour fix rate
+
+# Marbles
+nrow(clean4hrfixall[clean4hrfixall$MountainRange == "Marb", ])
+# There are 2067 fixes for the Marbles.
+# Total fixes there should be: 2262
+# 2067/2262 = 91.38% fix rate
+
+# South Bristols
+nrow(clean4hrfixall[clean4hrfixall$MountainRange == "BrsS", ])
+# There are 1964 fixes for the South Bristols.
+# Total fixes there should be: 2196
+# 2137/2196 = 89.44%
+
+# Nopah
+nrow(clean4hrfixall[clean4hrfixall$MountainRange == "Nopa", ])
+# There are 795 for the Nopahs.
+# Total fixes there should be: 888
+# 795/888 = 89.53% fix rate
+
+# CMPR
+nrow(clean4hrfixall[clean4hrfixall$MountainRange == "CMPR", ])
+# 325 points for CMPR.
+# Total fixes there should be: 348
+# 93.34% fix rate
+
+# NROM
+nrow(clean4hrfixall[clean4hrfixall$MountainRange == "NROM", ])
+# 533 points for NROM.
+# Total fixes there should be: 570
+# 93.51% fix rate
+
+# All mtn ranges together except NROM:
+nrow(clean4hrfixall[clean4hrfixall$MountainRange == "Marb" | clean4hrfixall$MountainRange == "BrsS" | clean4hrfixall$MountainRange == "Nopa" | clean4hrfixall$MountainRange == "CMPR",])
+# 5151 points for Marb, BrsS, Nopa, CMPR.
+# Total fixes there should be: 5694
+# 5151/5694 = 90.46% fix rate
+
+# All mtn ranges together including NROM:
+nrow(clean4hrfixall)
+# 5684 points total
+# Total fixes there should be: 6264
+# 5684/6264 = 90.74% fix rate
 ```
 
 ```{r}
