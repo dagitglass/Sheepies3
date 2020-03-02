@@ -406,6 +406,29 @@ nrow(clean4hrfixall)
 # Total fixes there should be: 6264
 # 5684/6264 = 90.74% fix rate
 ```
+I then started to calculate my four measures of GPS movement: step length, turning angle, distance to water, angle of movement relative to water. I decided to start with 1 hr, then do 4 hr. To start with, I calculated turning angle. 
+
+```{r}
+library(moveHMM)
+# 1 hr
+names(cln1hrfix)[names(cln1hrfix) == "y"] <- "Latitude"
+names(cln1hrfix)[names(cln1hrfix) == "x"] <- "Longitude"
+cln1hrfix1 <- cln1hrfix[with(cln1hrfix, order(ID, DateTimeLocalTestct)), ]
+pcln1hrfix <- prepData(cln1hrfix1, type = "LL", coordNames = c("Longitude", "Latitude"))
+# Upon examination, these turning angles are in radians. The min and max are pi, which makes sense because it is impossible to have a turning angle greater than 180 degrees since the angle that the animal turned should be assumed to be the smaller one (why would I turn 270 degrees when I can only turn 90?). Since for this metric, all I am looking at is the tortuosity of the track, I think I should make every radian angle positive. After all, I do not care about whether the sheep turned left or right.
+pcln1hrfix$positangle <- abs(pcln1hrfix$angle)
+
+
+
+
+```
+
+
+
+
+
+
+
 
 ```{r}
 library(rosm)
