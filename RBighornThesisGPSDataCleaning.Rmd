@@ -1,6 +1,8 @@
 ---
 title: "Cleaning the GPS Data"
-output: html_document
+output:
+  word_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -17,7 +19,7 @@ First, I uploaded the GPS data. I checked for duplicates - there were none. Then
 A list of bighorn whose collars are every four hours:
 
 Marbles: BHS_1581 F, BHS_1595 F (died on 8/5), BHS_1588 F
-South Bristols: BHS_1580 F (actually was 1 hour for some time????), 
+South Bristols: BHS_1580 F (before 2019-07-24 04:00, after 1 hour), 
 Nopah: BHS_1738 F
 CMPR: none
 NROM: BHS_1568 F (went to community center), BHS_1565 F, BHS_1567 F, BHS_1564 F, BHS_1677 F
@@ -29,7 +31,7 @@ NROM: BHS_1568 F (went to community center), BHS_1565 F, BHS_1567 F, BHS_1564 F,
 A list of bighorn whose collars are every hour or less:
 
 Marbles: BHS_1589 F (very beginning every four hours?), BHS_1584 F, BHS_1582 F, BHS_1577 F, BHS_1683 M, BHS_1682 M, BHS_1684 M (died on 8/17)
-South Bristols: BHS_1688 M, BHS_1685 M, BHS_1689 M, BHS_1687 F, BHS_1686 M
+South Bristols: BHS_1688 M, BHS_1685 M, BHS_1689 M, BHS_1687 F, BHS_1686 M, BHS_1580F(after 2019-07-24 04:00)
 Nopah: BHS_1736 F, BHS_1740 F, BHS_1739 M
 CMPR: BHS_1730 F, BHS_1733 F
 NROM: none
@@ -118,12 +120,10 @@ is1595cut <- is1595[(is1595$DateTimeLocalTestct < as.POSIXct("2019-08-05 00:00:0
 allidgpsdatacut3 <- rbind(not1595, is1595cut)
 
 ```
-
 Subsetting to every hour and four hour
 
-To remove the locations that were taken at 20 minute fix rates, I subset by the rows where the minutes were between 55 and 10. The number of rows before subsetting was `r nrow(rangeidgpsdata` while the number of rows after subsetting was `r nrow(rangeidhour)`, demonstrating that rows with locations taken not close to the hour mark were removed. 
+To remove the locations that were taken at 20 minute fix rates, I subset by the rows where the minutes were between 55 and 10. The number of rows before subsetting was 21172 while the number of rows after subsetting was 17691, demonstrating that rows with locations taken not close to the hour mark were removed. 
 
-After double checking that all the four-hour collars were on the same schedule, I then subset the gps data to only the rows where the hours were 00, 04, 08, 12, 16, and 20. This reason for this subsetting was to make all the collars be on the same, four hour schedule in order to make them comparable.
 
 ```{r}
 
@@ -131,7 +131,7 @@ After double checking that all the four-hour collars were on the same schedule, 
 # rangeidhour includes collars on both 1-hour and 4-hour fix rates
 rangeidhour <- subset(allidgpsdatacut3, format(allidgpsdatacut3$DateTimeLocalTest, "%M") %in% c('00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '55', '56', '57', '58', '59', '54', '53', '52', '51', '50'))
 ## I double checked the sheep that are every four hours to make sure that they are on a 0-4-8-12-16-20-24 schedule. They are all.
-rangeidfourhour <- subset(rangeidhour, format(rangeidhour$DateTimeLocalTest, "%H") %in% c('00', '04', '08', '12', '16', '20', '24'))
+# rangeidfourhour <- subset(rangeidhour, format(rangeidhour$DateTimeLocalTest, "%H") %in% c('00', '04', '08', '12', '16', '20', '24'))
 # Including every hour as ~18,000 gps observations, including only every four hour as ~6,000 observations. Both include 28 individual sheep. 
 
 
@@ -143,6 +143,8 @@ rangeidfourhour <- subset(rangeidhour, format(rangeidhour$DateTimeLocalTest, "%H
 ### Cleaning the GPS Data
 
 ## Mapping the GPS Data
+
+I mapped the GPS data to be able to visually check how cleaning the data changed the sheep movement tracks.
 
 ```{r}
 # Making an individually identifiable ID for each point
@@ -206,7 +208,7 @@ nrow(pnromidhour)
 # 698 locations for NROM before cleaning.
 
 ```
-Before looking at HDOP, I first deleted points considered to have location error based on their impossible elevation data (D'Eon et al. 2002).The range of elevations possible in each mountain range was calculated by drawing a polygon around each mountain range outside of CDFW's bighorn population range maps using Caltopo. All points outside of these possible range were eliminated.
+Before looking at HDOP, I first deleted points considered to have location error based on their impossible elevation data (D'Eon et al. 2002). The range of elevations possible in each mountain range was calculated by drawing a polygon around each mountain range outside of CDFW's bighorn population range maps using Caltopo. All points outside of these possible range were eliminated.
 
 Using CalTopo: 
 Marbles: 597' - 3840' (181 m - 1171 m)
@@ -252,7 +254,7 @@ nrow(pnromidhouralt)
 plot(pnromidhouralt, compact = T)
 ```
 
-I then eliminated the points with a DOP above 10 (Lewis et al. 2007), as these points most likely are not spatially accurate due to minimum distribution of the satellites locating the collar. It is worth noting that these points 
+I then eliminated the points with a DOP above 10 (Lewis et al. 2007), as these points may not be spatially accurate due to minimum distribution of the satellites locating the collar.
 
 
 ```{r}
@@ -292,10 +294,9 @@ nrow(dopnrom)
 plot(dopnrom, compact = T)
 ```
 
-I next examined the relative fix rate by mountain range to check for topographic bias. 
+I next examined the relative fix rate by mountain range to check for topographic bias. Since all analyses will be between comparable collars on the same fix schedule, I first separated the fixes back into 1 hour fix rate and 4 hour fix rate. I did subset the 1 hours fix rate collars to increase the 4 hour fix rate sample size. Sheep 1589 switched from 4 hour fix rate to 1 hour fix rate on 2019-06-15 16:00:00.
 
-Sheep 1589 switched from 4 hour fix rate to 1 hour fix rate on 2019-06-15 16:00:00.
-
+A lot of the basic, back-of-a-napkin calculations I did on a separate google sheet.
 
 
 ```{r}
@@ -442,7 +443,6 @@ bmaps.plot(marbles, type = "Aerial", zoom = 10)
 
 # sp package
 # talk to Lorena
-raster()
 
 library(moveHMM)
 
@@ -471,6 +471,6 @@ library(moveHMM)
 
 ```{r}
 
-raster()
+
 ```
 
