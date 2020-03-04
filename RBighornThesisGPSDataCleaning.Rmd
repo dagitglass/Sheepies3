@@ -418,6 +418,8 @@ cln1hrfix1 <- cln1hrfix[with(cln1hrfix, order(ID, DateTimeLocalTestct)), ]
 pcln1hrfix <- prepData(cln1hrfix1, type = "LL", coordNames = c("Longitude", "Latitude"))
 # Upon examination, these turning angles are in radians. The min and max are pi, which makes sense because it is impossible to have a turning angle greater than 180 degrees since the angle that the animal turned should be assumed to be the smaller one (why would I turn 270 degrees when I can only turn 90?). Since for this metric, all I am looking at is the tortuosity of the track, I think I should make every radian angle positive. After all, I do not care about whether the sheep turned left or right.
 pcln1hrfix$positangle <- abs(pcln1hrfix$angle)
+library(amt)
+pcln1hrfix$positangledegree <- as_degree(pcln1hrfix$positangle)
 
 
 
