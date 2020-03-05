@@ -426,10 +426,66 @@ pcln1hrfix$positangledegree <- as_degree(pcln1hrfix$positangle)
 
 ```
 
+I next calculated the shortest topographic distance between points. This is basically step length, accounting for elevation.
+
+
+```{r}
+# Setting up the elevation raster
+library(raster)
+library(sp)
+library(rgdal)
+nopahelevation <- raster("C:/Users/Danielle Glass/Downloads/nopahelevation.tif")
+proj4string(nopahelevation) <- CRS("+proj=longlat +ellps=GRS80 +datum=NAD83 +no_defs")
+plot(nopahelevation, compact = TRUE)
+library(rgdal)
+# tnopahelevation <- projectRaster(from = nopahelevation, crs = ("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"))
+# plot(tnopahelevation)
+nopahelevationattempt2 <- raster("C:/Users/Danielle Glass/Downloads/NopahElevation1.tif")
+proj4string(nopahelevationattempt2) <- CRS("+proj=longlat +ellps=GRS80 +datum=NAD83 +no_defs")
+
+# 
+# Attempt below didn't work, but one above did?
+# nopahelevationproj <- projectRaster(nopahelevation, crs = "+proj=longlat +ellps=GRS80 +datum=NAD83 +no_defs")
+
+# WGS 84 
+
+# Setting up the SpatialPointsObjects
+onehrnopah <- pcln1hrfix[pcln1hrfix$MountainRange == "Nopa", ]
+onehrnopah$ID <- droplevels(onehrnopah$ID)
+coordsnopa <- as.data.frame(onehrnopah[ ,c("x", "y")])
+restodatanopa <- as.data.frame(onehrnopah[ , c(1:3, 6:27)])
+crsnopa <- CRS("+proj=longlat +ellps=GRS80 +datum=NAD83 +no_defs")
+nopaspdf <- SpatialPointsDataFrame(coords = coordsnopa, data = restodatanopa, proj4string = crsnopa)
+tnopaspdf <- spTransform(nopaspdf , CRS("+proj=longlat +ellps=GRS80 +datum=NAD83 +no_defs"))
+jpeg("tnopaspdf.jpg", width = 8, height = 12, units = "in", res = 180)
+plot(tnopaspdf)
+dev.off()
+View(nopaspdf@data)
+
+library(topoDistance)
+topodistnopa <- topoDist(DEM = nopahelevationattempt2, pts = tnopaspdf, directions = 4, paths = FALSE, zweight = 1)
+View(topodistnopa)
+
+
+# library(dplyr)
+# BrsSlongtimedif <- BrsScutobslong %>%
+#   arrange(KI_Known_ID, DateTimect) %>%
+#   group_by(KI_Known_ID) %>%
+#   mutate(Timediff = DateTimect - lag(DateTimect), diff_hours = as.numeric(Timediff, units = 'hours'))
+
+library(adehabitatLT)
+data.lt.nopah <- as.ltraj(xy = onehrnopah[, c("x", "y")], date = onehrnopah$DateTimeLocalTestct, id = onehrnopah$ID)
+View(data.lt.nopah[[1]])
+
+# data.lt_Desert <- as.ltraj(xy = DesertDataDanielleNoDuplicates[, c("UTME", "UTMN")], date = DesertDataDanielleNoDuplicates$DateTimeC, id = DesertDataDanielleNoDuplicates$ID)
+
+# data.lt<-as.ltraj(xy=data[,c("x","y")], date=data$date, id=data$id)
 
 
 
 
+
+```
 
 
 
@@ -472,7 +528,23 @@ library(moveHMM)
 
 
 ```{r}
+onehrnopah
 
+
+# library(dplyr)
+# BrsSlongtimedif <- BrsScutobslong %>%
+#   arrange(KI_Known_ID, DateTimect) %>%
+#   group_by(KI_Known_ID) %>%
+#   mutate(Timediff = DateTimect - lag(DateTimect), diff_hours = as.numeric(Timediff, units = 'hours'))
+
+library(adehabitatLT)
+library(dplyr)
+data.lt.nopah <- as.ltraj(xy = onehrnopah[, c("x", "y")], date = onehrnopah$DateTimeLocalTestct, id = onehrnopah$ID)
+View(data.lt.nopah[[1]])
+for(i in 1:3){data.lt.nopah[[i]]$xend <- lag(data.lt.nopah[[i]]$x)}
+for(i in 1:3){data.lt.nopah[[i]]$yend <- lag(data.lt.nopah[[i]]$y)}
+nopah1736 <- as.data.frame(data.lt.nopah[[1]])
+write.csv(nopah1736, "C:/Users/Danielle Glass/Documents/RWorkingDirectory2/Sheepies3/nopah1736.csv")
 
 ```
 
