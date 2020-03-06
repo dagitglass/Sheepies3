@@ -1197,3 +1197,30 @@ This is where I am going to leave off my basic analyses of the visitation data f
 - how much time individual bighorn spend drinking water when they visit (and whether this differs by age, sex)
 - whether there is a significant difference in how often ewes with lambs come in vs. ewes without lambs (or ewe groups with lambs come in vs. ewe groups without lambs)
 - whether there is a significant difference in how often sheep in large groups come in vs. sheep in small groups come in
+
+```{r}
+## how much time individual bighorn spend drinking water when they visit (and whether this differs by age, sex)
+View(allrangetime1)
+library(lubridate)
+allrangetime1$KI_DG_LastPhotoTime[allrangetime1$KI_DG_LastPhotoTime == ""] <- NA
+allrangetime1$KI_DG_FirstPhotoTime[allrangetime1$KI_DG_FirstPhotoTime == ""] <- NA
+allrangetime1$KI_DG_FirstPhotoTime <- as.numeric(allrangetime1$KI_DG_FirstPhotoTime)
+allrangetime1$KI_DG_FirstPhotoTime <- hms(allrangetime1$KI_DG_FirstPhotoTime)
+allrangetime1$KI_DG_LastPhotoTime <- as.numeric(allrangetime1$KI_DG_LastPhotoTime)
+allrangetime1$KI_DG_LastPhotoTime <- hms(allrangetime1$KI_DG_LastPhotoTime)
+allrangetime1$VisitDuration <- difftime(allrangetime1$KI_DG_LastPhotoTime, allrangetime1$KI_DG_FirstPhotoTime, units = c("auto"))
+allrangetime1$VisitDuration <- as.numeric(allrangetime1$VisitDuration)
+allrangetime1$VisitDuration <- abs(allrangetime1$VisitDuration)
+boxplot(allrangetime1$VisitDuration, ylab = "Length of Visit to Water (mins)", main = "Time Spent at Water by Individual Bighorn")
+sum(table(allrangetime1$VisitDuration))
+# Sample size number of sheep visits = 1011 visits
+qqnorm(allrangetime1$VisitDuration)
+qqline(allrangetime1$VisitDuration)
+# Not normally distributed. Huge gap could be not being careful enough at following rules for defining what is a visit? Or sheep come/drink/leave vs. sheep come/stay/hang out?
+hist(allrangetime1$VisitDuration)
+# NEED TO FIGURE THAT OUT BEFORE RUNNING THE REST OF IT..
+
+
+## whether there is a significant difference in how often ewes with lambs come in vs. ewes without lambs (or ewe groups with lambs come in vs. ewe groups without lambs)
+
+```
