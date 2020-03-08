@@ -407,7 +407,12 @@ nrow(clean4hrfixall)
 # Total fixes there should be: 6264
 # 5684/6264 = 90.74% fix rate
 ```
-I then started to calculate my four measures of GPS movement: step length, turning angle, distance to water, angle of movement relative to water. I decided to start with 1 hr, then do 4 hr. To start with, I calculated turning angle. 
+I then started to calculate my four measures of GPS movement: step length, turning angle, distance to water, angle of movement relative to water. I decided to start with 1 hr, then do 4 hr. To start with, I calculated turning angle.
+
+- if turning angle is different between different sheep- DONE
+- if turning angle is different by month- DONE
+- if turning angle is different by mountain range - DONE
+- if turning angle is different by time-of-day
 
 ```{r}
 library(moveHMM)
@@ -420,10 +425,51 @@ pcln1hrfix <- prepData(cln1hrfix1, type = "LL", coordNames = c("Longitude", "Lat
 pcln1hrfix$positangle <- abs(pcln1hrfix$angle)
 library(amt)
 pcln1hrfix$positangledegree <- as_degree(pcln1hrfix$positangle)
+# Angles between sheep are already deleted because of how prepData function worked
+hist(pcln1hrfix$positangledegree, xlab = "Angle Degree", main = "Frequency of Turning Angles at 1 Hr Fix Rate for All Bighorn (n = 14924)")
+pcln1hrfix$Month <- month(pcln1hrfix$DateTimeLocalTestct)
+pcln1hrfix$MountainRange <- droplevels(pcln1hrfix$MountainRange)
+# If turning angle is different by mountain range
+boxplot(positangledegree ~ MountainRange, data = pcln1hrfix, ylab = "Turning Angle", main = "Turning Angle by Mountain Range")
+turnangleMtnRange <- aov(positangledegree ~ MountainRange, data = pcln1hrfix)
+summary.lm(turnangleMtnRange)
+# Multiple R-squared:  0.0003511,	Adjusted R-squared:  0.0001495 
+# F-statistic: 1.742 on 3 and 14878 DF,  p-value: 0.1561
+TukeyHSD(turnangleMtnRange)
+# CMPR-BrsS  0.8506750 -3.864226 5.5655764 0.9669665
+# Marb-BrsS -2.0649079 -4.761631 0.6318155 0.2004612
+# Nopa-BrsS  0.1728248 -3.343584 3.6892338 0.9992810
+# Marb-CMPR -2.9155830 -7.771596 1.9404297 0.4119503
+# Nopa-CMPR -0.6778502 -6.032631 4.6769302 0.9881204
+# Nopa-Marb  2.2377327 -1.465738 5.9412036 0.4061609
+# Turning angle is not significantly different between any mountain ranges.
 
+# If turning angle is significantly different by individual sheep
+boxplot(positangledegree ~ ID, data = pcln1hrfix, ylab = "Turning Angle", main = "Turning Angle by Individual Bighorn")
+turnangleid <- aov(positangledegree ~ ID, data = pcln1hrfix)
+summary.lm(turnangleid)
+# Multiple R-squared:  0.003677,	Adjusted R-squared:  0.002538 
+# F-statistic: 3.227 on 17 and 14864 DF,  p-value: 7.41e-06
+TukeyHSD(turnangleid)
+# Only bighorn combos that were significantly different were: 1686-1682, 1687-1686, 1688-1686, 1740-1686.
 
-
-
+# If turning angle is different by month
+# Because there was no significant difference between mountain ranges, I did not divide up these results by mountain range.
+boxplot(positangledegree ~ Month, data = pcln1hrfix)
+pcln1hrfix$Month <- as.factor(pcln1hrfix$Month)
+turnanglemonth <- aov(positangledegree ~ Month, data = pcln1hrfix)
+summary.lm(turnanglemonth)
+# Multiple R-squared:  0.000449,	Adjusted R-squared:  0.0002475 
+# F-statistic: 2.228 on 3 and 14878 DF,  p-value: 0.08274
+TukeyHSD(turnanglemonth)
+#           diff        lwr       upr     p adj
+# 6-5 -2.0224134  -7.829637 3.7848099 0.8075684
+# 7-5 -4.0070869  -9.769706 1.7555324 0.2797733
+# 8-5 -4.1284510 -10.181881 1.9249787 0.2967243
+# 7-6 -1.9846735  -4.692344 0.7229972 0.2352397
+# 8-6 -2.1060376  -5.387457 1.1753815 0.3511314
+# 8-7 -0.1213641  -3.323184 3.0804556 0.9996694
+# No significant different in turning angle between months. The boxplot does show a possible slight downward trend though.
 ```
 
 I next calculated the shortest topographic distance between points. This is basically step length, accounting for elevation.
@@ -443,6 +489,7 @@ library(rgdal)
 nopahelevationattempt2 <- raster("C:/Users/Danielle Glass/Downloads/NopahElevation1.tif")
 proj4string(nopahelevationattempt2) <- CRS("+proj=longlat +ellps=GRS80 +datum=NAD83 +no_defs")
 
+nopahelevationattempt3 <- raster("C:/Users/dmg85/Downloads/Sheepies3-master/output_srtm.tif")
 # 
 # Attempt below didn't work, but one above did?
 # nopahelevationproj <- projectRaster(nopahelevation, crs = "+proj=longlat +ellps=GRS80 +datum=NAD83 +no_defs")
@@ -454,9 +501,10 @@ onehrnopah <- pcln1hrfix[pcln1hrfix$MountainRange == "Nopa", ]
 onehrnopah$ID <- droplevels(onehrnopah$ID)
 coordsnopa <- as.data.frame(onehrnopah[ ,c("x", "y")])
 restodatanopa <- as.data.frame(onehrnopah[ , c(1:3, 6:27)])
-crsnopa <- CRS("+proj=longlat +ellps=GRS80 +datum=NAD83 +no_defs")
+crsnopa <- CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs")
+# crsnopa <- CRS("+proj=longlat +ellps=GRS80 +datum=NAD83 +no_defs")
 nopaspdf <- SpatialPointsDataFrame(coords = coordsnopa, data = restodatanopa, proj4string = crsnopa)
-tnopaspdf <- spTransform(nopaspdf , CRS("+proj=longlat +ellps=GRS80 +datum=NAD83 +no_defs"))
+# tnopaspdf <- spTransform(nopaspdf , CRS("+proj=longlat +ellps=GRS80 +datum=NAD83 +no_defs"))
 jpeg("tnopaspdf.jpg", width = 8, height = 12, units = "in", res = 180)
 plot(tnopaspdf)
 dev.off()
@@ -465,6 +513,18 @@ View(nopaspdf@data)
 library(topoDistance)
 topodistnopa <- topoDist(DEM = nopahelevationattempt2, pts = tnopaspdf, directions = 4, paths = FALSE, zweight = 1)
 View(topodistnopa)
+topodistnopa1 <- as.matrix(topodistnopa)
+topodistnopa1sub <- topodistnopa1[row(topodistnopa1) == (col(topodistnopa1) - 1)]
+View(topodistnopa1sub)
+natopodistnopa1sub <- c(NA, topodistnopa1sub)
+
+onehrnopah2 <- cbind(onehrnopah, natopodistnopa1sub)
+
+write.csv(onehrnopah2, "C:/Users/dmg85/Downloads/Sheepies3-master/onehrnopah2.csv")
+  #onehrnopah$topodistnopahstplength <- topodistnopa1sub
+
+
+#View(onehrnopah2)
 
 
 # library(dplyr)
